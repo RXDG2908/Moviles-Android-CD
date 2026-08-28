@@ -9,6 +9,36 @@ Repositorio del curso **Programación en Móviles** (C24 4to D-L-L) — Tecsup.
 Cada carpeta `Semana NN` guarda el material, los laboratorios y los proyectos
 de esa semana del ciclo.
 
+## Cómo se entrega cada ejercicio
+
+Todos los ejercicios del ciclo se entregan en **dos ramas**:
+
+| Rama | Qué lleva |
+|---|---|
+| **R1 — sin IA** | El ejercicio hecho a mano, siguiendo el manual del laboratorio al pie de la letra. Sin Gemini, ChatGPT ni Copilot. Sobre esta rama hay defensa oral. |
+| **R2 — con IA** | Lo mismo más los requisitos extra: POO, herencia, polimorfismo, encapsulamiento y abstracción. |
+
+Reglas de la rama con IA:
+
+- **6 commits**, uno por cada bloque agregado.
+- **Un prompt por sección**, incluido en la entrega.
+- El docente **califica la calidad y la estructura del prompt**, no solo el resultado.
+
+Regla que aplica a las dos ramas: **los commits tienen fecha y hora**. Se hacen
+conforme avanzas — los proyectos con todos los commits hechos de golpe al final
+no se revisan.
+
+## Rutina en la máquina del laboratorio
+
+Se repite todas las clases, porque las máquinas son compartidas:
+
+1. Settings → Version Control → GitHub → **Remove** a la cuenta del alumno anterior.
+2. **+** para agregar la tuya.
+3. Clonar este repositorio (no crear el proyecto desde cero).
+4. Entrar a la carpeta de la semana que toca y **borrar el archivo del laboratorio**
+   que venga ahí — el archivo, no la carpeta.
+5. Recién ahí crear el proyecto y trabajar.
+
 | Semana | Fechas | Tema |
 |---|---|---|
 | 1 | 17–23 ago | Introducción a Android. Entornos de desarrollo |
