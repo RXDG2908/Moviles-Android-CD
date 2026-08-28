@@ -1,37 +1,52 @@
 package com.leon.lab02carritokotlin
 
 // =====================================================================
-// Laboratorio 02 - Carrito de compras en Kotlin
-// Rama R2 (con IA) - Bloque 1: POO base
+// Rama R2 (con IA) - Bloque 2: Abstraccion
 //
-// El carrito deja de ser una lista suelta que se pasa de funcion en
-// funcion, y pasa a ser un objeto con su propio estado y operaciones.
-// El reporte tambien se separa: una clase calcula y otra muestra.
+// Se define ProductoBase, una clase abstracta que fija el contrato que
+// todo producto debe cumplir: saber calcular su importe y saber decir
+// que tipo es. La clase abstracta no se puede instanciar; solo describe
+// QUE debe hacer un producto, no COMO.
 // =====================================================================
 
 const val TASA_IGV = 0.18
 
-class Producto(
+abstract class ProductoBase(
     val nombre: String,
     val precio: Double,
     var cantidad: Int
 ) {
-    val importe: Double
-        get() = precio * cantidad
+    // Contrato: cada producto concreto decide como responde a esto.
+    abstract val tipo: String
+
+    abstract fun calcularImporte(): Double
+
+    open fun etiqueta(): String = "$nombre ($tipo)"
+}
+
+class Producto(
+    nombre: String,
+    precio: Double,
+    cantidad: Int
+) : ProductoBase(nombre, precio, cantidad) {
+
+    override val tipo: String = "General"
+
+    override fun calcularImporte(): Double = precio * cantidad
 }
 
 class Carrito(val cliente: String) {
 
-    private val productos = mutableListOf<Producto>()
+    private val productos = mutableListOf<ProductoBase>()
 
     val cantidadProductos: Int
         get() = productos.size
 
-    fun agregar(producto: Producto) {
+    fun agregar(producto: ProductoBase) {
         productos.add(producto)
     }
 
-    fun buscar(nombre: String): Producto? {
+    fun buscar(nombre: String): ProductoBase? {
         return productos.find { it.nombre == nombre }
     }
 
@@ -42,7 +57,7 @@ class Carrito(val cliente: String) {
     fun calcularSubtotal(): Double {
         var subtotal = 0.0
         for (p in productos) {
-            subtotal += p.importe
+            subtotal += p.calcularImporte()
         }
         return subtotal
     }
@@ -60,9 +75,9 @@ class Carrito(val cliente: String) {
         }
     }
 
-    fun productoMasCaro(): Producto? = productos.maxByOrNull { it.precio }
+    fun productoMasCaro(): ProductoBase? = productos.maxByOrNull { it.precio }
 
-    fun listar(): List<Producto> = productos
+    fun listar(): List<ProductoBase> = productos
 }
 
 class ReporteConsola(private val carrito: Carrito) {
@@ -86,7 +101,8 @@ class ReporteConsola(private val carrito: Carrito) {
         println("--------- DETALLE DEL CARRITO ---------")
         var i = 1
         for (p in carrito.listar()) {
-            println(String.format("%d. %-20s x%d  S/ %8.2f", i, p.nombre, p.cantidad, p.importe))
+            println(String.format("%d. %-20s x%d  S/ %8.2f",
+                i, p.nombre, p.cantidad, p.calcularImporte()))
             i++
         }
         println("---------------------------------------")
