@@ -1,6 +1,9 @@
 package com.leon.s02parking
 
+import com.leon.s02parking.model.ParkingCalculator
+import com.leon.s02parking.model.ParkingRecord
 import com.leon.s02parking.model.VehicleType
+import com.leon.s02parking.util.aMoneda
 
 /**
  * Control de Estacionamiento — aplicación de consola.
@@ -9,19 +12,23 @@ fun main() {
     println("=".repeat(40))
     println("     CONTROL DE ESTACIONAMIENTO")
     println("=".repeat(40))
-    println()
 
-    val placa = leerPlaca()
-    val tipo = leerTipoVehiculo()
-    val horas = leerHoras()
-    val clienteFrecuente = leerClienteFrecuente()
+    var continuar = true
+    while (continuar) {
+        println()
+        val placa = leerPlaca()
+        val tipo = leerTipoVehiculo()
+        val horas = leerHoras()
+        val clienteFrecuente = leerClienteFrecuente()
+
+        val registro = ParkingCalculator.calcular(placa, tipo, horas, clienteFrecuente)
+        imprimirResumen(registro)
+
+        continuar = preguntarSiNo("\n¿Registrar otro vehículo? (s/n): ")
+    }
 
     println()
-    println("Datos registrados:")
-    println("Placa: $placa")
-    println("Tipo: ${tipo.etiqueta}")
-    println("Horas: $horas")
-    println("Cliente frecuente: ${if (clienteFrecuente) "Sí" else "No"}")
+    println("Gracias por usar el sistema de estacionamiento.")
 }
 
 /**
@@ -99,4 +106,39 @@ fun preguntarSiNo(mensaje: String): Boolean {
             else -> println("Responde con 's' o 'n'.")
         }
     }
+}
+
+/**
+ * Imprime el resumen completo del cobro: detalle hora por hora, subtotal,
+ * descuento y total, con exactamente 2 decimales.
+ */
+fun imprimirResumen(registro: ParkingRecord) {
+    println()
+    println("-".repeat(40))
+    println("RESUMEN DEL ESTACIONAMIENTO")
+    println("-".repeat(40))
+    println("Placa: ${registro.placa}")
+    println("Tipo: ${registro.tipo.etiqueta}")
+    println("Horas: ${registro.horas}")
+    println("Cliente frecuente: ${if (registro.clienteFrecuente) "Sí" else "No"}")
+    println()
+    println("DETALLE:")
+    println()
+    registro.detalle.forEach { hora ->
+        val recargo = "${hora.recargoPorcentaje}%"
+        println(
+            "Hora %-2d   %-10s %-6s %s".format(
+                hora.hora,
+                hora.tarifa.aMoneda(),
+                recargo,
+                hora.importe.aMoneda()
+            )
+        )
+    }
+    println()
+    println("Subtotal:              ${registro.subtotal.aMoneda()}")
+    println("Descuento frecuente:   ${registro.descuento.aMoneda()}")
+    println("-".repeat(40))
+    println("TOTAL:                 ${registro.total.aMoneda()}")
+    println("-".repeat(40))
 }
