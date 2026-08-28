@@ -1,4 +1,4 @@
-# Laboratorio 02 — Carrito de compras en Kotlin
+# Laboratorio 02 — Carrito de compras en Kotlin · Rama R2 (con IA)
 
 **Alumno:** Renzo Raúl León Fernández
 **Curso:** Programación en Móviles — C24, 4to ciclo
@@ -7,108 +7,172 @@
 
 ---
 
-## Descripción
+## Qué es esta rama
 
-Programa de consola en Kotlin que simula el carrito de compras de una tienda. Registra
-productos con su nombre, precio y cantidad, calcula el subtotal, el IGV del 18% y el
-total a pagar, muestra el detalle en columnas alineadas con dos decimales, identifica
-el producto más caro y aplica un descuento escalonado según el monto de la compra.
+La rama `S02-R1` resuelve el laboratorio siguiendo el manual: código procedural, una
+`data class` y funciones sueltas. Esta rama parte de ahí y la reconstruye aplicando los
+cuatro pilares de la programación orientada a objetos, usando IA como herramienta.
 
-Se ejecuta desde `fun main()` con el botón Run de Android Studio, sin emulador.
+La regla que gobernó todo el trabajo: **los montos y el formato de la salida no podían
+cambiar**. Subtotal 2786.00, IGV 501.48, total 3287.48 y total con descuento 3123.11
+siguen siendo idénticos a la rama sin IA. Eso convirtió cada paso en una
+refactorización verificable en vez de una reescritura a ciegas.
 
-## Funciones implementadas
+## Los cuatro pilares, y dónde está cada uno
 
-| Función | Recibe | Devuelve | Qué hace |
-|---|---|---|---|
-| `calcularSubtotal` | La lista de productos | `Double` | Suma el precio por la cantidad de cada producto |
-| `calcularIGV` | El subtotal | `Double` | Calcula el 18% del subtotal |
-| `calcularTotal` | Subtotal e IGV | `Double` | Suma ambos montos |
-| `mostrarDetalle` | La lista de productos | — | Imprime el detalle numerado con columnas alineadas |
-| `calcularDescuento` | El total | `Double` | Aplica 10% sobre S/ 5000, 5% sobre S/ 3000, o nada |
-| `buscarProducto` | La lista y un nombre | `Producto?` | Devuelve el producto si existe, o `null` si no |
+| Pilar | Dónde se ve en el código |
+|---|---|
+| **Abstracción** | `ProductoBase` es una clase abstracta: define **qué** debe saber hacer todo producto —calcular su importe, decir su tipo— sin decir **cómo**. No se puede instanciar. |
+| **Herencia** | `ProductoElectronico` y `ProductoAlmacenamiento` heredan de `ProductoBase` sus atributos y su contrato, y cada una agrega lo suyo: meses de garantía y capacidad en GB. |
+| **Polimorfismo** | `imprimirClasificacion` recorre la lista tratando a todos como `ProductoBase` y llama a `etiqueta()` y `descripcionGarantia()`. No pregunta de qué tipo es cada uno: cada objeto responde a su manera y Kotlin resuelve cuál versión ejecutar. |
+| **Encapsulamiento** | `precio` y `cantidad` tienen `private set`: solo se modifican desde adentro. La cantidad cambia únicamente por `cambiarCantidad()`, que valida. El `init` rechaza precios y cantidades no positivos. La lista del carrito es privada y se entrega como copia de solo lectura. |
 
-El modelo de datos es la `data class Producto`, con los campos `nombre`, `precio` y
-`cantidad`.
+## Estructura de clases
 
-## Reto adicional
+```
+ProductoBase (abstracta)
+├── ProductoElectronico      (mesesGarantia)
+└── ProductoAlmacenamiento   (capacidadGB)
 
-- **Buscar producto:** `buscarProducto` usa la función `find` de las listas y devuelve
-  un tipo nullable, porque el producto puede no estar en el carrito.
-- **Eliminar producto:** se elimina con `removeIf` y se vuelven a mostrar el detalle y
-  todos los totales recalculados.
-
-## Captura de la consola
-
-> Pendiente de agregar: guardar la imagen como `captura-consola.png` en esta misma
-> carpeta y reemplazar esta nota por `![Salida del programa](captura-consola.png)`.
-
-Salida obtenida al ejecutar el programa:
-
-```text
-=========================================
-   CARRITO DE COMPRAS - TIENDA TECSUP
-=========================================
-Cliente: Renzo Leon
-
-Producto agregado: Laptop HP
-Producto agregado: Mouse Logitech
-Producto agregado: Audifonos Sony
-Producto agregado: USB Kingston 64GB
-
---------- DETALLE DEL CARRITO ---------
-1. Laptop HP            x1  S/  2500.00
-2. Mouse Logitech       x2  S/    91.00
-3. Audifonos Sony       x1  S/   120.00
-4. USB Kingston 64GB    x3  S/    75.00
----------------------------------------
-Cantidad de productos : 4
-Subtotal              : S/  2786.00
-IGV (18%)             : S/   501.48
-TOTAL A PAGAR         : S/  3287.48
----------------------------------------
-Producto mas caro: Laptop HP (S/ 2500.00)
-Descuento aplicado: 5% por compra mayor a S/ 3000
-TOTAL CON DESCUENTO   : S/  3123.11
-
---------- BUSCAR PRODUCTO ---------
-Producto encontrado: Mouse Logitech
-Precio: S/ 45.50
-Cantidad: 2
-
---------- ELIMINAR PRODUCTO ---------
-Producto eliminado: USB Kingston 64GB
-
---------- DETALLE DEL CARRITO ---------
-1. Laptop HP            x1  S/  2500.00
-2. Mouse Logitech       x2  S/    91.00
-3. Audifonos Sony       x1  S/   120.00
----------------------------------------
-Cantidad de productos : 3
-Subtotal              : S/  2711.00
-IGV (18%)             : S/   487.98
-TOTAL A PAGAR         : S/  3198.98
-TOTAL CON DESCUENTO   : S/  3039.03
-
-Gracias por su compra, Renzo Leon!
+Carrito            — guarda los productos y hace los cálculos
+ReporteConsola     — solo se ocupa de mostrar
 ```
 
-## ¿Por qué `nombre` y `precio` son `val` pero `cantidad` es `var`?
+Calcular y presentar están separados: si mañana el reporte va a una pantalla Android
+en vez de a la consola, `Carrito` no se toca.
 
-<!--
-    ESCRIBE TU RESPUESTA AQUÍ, con tus palabras.
+---
 
-    Es la misma pregunta de la defensa oral, así que piénsala bien.
-    Dos cosas que tienes que responder:
+# Prompts utilizados
 
-      1. Por qué el nombre y el precio de un producto no deberían cambiar una vez
-         creado el objeto, y en cambio la cantidad sí. Piénsalo desde el negocio:
-         en un carrito real, ¿qué modificas mientras compras?
+Un prompt por bloque, un bloque por commit. Todos siguen la misma estructura de cuatro
+partes, porque un prompt sin criterio de aceptación deja que el modelo decida solo si
+acertó:
 
-      2. Qué pasaría si intentas cambiar el precio después de crear el producto.
-         (Pista: no es un error al ejecutar. Ocurre antes.)
+| Parte | Para qué sirve |
+|---|---|
+| **Contexto** | Qué es el programa y en qué estado está antes del cambio |
+| **Tarea** | Qué se pide, en una sola frase |
+| **Restricciones** | Los límites que no se pueden cruzar |
+| **Criterio de aceptación** | Cómo se comprueba que el resultado es correcto |
 
-    Borra este comentario cuando termines.
--->
+---
+
+## Bloque 1 — POO base
+
+**Contexto.** Tengo un programa de consola en Kotlin que simula el carrito de compras
+de una tienda. Ahora mismo es código procedural: una `data class Producto` y cinco
+funciones sueltas —`calcularSubtotal`, `calcularIGV`, `calcularTotal`, `mostrarDetalle`
+y `calcularDescuento`— que reciben la lista de productos por parámetro, más un `main`
+que las orquesta.
+
+**Tarea.** Reestructúralo a programación orientada a objetos: que el carrito sea un
+objeto con su propio estado y sus propias operaciones, en lugar de una lista que se
+pasa de función en función.
+
+**Restricciones.** La salida en consola debe quedar exactamente igual, carácter por
+carácter. Solo Kotlin estándar, sin librerías externas. Todo en un solo archivo y en un
+nivel que un alumno de cuarto ciclo pueda explicar en una defensa oral: sin inyección de
+dependencias, sin genéricos, sin corrutinas.
+
+**Criterio de aceptación.** Al ejecutar, el subtotal sigue siendo 2786.00, el IGV
+501.48, el total 3287.48 y el total con descuento 3123.11, con las columnas alineadas
+igual que antes.
+
+---
+
+## Bloque 2 — Abstracción
+
+**Contexto.** El programa ya está en clases: `Producto`, `Carrito` y `ReporteConsola`.
+`Producto` es una clase concreta que calcula su importe multiplicando precio por
+cantidad.
+
+**Tarea.** Introduce una clase abstracta `ProductoBase` que defina el contrato que todo
+producto debe cumplir, y haz que `Producto` la implemente.
+
+**Restricciones.** La clase abstracta debe declarar **qué** sabe hacer un producto, no
+**cómo** lo hace. El carrito debe trabajar contra el tipo abstracto, no contra la clase
+concreta. No cambies todavía los tipos de producto que se crean en `main`. La salida no
+puede cambiar.
+
+**Criterio de aceptación.** `ProductoBase` no se puede instanciar directamente, el
+carrito almacena `ProductoBase` y la salida sigue siendo idéntica.
+
+---
+
+## Bloque 3 — Herencia
+
+**Contexto.** Existe `ProductoBase` como clase abstracta, con una única implementación
+concreta genérica.
+
+**Tarea.** Crea dos subclases que hereden de `ProductoBase` y modelen los productos
+reales del carrito: uno para artículos electrónicos y otro para artículos de
+almacenamiento.
+
+**Restricciones.** Cada subclase debe aportar al menos un atributo propio que la
+distinga, y ese atributo tiene que tener sentido de negocio, no ser relleno. Los
+importes no pueden cambiar: los cuatro productos siguen costando lo mismo. La salida no
+puede cambiar.
+
+**Criterio de aceptación.** El `main` construye los productos usando las subclases, y
+los montos del reporte siguen dando 2786.00, 501.48, 3287.48 y 3123.11.
+
+---
+
+## Bloque 4 — Polimorfismo
+
+**Contexto.** Ya hay dos subclases que heredan de `ProductoBase`, pero el programa
+todavía no aprovecha esa diferencia: las trata a todas igual.
+
+**Tarea.** Haz que cada subclase responda a su manera a los métodos de la clase base, y
+agrega al reporte una sección que lo demuestre recorriendo la lista sin preguntar de
+qué tipo es cada producto.
+
+**Restricciones.** Prohibido usar `is`, `when` sobre el tipo o cualquier comprobación de
+clase para decidir qué imprimir: eso sería lo contrario del polimorfismo. La nueva
+sección se agrega **después** del bloque de totales, para no alterar ninguna de las
+líneas que ya existían. Los montos siguen intactos.
+
+**Criterio de aceptación.** Un mismo bucle imprime descripciones distintas según el tipo
+real de cada objeto, y las líneas del reporte original quedan sin tocar.
+
+---
+
+## Bloque 5 — Encapsulamiento
+
+**Contexto.** Las clases ya usan abstracción, herencia y polimorfismo, pero el estado
+sigue expuesto: `cantidad` es una propiedad pública mutable y cualquiera puede ponerle
+un valor absurdo desde fuera.
+
+**Tarea.** Cierra el estado de las clases: que los atributos solo se modifiquen desde
+adentro, a través de métodos que validen.
+
+**Restricciones.** Debe rechazarse un precio menor o igual a cero, una cantidad menor o
+igual a cero y un nombre vacío, y el rechazo tiene que ocurrir al construir el objeto,
+no después. La lista interna del carrito no puede quedar expuesta de forma que alguien
+la modifique saltándose las operaciones del carrito. Agrega una demostración en consola
+de que una cantidad inválida se rechaza. Los montos del reporte siguen intactos.
+
+**Criterio de aceptación.** Intentar poner una cantidad en cero lanza una excepción con
+mensaje claro, el programa la captura y sigue corriendo, y los totales no cambian.
+
+---
+
+## Bloque 6 — Integración y documentación
+
+**Contexto.** Los cinco bloques anteriores están aplicados y commiteados por separado.
+
+**Tarea.** Revisa el conjunto, verifica que la salida sigue coincidiendo con la de la
+rama sin IA, y documenta en el README qué pilar de la POO quedó en qué parte del código
+junto con los prompts usados en cada bloque.
+
+**Restricciones.** La documentación tiene que señalar clases y métodos concretos, no
+hablar en general de los pilares. Los prompts se transcriben tal como se usaron.
+
+**Criterio de aceptación.** El README permite a un tercero abrir el código y encontrar
+cada pilar sin buscarlo a ciegas, y la salida verificada coincide con la de `S02-R1`.
+
+---
 
 ## Cómo ejecutarlo
 
@@ -117,3 +181,7 @@ Gracias por su compra, Renzo Leon!
 3. Pulsar el botón ▶ verde del margen izquierdo, junto a `fun main()`, y elegir
    *Run 'CarritoKt'*.
 4. El resultado aparece en la pestaña **Run**.
+
+> Si Android Studio falla con *SourceSet with name 'main' not found*, cambiar en
+> **Settings → Build, Execution, Deployment → Build Tools → Gradle** la opción
+> *Build and run using* a **IntelliJ IDEA**.
