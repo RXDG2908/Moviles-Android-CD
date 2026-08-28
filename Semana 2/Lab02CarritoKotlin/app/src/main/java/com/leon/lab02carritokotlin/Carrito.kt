@@ -1,12 +1,11 @@
 package com.leon.lab02carritokotlin
 
 // =====================================================================
-// Rama R2 (con IA) - Bloque 2: Abstraccion
+// Rama R2 (con IA) - Bloque 3: Herencia
 //
-// Se define ProductoBase, una clase abstracta que fija el contrato que
-// todo producto debe cumplir: saber calcular su importe y saber decir
-// que tipo es. La clase abstracta no se puede instanciar; solo describe
-// QUE debe hacer un producto, no COMO.
+// De ProductoBase nacen dos tipos concretos que heredan sus atributos y
+// su contrato, y agregan lo suyo propio: los electronicos tienen meses
+// de garantia, los de almacenamiento tienen capacidad en GB.
 // =====================================================================
 
 const val TASA_IGV = 0.18
@@ -16,7 +15,6 @@ abstract class ProductoBase(
     val precio: Double,
     var cantidad: Int
 ) {
-    // Contrato: cada producto concreto decide como responde a esto.
     abstract val tipo: String
 
     abstract fun calcularImporte(): Double
@@ -24,13 +22,26 @@ abstract class ProductoBase(
     open fun etiqueta(): String = "$nombre ($tipo)"
 }
 
-class Producto(
+class ProductoElectronico(
     nombre: String,
     precio: Double,
-    cantidad: Int
+    cantidad: Int,
+    val mesesGarantia: Int
 ) : ProductoBase(nombre, precio, cantidad) {
 
-    override val tipo: String = "General"
+    override val tipo: String = "Electronico"
+
+    override fun calcularImporte(): Double = precio * cantidad
+}
+
+class ProductoAlmacenamiento(
+    nombre: String,
+    precio: Double,
+    cantidad: Int,
+    val capacidadGB: Int
+) : ProductoBase(nombre, precio, cantidad) {
+
+    override val tipo: String = "Almacenamiento"
 
     override fun calcularImporte(): Double = precio * cantidad
 }
@@ -155,10 +166,10 @@ fun main() {
     val carrito = Carrito("Renzo Leon")
     val reporte = ReporteConsola(carrito)
 
-    carrito.agregar(Producto("Laptop HP", 2500.0, 1))
-    carrito.agregar(Producto("Mouse Logitech", 45.5, 2))
-    carrito.agregar(Producto("Audifonos Sony", 120.0, 1))
-    carrito.agregar(Producto("USB Kingston 64GB", 25.0, 3))
+    carrito.agregar(ProductoElectronico("Laptop HP", 2500.0, 1, 24))
+    carrito.agregar(ProductoElectronico("Mouse Logitech", 45.5, 2, 12))
+    carrito.agregar(ProductoElectronico("Audifonos Sony", 120.0, 1, 12))
+    carrito.agregar(ProductoAlmacenamiento("USB Kingston 64GB", 25.0, 3, 64))
 
     reporte.imprimirCabecera()
     reporte.imprimirProductosAgregados()
