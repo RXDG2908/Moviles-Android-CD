@@ -1,11 +1,12 @@
 package com.leon.lab02carritokotlin
 
 // =====================================================================
-// Rama R2 (con IA) - Bloque 3: Herencia
+// Rama R2 (con IA) - Bloque 4: Polimorfismo
 //
-// De ProductoBase nacen dos tipos concretos que heredan sus atributos y
-// su contrato, y agregan lo suyo propio: los electronicos tienen meses
-// de garantia, los de almacenamiento tienen capacidad en GB.
+// El reporte recorre la lista tratando a todos como ProductoBase, sin
+// preguntar de que tipo son. Cada subclase responde a etiqueta() y a
+// descripcionGarantia() a su manera, y es Kotlin quien decide en tiempo
+// de ejecucion cual version se ejecuta.
 // =====================================================================
 
 const val TASA_IGV = 0.18
@@ -20,6 +21,8 @@ abstract class ProductoBase(
     abstract fun calcularImporte(): Double
 
     open fun etiqueta(): String = "$nombre ($tipo)"
+
+    open fun descripcionGarantia(): String = "Sin garantia"
 }
 
 class ProductoElectronico(
@@ -32,6 +35,10 @@ class ProductoElectronico(
     override val tipo: String = "Electronico"
 
     override fun calcularImporte(): Double = precio * cantidad
+
+    override fun etiqueta(): String = "$nombre [$tipo]"
+
+    override fun descripcionGarantia(): String = "Garantia de $mesesGarantia meses"
 }
 
 class ProductoAlmacenamiento(
@@ -44,6 +51,10 @@ class ProductoAlmacenamiento(
     override val tipo: String = "Almacenamiento"
 
     override fun calcularImporte(): Double = precio * cantidad
+
+    override fun etiqueta(): String = "$nombre [$tipo, ${capacidadGB}GB]"
+
+    override fun descripcionGarantia(): String = "Cambio por defecto de fabrica"
 }
 
 class Carrito(val cliente: String) {
@@ -156,6 +167,17 @@ class ReporteConsola(private val carrito: Carrito) {
             carrito.calcularTotal() - carrito.calcularDescuento()))
     }
 
+    // Polimorfismo: el bucle no sabe ni pregunta de que tipo es cada
+    // producto. Llama al mismo metodo y cada objeto responde a su modo.
+    fun imprimirClasificacion() {
+        println()
+        println("------ CLASIFICACION DE PRODUCTOS ------")
+        for (p in carrito.listar()) {
+            println(String.format("%-32s %s", p.etiqueta(), p.descripcionGarantia()))
+        }
+        println("---------------------------------------")
+    }
+
     fun imprimirDespedida() {
         println()
         println("Gracias por su compra, ${carrito.cliente}!")
@@ -179,13 +201,15 @@ fun main() {
     reporte.imprimirProductoMasCaro()
     reporte.imprimirDescuento()
 
+    reporte.imprimirClasificacion()
+
     // ---------- Reto adicional ----------
 
     println()
     println("--------- BUSCAR PRODUCTO ---------")
     val encontrado = carrito.buscar("Mouse Logitech")
     if (encontrado != null) {
-        println("Producto encontrado: ${encontrado.nombre}")
+        println("Producto encontrado: ${encontrado.etiqueta()}")
         println("Precio: S/ ${String.format("%.2f", encontrado.precio)}")
         println("Cantidad: ${encontrado.cantidad}")
     } else {
