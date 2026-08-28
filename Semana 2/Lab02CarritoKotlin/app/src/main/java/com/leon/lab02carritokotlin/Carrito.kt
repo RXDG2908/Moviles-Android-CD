@@ -1,21 +1,34 @@
 package com.leon.lab02carritokotlin
 
 // =====================================================================
-// Rama R2 (con IA) - Bloque 4: Polimorfismo
+// Rama R2 (con IA) - Bloque 5: Encapsulamiento
 //
-// El reporte recorre la lista tratando a todos como ProductoBase, sin
-// preguntar de que tipo son. Cada subclase responde a etiqueta() y a
-// descripcionGarantia() a su manera, y es Kotlin quien decide en tiempo
-// de ejecucion cual version se ejecuta.
+// El estado deja de estar expuesto. La cantidad solo se modifica por un
+// metodo que valida, el precio se valida al construir el objeto, y la
+// lista del carrito se entrega como solo lectura para que nadie la
+// modifique por fuera de las operaciones del propio carrito.
 // =====================================================================
 
 const val TASA_IGV = 0.18
 
 abstract class ProductoBase(
     val nombre: String,
-    val precio: Double,
-    var cantidad: Int
+    precio: Double,
+    cantidad: Int
 ) {
+    // El estado queda privado; afuera solo se ve lo que se decide exponer.
+    var precio: Double = precio
+        private set
+
+    var cantidad: Int = cantidad
+        private set
+
+    init {
+        require(nombre.isNotBlank()) { "El nombre del producto no puede estar vacio" }
+        require(precio > 0) { "El precio debe ser mayor que cero" }
+        require(cantidad > 0) { "La cantidad debe ser mayor que cero" }
+    }
+
     abstract val tipo: String
 
     abstract fun calcularImporte(): Double
@@ -23,6 +36,17 @@ abstract class ProductoBase(
     open fun etiqueta(): String = "$nombre ($tipo)"
 
     open fun descripcionGarantia(): String = "Sin garantia"
+
+    // Unica puerta de entrada para cambiar la cantidad.
+    fun cambiarCantidad(nuevaCantidad: Int) {
+        require(nuevaCantidad > 0) { "La cantidad debe ser mayor que cero" }
+        cantidad = nuevaCantidad
+    }
+
+    fun aplicarDescuentoUnitario(porcentaje: Double) {
+        require(porcentaje in 0.0..1.0) { "El porcentaje debe estar entre 0 y 1" }
+        precio -= precio * porcentaje
+    }
 }
 
 class ProductoElectronico(
@@ -99,7 +123,9 @@ class Carrito(val cliente: String) {
 
     fun productoMasCaro(): ProductoBase? = productos.maxByOrNull { it.precio }
 
-    fun listar(): List<ProductoBase> = productos
+    // Se entrega una vista de solo lectura: afuera se puede recorrer,
+    // pero no agregar ni quitar saltandose las reglas del carrito.
+    fun listar(): List<ProductoBase> = productos.toList()
 }
 
 class ReporteConsola(private val carrito: Carrito) {
@@ -167,8 +193,6 @@ class ReporteConsola(private val carrito: Carrito) {
             carrito.calcularTotal() - carrito.calcularDescuento()))
     }
 
-    // Polimorfismo: el bucle no sabe ni pregunta de que tipo es cada
-    // producto. Llama al mismo metodo y cada objeto responde a su modo.
     fun imprimirClasificacion() {
         println()
         println("------ CLASIFICACION DE PRODUCTOS ------")
@@ -202,6 +226,19 @@ fun main() {
     reporte.imprimirDescuento()
 
     reporte.imprimirClasificacion()
+
+    // ---------- Validaciones del encapsulamiento ----------
+
+    println()
+    println("------ VALIDACION DE CANTIDAD ------")
+    try {
+        val mouse = carrito.buscar("Mouse Logitech")
+        mouse?.cambiarCantidad(0)
+    } catch (e: IllegalArgumentException) {
+        println("Rechazado: ${e.message}")
+    }
+    println("La cantidad solo cambia por cambiarCantidad(), que valida antes")
+    println("---------------------------------------")
 
     // ---------- Reto adicional ----------
 
