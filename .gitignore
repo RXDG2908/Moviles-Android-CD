@@ -1,0 +1,19 @@
+# Android Studio / IntelliJ
+.idea/
+*.iml
+.gradle/
+local.properties
+build/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Kotlin / Java
+*.class
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
