@@ -164,3 +164,16 @@ independiente a partir de ese mismo prompt.
 > formatee cualquier importe con el prefijo `"S/ "` y exactamente
 > 2 decimales. Por ejemplo, `BigDecimal("4")` debe mostrarse como
 > `"S/ 4.00"`, y `BigDecimal("10")` como `"S/ 10.00"`.
+
+---
+
+## 11. Nuevo tipo de vehículo — `TRAILER`
+
+📄 `src/main/kotlin/com/leon/s02parking/model/VehicleType.kt`
+📄 `src/main/kotlin/com/leon/s02parking/Main.kt`
+
+> Agrega un cuarto valor al `enum class VehicleType`: **Trailer**, con
+> etiqueta `"Trailer"` y tarifa básica `BigDecimal("20.00")` por hora.
+> Actualiza el menú numerado de `leerTipoVehiculo()` en `Main.kt` para
+> incluir la opción `4. Trailer`, devolviendo `VehicleType.TRAILER` cuando
+> se seleccione.

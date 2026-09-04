@@ -58,4 +58,10 @@ class ParkingCalculatorTest {
         val detalle = ParkingCalculator.calcularDetallePorHora(VehicleType.AUTO.tarifaPorHora, 6)
         assertEquals(50, detalle[5].recargoPorcentaje)
     }
+
+    @Test
+    fun `caso 7 trailer 1 hora`() {
+        val registro = ParkingCalculator.calcular("ABC-123", VehicleType.TRAILER, 1, false)
+        assertEquals(BigDecimal("20.00"), registro.subtotal)
+    }
 }

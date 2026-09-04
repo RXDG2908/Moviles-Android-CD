@@ -55,11 +55,13 @@ fun leerTipoVehiculo(): VehicleType {
         println("  1. Moto")
         println("  2. Auto")
         println("  3. Camioneta")
+        println("  4. Trailer")
         print("Selecciona una opción: ")
         when (readLine()?.trim()) {
             "1" -> return VehicleType.MOTO
             "2" -> return VehicleType.AUTO
             "3" -> return VehicleType.CAMIONETA
+            "4" -> return VehicleType.TRAILER
             else -> println("Selecciona el tipo de vehículo.")
         }
     }

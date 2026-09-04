@@ -8,5 +8,6 @@ import java.math.BigDecimal
 enum class VehicleType(val etiqueta: String, val tarifaPorHora: BigDecimal) {
     MOTO("Moto", BigDecimal("2.00")),
     AUTO("Auto", BigDecimal("4.00")),
-    CAMIONETA("Camioneta", BigDecimal("10.00"))
+    CAMIONETA("Camioneta", BigDecimal("10.00")),
+    TRAILER("Trailer", BigDecimal("20.00"))
 }
