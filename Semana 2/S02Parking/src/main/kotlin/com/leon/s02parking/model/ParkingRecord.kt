@@ -22,6 +22,7 @@ data class ParkingRecord(
     val clienteFrecuente: Boolean,
     val detalle: List<HourDetail>,
     val subtotal: BigDecimal,
-    val descuento: BigDecimal,
+    val descuentoFrecuente: BigDecimal,
+    val descuentoPorMonto: BigDecimal,
     val total: BigDecimal
 )

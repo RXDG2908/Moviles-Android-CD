@@ -177,3 +177,35 @@ independiente a partir de ese mismo prompt.
 > Actualiza el menú numerado de `leerTipoVehiculo()` en `Main.kt` para
 > incluir la opción `4. Trailer`, devolviendo `VehicleType.TRAILER` cuando
 > se seleccione.
+
+---
+
+## 12. Nuevos tramos de recargo y descuento adicional por monto
+
+📄 `src/main/kotlin/com/leon/s02parking/model/ParkingCalculator.kt`
+📄 `src/main/kotlin/com/leon/s02parking/model/ParkingRecord.kt`
+📄 `src/main/kotlin/com/leon/s02parking/Main.kt`
+
+> Cambia la tabla de recargo por hora en `calcularDetallePorHora` a:
+>
+> | Hora | Recargo |
+> |---|---|
+> | 1-2 | 0% |
+> | 3-5 | 20% |
+> | 6-10 | 40% |
+> | 11 en adelante | 50% |
+>
+> Agrega una segunda función `calcularDescuentoPorMonto(subtotalOriginal:
+> BigDecimal, montoTrasFrecuente: BigDecimal): BigDecimal`: si el
+> `subtotalOriginal` (el subtotal con recargos, antes de cualquier
+> descuento) supera **S/500**, aplica un descuento adicional del **20%**
+> sobre `montoTrasFrecuente` (el monto que ya quedó luego de restar, si
+> corresponde, el 10% de cliente frecuente); si no supera S/500, el
+> descuento es `0.00`.
+>
+> Este descuento es **adicional** al de cliente frecuente, nunca lo
+> reemplaza: primero se resta el 10% de cliente frecuente sobre el
+> subtotal, y sobre ese resultado se resta el 20% adicional si aplica.
+> Actualiza `ParkingRecord` para exponer `descuentoFrecuente` y
+> `descuentoPorMonto` por separado, y el resumen impreso en `Main.kt` para
+> mostrar ambas líneas.
