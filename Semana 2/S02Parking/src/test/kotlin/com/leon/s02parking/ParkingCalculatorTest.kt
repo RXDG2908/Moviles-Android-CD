@@ -11,13 +11,13 @@ class ParkingCalculatorTest {
     @Test
     fun `caso 1 moto 1 hora`() {
         val registro = ParkingCalculator.calcular("ABC-123", VehicleType.MOTO, 1, false)
-        assertEquals(BigDecimal("2.00"), registro.total)
+        assertEquals(BigDecimal("2.36"), registro.total)
     }
 
     @Test
     fun `caso 2 auto 2 horas`() {
         val registro = ParkingCalculator.calcular("ABC-123", VehicleType.AUTO, 2, false)
-        assertEquals(BigDecimal("8.00"), registro.total)
+        assertEquals(BigDecimal("9.44"), registro.total)
     }
 
     @Test
@@ -30,7 +30,7 @@ class ParkingCalculatorTest {
     @Test
     fun `caso 4 auto 3 horas`() {
         val registro = ParkingCalculator.calcular("ABC-123", VehicleType.AUTO, 3, false)
-        assertEquals(BigDecimal("12.80"), registro.total)
+        assertEquals(BigDecimal("15.10"), registro.total)
     }
 
     @Test
@@ -39,13 +39,15 @@ class ParkingCalculatorTest {
         assertEquals(BigDecimal("12.80"), registro.subtotal)
         assertEquals(BigDecimal("1.28"), registro.descuentoFrecuente)
         assertEquals(BigDecimal("0.00"), registro.descuentoPorMonto)
-        assertEquals(BigDecimal("11.52"), registro.total)
+        assertEquals(BigDecimal("2.07"), registro.igv)
+        assertEquals(BigDecimal("13.59"), registro.total)
     }
 
     @Test
     fun `caso 6 camioneta 6 horas`() {
         val registro = ParkingCalculator.calcular("ABC-123", VehicleType.CAMIONETA, 6, false)
-        assertEquals(BigDecimal("70.00"), registro.total)
+        assertEquals(BigDecimal("12.60"), registro.igv)
+        assertEquals(BigDecimal("82.60"), registro.total)
     }
 
     @Test
@@ -91,11 +93,18 @@ class ParkingCalculatorTest {
     }
 
     @Test
-    fun `caso 8 trailer 19 horas cliente frecuente combina ambos descuentos`() {
+    fun `caso 8 trailer 19 horas cliente frecuente combina ambos descuentos y el IGV`() {
         val registro = ParkingCalculator.calcular("ABC-123", VehicleType.TRAILER, 19, true)
         assertEquals(BigDecimal("522.00"), registro.subtotal)
         assertEquals(BigDecimal("52.20"), registro.descuentoFrecuente)
         assertEquals(BigDecimal("93.96"), registro.descuentoPorMonto)
-        assertEquals(BigDecimal("375.84"), registro.total)
+        assertEquals(BigDecimal("67.65"), registro.igv)
+        assertEquals(BigDecimal("443.49"), registro.total)
+    }
+
+    @Test
+    fun `calcularIGV aplica 18 por ciento sobre el monto con descuento`() {
+        val igv = ParkingCalculator.calcularIGV(BigDecimal("100.00"))
+        assertEquals(BigDecimal("18.00"), igv)
     }
 }

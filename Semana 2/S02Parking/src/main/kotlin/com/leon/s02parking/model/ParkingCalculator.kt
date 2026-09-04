@@ -25,6 +25,7 @@ object ParkingCalculator {
     private val DESCUENTO_FRECUENTE = BigDecimal("0.10")
     private val DESCUENTO_POR_MONTO = BigDecimal("0.20")
     private val UMBRAL_DESCUENTO_POR_MONTO = BigDecimal("500")
+    private val IGV = BigDecimal("0.18")
     private const val ESCALA = 2
 
     /**
@@ -81,10 +82,22 @@ object ParkingCalculator {
         }
 
     /**
-     * Total a pagar luego de restar ambos descuentos al subtotal.
+     * Monto luego de restar ambos descuentos al subtotal, antes de IGV.
      */
-    fun calcularTotal(subtotal: BigDecimal, descuentoFrecuente: BigDecimal, descuentoPorMonto: BigDecimal): BigDecimal =
+    fun calcularMontoConDescuento(subtotal: BigDecimal, descuentoFrecuente: BigDecimal, descuentoPorMonto: BigDecimal): BigDecimal =
         subtotal.subtract(descuentoFrecuente).subtract(descuentoPorMonto).setScale(ESCALA, RoundingMode.HALF_UP)
+
+    /**
+     * IGV del 18% sobre el monto ya con los descuentos aplicados.
+     */
+    fun calcularIGV(montoConDescuento: BigDecimal): BigDecimal =
+        montoConDescuento.multiply(IGV).setScale(ESCALA, RoundingMode.HALF_UP)
+
+    /**
+     * Total final a pagar: monto con descuento más el IGV.
+     */
+    fun calcularTotal(montoConDescuento: BigDecimal, igv: BigDecimal): BigDecimal =
+        montoConDescuento.add(igv).setScale(ESCALA, RoundingMode.HALF_UP)
 
     /**
      * Calcula el registro completo de cobro para un vehículo.
@@ -100,7 +113,9 @@ object ParkingCalculator {
         val descuentoFrecuente = calcularDescuentoFrecuente(subtotal, clienteFrecuente)
         val montoTrasFrecuente = subtotal.subtract(descuentoFrecuente).setScale(ESCALA, RoundingMode.HALF_UP)
         val descuentoPorMonto = calcularDescuentoPorMonto(subtotal, montoTrasFrecuente)
-        val total = calcularTotal(subtotal, descuentoFrecuente, descuentoPorMonto)
+        val montoConDescuento = calcularMontoConDescuento(subtotal, descuentoFrecuente, descuentoPorMonto)
+        val igv = calcularIGV(montoConDescuento)
+        val total = calcularTotal(montoConDescuento, igv)
         return ParkingRecord(
             placa = placa,
             tipo = tipo,
@@ -110,6 +125,7 @@ object ParkingCalculator {
             subtotal = subtotal,
             descuentoFrecuente = descuentoFrecuente,
             descuentoPorMonto = descuentoPorMonto,
+            igv = igv,
             total = total
         )
     }

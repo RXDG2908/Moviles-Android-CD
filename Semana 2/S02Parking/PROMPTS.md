@@ -209,3 +209,19 @@ independiente a partir de ese mismo prompt.
 > Actualiza `ParkingRecord` para exponer `descuentoFrecuente` y
 > `descuentoPorMonto` por separado, y el resumen impreso en `Main.kt` para
 > mostrar ambas líneas.
+
+---
+
+## 13. IGV del 18%
+
+📄 `src/main/kotlin/com/leon/s02parking/model/ParkingCalculator.kt`
+📄 `src/main/kotlin/com/leon/s02parking/model/ParkingRecord.kt`
+📄 `src/main/kotlin/com/leon/s02parking/Main.kt`
+
+> Agrega el cálculo del IGV (18%) al flujo de cobro. Crea
+> `calcularIGV(montoConDescuento: BigDecimal): BigDecimal` que calcule el
+> 18% sobre el monto **ya con los descuentos de cliente frecuente y por
+> monto aplicados** (no sobre el subtotal original). El total final a
+> pagar (`calcularTotal`) debe ser ese monto con descuento más el IGV.
+> Expón el nuevo campo `igv` en `ParkingRecord` y muestra una línea
+> `"IGV (18%):"` en el resumen impreso, justo antes del `TOTAL`.

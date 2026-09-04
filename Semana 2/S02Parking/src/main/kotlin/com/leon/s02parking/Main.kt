@@ -141,6 +141,7 @@ fun imprimirResumen(registro: ParkingRecord) {
     println("Subtotal:              ${registro.subtotal.aMoneda()}")
     println("Descuento frecuente:   ${registro.descuentoFrecuente.aMoneda()}")
     println("Descuento por monto:   ${registro.descuentoPorMonto.aMoneda()}")
+    println("IGV (18%):             ${registro.igv.aMoneda()}")
     println("-".repeat(40))
     println("TOTAL:                 ${registro.total.aMoneda()}")
     println("-".repeat(40))

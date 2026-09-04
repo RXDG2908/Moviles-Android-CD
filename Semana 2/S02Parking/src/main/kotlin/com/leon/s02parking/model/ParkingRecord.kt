@@ -24,5 +24,6 @@ data class ParkingRecord(
     val subtotal: BigDecimal,
     val descuentoFrecuente: BigDecimal,
     val descuentoPorMonto: BigDecimal,
+    val igv: BigDecimal,
     val total: BigDecimal
 )
