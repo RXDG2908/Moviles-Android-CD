@@ -25,8 +25,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.leon.lab03registroproducto.ui.theme.Lab03RegistroProductoTheme
 
@@ -44,8 +44,10 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+// Pantalla del registro de producto
 @Composable
 fun PantallaRegistro(modifier: Modifier = Modifier) {
+    // Estados de la pantalla
     var nombre by remember { mutableStateOf("") }
     var precio by remember { mutableStateOf("") }
     var cantidad by remember { mutableStateOf("") }
@@ -56,6 +58,7 @@ fun PantallaRegistro(modifier: Modifier = Modifier) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
+        // Encabezado
         Text(
             text = "Nuevo producto",
             style = MaterialTheme.typography.headlineSmall
@@ -66,6 +69,8 @@ fun PantallaRegistro(modifier: Modifier = Modifier) {
             color = MaterialTheme.colorScheme.outline
         )
         Spacer(modifier = Modifier.height(24.dp))
+
+        // Campos de ingreso
         OutlinedTextField(
             value = nombre,
             onValueChange = { nombre = it },
@@ -89,6 +94,8 @@ fun PantallaRegistro(modifier: Modifier = Modifier) {
             )
         }
         Spacer(modifier = Modifier.height(24.dp))
+
+        // Boton que muestra el resumen
         Button(
             onClick = { mostrarResumen = true },
             modifier = Modifier.fillMaxWidth()
@@ -96,6 +103,8 @@ fun PantallaRegistro(modifier: Modifier = Modifier) {
             Text("AGREGAR PRODUCTO")
         }
         Spacer(modifier = Modifier.height(24.dp))
+
+        // Resumen del producto registrado
         if (mostrarResumen) {
             val precioNum = precio.toDoubleOrNull() ?: 0.0
             val cantidadNum = cantidad.toIntOrNull() ?: 0
@@ -118,14 +127,12 @@ fun PantallaRegistro(modifier: Modifier = Modifier) {
                     )
                 }
             }
+            Spacer(modifier = Modifier.height(16.dp))
+            // Mensaje de confirmacion
+            Text(
+                text = "✓ Producto registrado correctamente",
+                color = Color(0xFF2E7D32)
+            )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PantallaRegistroPreview() {
-    Lab03RegistroProductoTheme {
-        PantallaRegistro()
     }
 }
