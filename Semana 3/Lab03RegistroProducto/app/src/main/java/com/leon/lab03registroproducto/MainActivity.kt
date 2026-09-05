@@ -99,8 +99,21 @@ fun PantallaRegistro(modifier: Modifier = Modifier) {
         // Boton que muestra el resumen
         Button(
             onClick = {
-                if (nombre == "" || precio == "" || cantidad == "") {
-                    mensajeError = "Faltan datos por completar"
+                // Se avisa exactamente que dato falta o esta mal escrito
+                if (nombre.trim() == "") {
+                    mensajeError = "Falta el nombre del producto"
+                    mostrarResumen = false
+                } else if (precio.trim() == "") {
+                    mensajeError = "Falta el precio"
+                    mostrarResumen = false
+                } else if (cantidad.trim() == "") {
+                    mensajeError = "Falta la cantidad"
+                    mostrarResumen = false
+                } else if (precio.toDoubleOrNull() == null) {
+                    mensajeError = "El precio debe ser un numero"
+                    mostrarResumen = false
+                } else if (cantidad.toIntOrNull() == null) {
+                    mensajeError = "La cantidad debe ser un numero entero"
                     mostrarResumen = false
                 } else {
                     mensajeError = ""
@@ -132,7 +145,7 @@ fun PantallaRegistro(modifier: Modifier = Modifier) {
         if (mensajeError != "") {
             Text(
                 text = mensajeError,
-                color = Color.Red
+                color = MaterialTheme.colorScheme.error
             )
         }
 
