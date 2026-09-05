@@ -52,6 +52,7 @@ fun PantallaRegistro(modifier: Modifier = Modifier) {
     var precio by remember { mutableStateOf("") }
     var cantidad by remember { mutableStateOf("") }
     var mostrarResumen by remember { mutableStateOf(false) }
+    var mensajeError by remember { mutableStateOf("") }
 
     Column(
         modifier = modifier
@@ -97,12 +98,43 @@ fun PantallaRegistro(modifier: Modifier = Modifier) {
 
         // Boton que muestra el resumen
         Button(
-            onClick = { mostrarResumen = true },
+            onClick = {
+                if (nombre == "" || precio == "" || cantidad == "") {
+                    mensajeError = "Faltan datos por completar"
+                    mostrarResumen = false
+                } else {
+                    mensajeError = ""
+                    mostrarResumen = true
+                }
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("AGREGAR PRODUCTO")
         }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Boton que limpia el formulario
+        Button(
+            onClick = {
+                nombre = ""
+                precio = ""
+                cantidad = ""
+                mostrarResumen = false
+                mensajeError = ""
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("LIMPIAR")
+        }
         Spacer(modifier = Modifier.height(24.dp))
+
+        // Mensaje de error de validacion
+        if (mensajeError != "") {
+            Text(
+                text = mensajeError,
+                color = Color.Red
+            )
+        }
 
         // Resumen del producto registrado
         if (mostrarResumen) {
