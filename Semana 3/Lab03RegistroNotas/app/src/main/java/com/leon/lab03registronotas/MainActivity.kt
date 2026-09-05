@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -39,7 +41,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            Lab03RegistroNotasTheme {
+            Lab03RegistroNotasTheme(dynamicColor = false) {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     PantallaNotas(modifier = Modifier.padding(innerPadding))
                 }
@@ -65,6 +67,7 @@ fun PantallaNotas(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
         // Encabezado
@@ -284,6 +287,20 @@ fun PantallaNotas(modifier: Modifier = Modifier) {
                     )
                 }
             }
+            Spacer(modifier = Modifier.height(16.dp))
+            // Mensaje de confirmacion
+            Text(
+                text = "✓ Promedio calculado correctamente",
+                color = Color(0xFF2E7D32)
+            )
         }
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Pie de la pantalla
+        Text(
+            text = "Desarrollado por: Renzo Raul Leon Fernandez",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.outline
+        )
     }
 }
