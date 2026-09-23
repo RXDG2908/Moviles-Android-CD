@@ -9,11 +9,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.leon.tecsupfit.data.Reserva
 import com.leon.tecsupfit.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PerfilScreen(navController: NavController) {
+fun PerfilScreen(navController: NavController, reservas: List<Reserva>) {
+    // Cantidad de reservas que todavía están confirmadas
+    var reservasActivas = 0
+    for (r in reservas) {
+        if (r.estado == "Confirmada") {
+            reservasActivas++
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(title = { Text("Mi perfil", fontWeight = FontWeight.Bold) })
@@ -54,8 +63,8 @@ fun PerfilScreen(navController: NavController) {
                             .padding(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text("14", fontSize = 24.sp, fontWeight = FontWeight.Bold)
-                        Text("Clases")
+                        Text("$reservasActivas", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                        Text("Reservas activas")
                     }
                 }
                 Card(modifier = Modifier.weight(1f)) {

@@ -40,7 +40,7 @@ fun AppNavigation() {
             RutinasScreen(navController)
         }
         composable(Screen.Perfil.route) {
-            PerfilScreen(navController)
+            PerfilScreen(navController, reservas)
         }
         composable(
             route = Screen.Detalle.route,

@@ -161,6 +161,38 @@ tocar un chip ese estado cambia y solo el chip que coincide sale relleno.
 | --- | --- | --- | --- | --- |
 | ![Inicio](ClinicaSalud/capturas/1-inicio.png) | ![Menú](ClinicaSalud/capturas/2-menu-lateral.png) | ![Agendar](ClinicaSalud/capturas/3-agendar.png) | ![Confirmación](ClinicaSalud/capturas/4-confirmacion.png) | ![Mis citas](ClinicaSalud/capturas/5-mis-citas.png) |
 
+## Rama mejora-ia (con IA)
+
+Esta rama parte de `main`. En TECSUP Fit y Clínica Salud+ se agregaron 7 mejoras en
+cada una, un bloque por commit: la mejora funcional que pide la tarea, los pilares de la
+programación orientada a objetos (POO, abstracción, herencia, polimorfismo y
+encapsulamiento) y la documentación. Los prompts usados, lo que generaron y lo que hubo
+que corregir están en el `PROMPTS.md` de cada proyecto.
+
+### TECSUP Fit
+
+| Bloque | Mejora | Qué se hizo | Estado |
+| --- | --- | --- | --- |
+| 1 | Mejora funcional | Cancelar una reserva confirmada con un cuadro de confirmación, aviso cuando no quedan reservas próximas y reservas activas reales en el Perfil | Hecho |
+| 2 | POO | `GestorReservas` guarda las reservas y hace reservar, cancelar y contar | Pendiente |
+| 3 | Abstracción | `ClaseGimnasio` abstracta: el contrato de toda clase (tipo y detalle extra) | Pendiente |
+| 4 | Herencia | `ClaseCardio` (calorías) y `ClaseBienestar` (nivel) heredan de `ClaseGimnasio` | Pendiente |
+| 5 | Polimorfismo | Inicio y Detalle muestran el tipo, el detalle y la recomendación de cada clase sin preguntar cuál es | Pendiente |
+| 6 | Encapsulamiento | Lista privada de solo lectura, reservas repetidas rechazadas y validaciones al crear una clase | Pendiente |
+| 7 | Integración | Esta documentación y `TecsupFit/PROMPTS.md` | Pendiente |
+
+### Clínica Salud+
+
+| Bloque | Mejora | Qué se hizo | Estado |
+| --- | --- | --- | --- |
+| 1 | Mejora funcional | Cancelar una cita confirmada desde el menú de tres puntos, con un cuadro de confirmación | Pendiente |
+| 2 | POO | `Agenda` guarda las citas y hace agendar y cancelar | Pendiente |
+| 3 | Abstracción | `MedicoBase` abstracta: el contrato de todo médico (tipo de atención e indicaciones) | Pendiente |
+| 4 | Herencia | `MedicoEspecialista` (requisito) y `MedicoPediatra` (edad máxima) heredan de `MedicoBase` | Pendiente |
+| 5 | Polimorfismo | El perfil del médico y Agendar muestran indicaciones y duración de la consulta según el tipo, sin preguntar cuál es | Pendiente |
+| 6 | Encapsulamiento | Lista privada de solo lectura, dos citas a la misma hora rechazadas y validaciones al crear un médico | Pendiente |
+| 7 | Integración | Esta documentación y `ClinicaSalud/PROMPTS.md` | Pendiente |
+
 ## Avance
 
 ### Rama main
@@ -192,6 +224,18 @@ tocar un chip ese estado cambia y solo el chip que coincide sale relleno.
 
 ### Rama mejora-ia
 
+- [x] Bloque 1 Mejora funcional TecsupFit: cancela reservas con AlertDialog, avisa sin reservas y cuenta las activas
+- [ ] Bloque 2 POO TecsupFit: GestorReservas guarda las reservas y sus operaciones
+- [ ] Bloque 3 Abstraccion TecsupFit: ClaseGimnasio define el contrato de toda clase
+- [ ] Bloque 4 Herencia TecsupFit: ClaseCardio y ClaseBienestar heredan de ClaseGimnasio
+- [ ] Bloque 5 Polimorfismo TecsupFit: cada tipo de clase muestra su detalle y su recomendacion
+- [ ] Bloque 6 Encapsulamiento TecsupFit: lista privada de solo lectura y reservas validadas
+- [ ] Bloque 7 Integracion TecsupFit: documenta pilares y prompts en README y PROMPTS.md
+- [ ] Bloque 1 Mejora funcional ClinicaSalud: cancela citas desde el menu de tres puntos con AlertDialog
+- [ ] Bloque 2 POO ClinicaSalud: Agenda guarda las citas y sus operaciones
+- [ ] Bloque 3 Abstraccion ClinicaSalud: MedicoBase define el contrato de todo medico
+- [ ] Bloque 4 Herencia ClinicaSalud: MedicoEspecialista y MedicoPediatra heredan de MedicoBase
+- [ ] Bloque 5 Polimorfismo ClinicaSalud: indicaciones y duracion de consulta segun el tipo de medico
+- [ ] Bloque 6 Encapsulamiento ClinicaSalud: lista privada de solo lectura y citas validadas
+- [ ] Bloque 7 Integracion ClinicaSalud: documenta pilares y prompts en README y PROMPTS.md
 - [ ] Guía: mejora de la presentación con componentes independientes y el prompt en este README
-- [ ] TECSUP Fit: mejora funcional con IA y `PROMPTS.md`
-- [ ] Clínica Salud+: mejora funcional con IA y `PROMPTS.md`
