@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.leon.clinicasalud.data.Medico
+import com.leon.clinicasalud.data.MedicoBase
 import com.leon.clinicasalud.data.medicos
 import com.leon.clinicasalud.navigation.Screen
 import kotlinx.coroutines.launch
@@ -104,7 +104,7 @@ fun HomeScreen(navController: NavController) {
 
 // Tarjeta de un médico: nombre, especialidad y calificación
 @Composable
-fun TarjetaMedico(medico: Medico, onClick: () -> Unit) {
+fun TarjetaMedico(medico: MedicoBase, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

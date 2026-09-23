@@ -11,7 +11,7 @@ class Agenda {
     )
 
     // Crea una cita confirmada con el médico, la fecha y la hora elegidos
-    fun agendar(medico: Medico, fecha: String, hora: String) {
+    fun agendar(medico: MedicoBase, fecha: String, hora: String) {
         citas.add(Cita(medico.nombre, fecha, hora, "Confirmada"))
     }
 

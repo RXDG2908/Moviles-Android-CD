@@ -82,3 +82,28 @@ reciben la agenda y solo llaman a sus funciones.
 
 **Qué se corrigió.** Nada. La lista `citas` quedó pública dentro de la agenda, y se cierra
 en el bloque 6.
+
+---
+
+## Bloque 3 — Abstracción: MedicoBase
+
+> **Contexto.** Los médicos son una `data class Medico` (id, nombre, especialidad,
+> calificación, reseñas, experiencia y descripción) en `Datos.kt`, y la usan Inicio, Perfil
+> del médico, Agendar, Confirmación y Agenda.
+>
+> **Tarea.** Crea una clase abstracta `MedicoBase` que defina el contrato de todo médico, y
+> una implementación concreta `MedicoGeneral` para los médicos actuales.
+>
+> **Restricciones.** La clase abstracta declara **qué** sabe decir un médico (su tipo de
+> atención y sus indicaciones para la consulta), no **cómo**. Pantallas y Agenda trabajan
+> con el tipo abstracto. Todavía no crees tipos distintos de médico. La app debe verse
+> igual.
+>
+> **Criterio de aceptación.** `MedicoBase` no se puede instanciar, la lista `medicos` es
+> `List<MedicoBase>` y todo funciona igual.
+
+**Qué generó.** `data/MedicoBase.kt` con la clase abstracta (`abstract val tipoAtencion`
+y `abstract fun indicaciones()`) y `MedicoGeneral`. La lista `medicos` quedó como
+`List<MedicoBase>`.
+
+**Qué se corrigió.** Nada.

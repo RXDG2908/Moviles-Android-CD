@@ -1,16 +1,5 @@
 package com.leon.clinicasalud.data
 
-// Un médico de la lista de Inicio
-data class Medico(
-    val id: Int,
-    val nombre: String,
-    val especialidad: String,     // sirve para el filtro de chips
-    val calificacion: Double,
-    val resenas: Int,
-    val experiencia: String,
-    val descripcion: String
-)
-
 // Una cita agendada por el paciente
 data class Cita(
     val medico: String,
@@ -19,12 +8,12 @@ data class Cita(
     val estado: String            // "Confirmada" o "Completada"
 )
 
-val medicos = listOf(
-    Medico(1, "Dra. Ana Torres", "Cardiología", 4.9, 128, "12 años exp.",
+val medicos: List<MedicoBase> = listOf(
+    MedicoGeneral(1, "Dra. Ana Torres", "Cardiología", 4.9, 128, "12 años exp.",
         "Especialista en arritmias e hipertensión, formación en la Clínica Mayo."),
-    Medico(2, "Dr. Luis Vega", "Pediatría", 4.7, 96, "8 años exp.",
+    MedicoGeneral(2, "Dr. Luis Vega", "Pediatría", 4.7, 96, "8 años exp.",
         "Atención de niños y adolescentes, control de crecimiento y vacunas."),
-    Medico(3, "Dra. Rosa Díaz", "Dermatología", 4.8, 74, "10 años exp.",
+    MedicoGeneral(3, "Dra. Rosa Díaz", "Dermatología", 4.8, 74, "10 años exp.",
         "Tratamiento de enfermedades de la piel y dermatología estética.")
 )
 
