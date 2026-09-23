@@ -30,7 +30,7 @@ Detalle, que recibe el número del elemento elegido.
 | 1 y 2 | Crear el proyecto y agregar la dependencia `navigation-compose` | Hecho |
 | 3 y 4 | Paquetes `navigation` y `screens`, y rutas en `Screen.kt` con una sealed class | Hecho |
 | 5 | `AppNavigation` con el `NavHost` y `MainActivity` que lo muestra | Hecho |
-| 6 | `HomeScreen` y `ListScreen` con `LazyColumn` | Pendiente |
+| 6 | `HomeScreen` y `ListScreen` con `LazyColumn` | Hecho |
 | 7 | `DetailScreen` con el argumento `itemId` y `ProfileScreen` con `popUpTo` | Pendiente |
 | 8 | Ejecutar y verificar el flujo completo | Pendiente |
 
@@ -75,7 +75,7 @@ y Confirmación, y la navegación secundaria es un menú lateral que se abre con
 - [x] Guía: Crea proyecto Semana05_Navegacion en Semana 5 con navigation-compose
 - [x] Guía: Agrega Screen con las rutas de la guia en una sealed class
 - [x] Guía: Agrega AppNavigation con NavHost, HomeScreen y conecta MainActivity
-- [ ] Guía: Agrega ListScreen con LazyColumn y registra la ruta list
+- [x] Guía: Agrega ListScreen con LazyColumn y registra la ruta list
 - [ ] Guía: Agrega DetailScreen con argumento itemId y ProfileScreen con popUpTo
 - [ ] Guía: Agrega capturas del flujo de la guia al README
 - [ ] TECSUP Fit: Crea proyecto TecsupFit en Semana 5 con navigation-compose y color verde

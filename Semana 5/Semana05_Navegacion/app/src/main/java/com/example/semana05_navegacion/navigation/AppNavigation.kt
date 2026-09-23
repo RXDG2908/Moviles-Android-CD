@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.semana05_navegacion.screens.HomeScreen
+import com.example.semana05_navegacion.screens.ListScreen
 
 @Composable
 fun AppNavigation() {
@@ -16,6 +17,9 @@ fun AppNavigation() {
     ) {
         composable(Screen.Home.route) {
             HomeScreen(navController)
+        }
+        composable(Screen.List.route) {
+            ListScreen(navController)
         }
     }
 }
