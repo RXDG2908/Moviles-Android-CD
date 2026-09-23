@@ -1,5 +1,6 @@
 package com.leon.tecsupfit.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -64,7 +65,12 @@ fun HomeScreen(navController: NavController) {
             LazyColumn {
                 items(clases) { clase ->
                     if (clase.dia == filtroElegido) {
-                        TarjetaClase(clase = clase)
+                        TarjetaClase(
+                            clase = clase,
+                            onClick = {
+                                navController.navigate(Screen.Detalle.createRoute(clase.id))
+                            }
+                        )
                     }
                 }
             }
@@ -74,11 +80,12 @@ fun HomeScreen(navController: NavController) {
 
 // Tarjeta de una clase: nombre y horario
 @Composable
-fun TarjetaClase(clase: Clase) {
+fun TarjetaClase(clase: Clase, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 8.dp)
+            .clickable { onClick() }
     ) {
         Row(
             modifier = Modifier.padding(16.dp),

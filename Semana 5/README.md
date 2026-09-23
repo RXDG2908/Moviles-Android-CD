@@ -67,7 +67,7 @@ Confirmación, y la navegación secundaria es una barra inferior con cuatro pest
 | --- | --- | --- |
 | RF-B01 | Inicio con una `LazyRow` de chips ("Hoy" y "Esta semana") que filtran la `LazyColumn` de clases, cada una con nombre y horario | Hecho |
 | RF-B02 | Barra inferior con 4 pestañas (Inicio, Reservas, Rutinas y Perfil), visible en esas pantallas y con la pestaña actual resaltada | Hecho |
-| RF-B03 | Detalle de clase que recibe el id de la clase por la ruta y muestra sus datos | Pendiente |
+| RF-B03 | Detalle de clase que recibe el id de la clase por la ruta y muestra sus datos | Hecho |
 | RF-B04 | Selección única de horario: solo se puede elegir uno y "Reservar cupo" se habilita cuando hay uno elegido | Pendiente |
 | RF-B05 | Confirmación con la clase y el horario; "Ver mis reservas" lleva a Reservas sin volver a pasar por el Detalle | Pendiente |
 | RF-B06 | Mis reservas: lista con el estado de cada reserva (Confirmada en verde, Completada en gris); la reserva nueva aparece al instante | Pendiente |
@@ -105,7 +105,7 @@ y Confirmación, y la navegación secundaria es un menú lateral que se abre con
 - [x] TECSUP Fit: Agrega NavHost y pantalla Inicio con Scaffold en TecsupFit
 - [x] TECSUP Fit: Agrega LazyRow de filtros y LazyColumn de clases en Inicio de TecsupFit
 - [x] TECSUP Fit: Agrega bottomBar con 4 pestanas y pantallas Reservas, Rutinas y Perfil
-- [ ] TECSUP Fit: Agrega Detalle de clase con parametro claseId y seleccion unica de horario
+- [x] TECSUP Fit: Agrega Detalle de clase con parametro claseId y seleccion unica de horario
 - [ ] TECSUP Fit: Agrega Confirmacion de reserva con clase y horario y vuelta con popUpTo
 - [ ] TECSUP Fit: Guarda las reservas con mutableStateListOf y muestra su estado en Reservas
 - [ ] TECSUP Fit: Agrega estadisticas al Perfil de TecsupFit y capturas al README

@@ -1,9 +1,12 @@
 package com.leon.tecsupfit.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.leon.tecsupfit.screens.DetalleScreen
 import com.leon.tecsupfit.screens.HomeScreen
 import com.leon.tecsupfit.screens.PerfilScreen
 import com.leon.tecsupfit.screens.ReservasScreen
@@ -28,6 +31,18 @@ fun AppNavigation() {
         }
         composable(Screen.Perfil.route) {
             PerfilScreen(navController)
+        }
+        composable(
+            route = Screen.Detalle.route,
+            arguments = listOf(
+                navArgument("claseId") {
+                    type = NavType.IntType
+                    defaultValue = 1
+                }
+            )
+        ) { backStackEntry ->
+            val claseId = backStackEntry.arguments?.getInt("claseId") ?: 1
+            DetalleScreen(navController, claseId)
         }
     }
 }
