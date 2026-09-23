@@ -20,6 +20,8 @@ fun DetalleScreen(navController: NavController, claseId: Int, gestor: GestorRese
     val clase = clases[claseId - 1]
     // Horario elegido: selección única (-1 = ninguno)
     var horarioElegido by remember { mutableStateOf(-1) }
+    // Mensaje cuando el gestor rechaza la reserva ("" = sin mensaje)
+    var mensajeError by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -77,18 +79,29 @@ fun DetalleScreen(navController: NavController, claseId: Int, gestor: GestorRese
                     ChipOpcion(
                         texto = clase.horarios[index],
                         seleccionado = horarioElegido == index,
-                        onClick = { horarioElegido = index }
+                        onClick = {
+                            horarioElegido = index
+                            mensajeError = ""
+                        }
                     )
                 }
             }
 
             Spacer(modifier = Modifier.weight(1f))
+            if (mensajeError != "") {
+                Text(mensajeError, color = MaterialTheme.colorScheme.error)
+                Spacer(modifier = Modifier.height(8.dp))
+            }
             Button(
                 onClick = {
-                    gestor.reservar(clase, clase.horarios[horarioElegido])
-                    navController.navigate(
-                        Screen.Confirmacion.createRoute(clase.id, horarioElegido)
-                    )
+                    val seReservo = gestor.reservar(clase, clase.horarios[horarioElegido])
+                    if (seReservo) {
+                        navController.navigate(
+                            Screen.Confirmacion.createRoute(clase.id, horarioElegido)
+                        )
+                    } else {
+                        mensajeError = "Ya tienes esta clase reservada en ese horario"
+                    }
                 },
                 // No deja reservar sin elegir horario
                 enabled = horarioElegido != -1,

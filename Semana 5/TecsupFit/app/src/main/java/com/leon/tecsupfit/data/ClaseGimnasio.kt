@@ -13,6 +13,12 @@ abstract class ClaseGimnasio(
     val cupos: String,
     val horarios: List<String> // opciones para elegir antes de reservar
 ) {
+    // Una clase no se puede crear sin nombre ni sin horarios
+    init {
+        require(nombre.isNotBlank()) { "La clase debe tener nombre" }
+        require(horarios.isNotEmpty()) { "La clase debe tener al menos un horario" }
+    }
+
     // Tipo de clase (lo decide cada clase concreta)
     abstract val tipo: String
 

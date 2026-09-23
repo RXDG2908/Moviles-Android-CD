@@ -182,3 +182,35 @@ tipo, el detalle extra y la recomendación.
 sobre el tipo. Spinning muestra "Cardio · Quema aproximada: 500 kcal · Trae agua y una
 toalla", y Yoga, "Bienestar · Nivel recomendado: Principiante · Usa ropa cómoda y trae tu
 mat", con el mismo código.
+
+---
+
+## Bloque 6 — Encapsulamiento: estado cerrado y validaciones
+
+> **Contexto.** Ya hay abstracción, herencia y polimorfismo, pero el estado sigue expuesto:
+> la lista `reservas` de `GestorReservas` es pública y mutable, cualquier pantalla podría
+> agregar o quitar sin validar, y una clase se puede crear sin nombre o sin horarios.
+>
+> **Tarea.** Cierra el estado: que las reservas solo cambien a través de las operaciones
+> del gestor, y que esas operaciones validen.
+>
+> **Restricciones.** La lista interna es privada y hacia afuera se entrega solo de lectura.
+> `reservar` rechaza un horario que no sea de esa clase y no deja reservar dos veces la
+> misma clase en el mismo horario (devuelve si se pudo o no). `cancelar` solo cancela
+> reservas confirmadas. `ClaseGimnasio` valida al construirse que el nombre no esté vacío y
+> que tenga al menos un horario. Si se intenta reservar algo repetido, Detalle muestra un
+> mensaje en rojo y no navega.
+>
+> **Criterio de aceptación.** Ninguna pantalla puede modificar la lista directamente (no
+> compila si se intenta), reservar la misma clase y horario dos veces muestra el mensaje, y
+> todo lo demás funciona igual.
+
+**Qué generó.** En `GestorReservas`, la lista pasó a `private val lista` y hacia afuera
+queda `val reservas: List<Reserva>` de solo lectura. `reservar()` valida con `require` y
+devuelve `false` si la reserva ya existe. `cancelar()` solo quita las confirmadas. En
+`ClaseGimnasio`, un bloque `init` con dos `require`. Detalle muestra "Ya tienes esta clase
+reservada en ese horario".
+
+**Qué se corrigió.** Nada. Para comprobar el criterio se agregó a propósito
+`gestor.reservas.add(...)` en una pantalla: no compiló ("Unresolved reference"), y se
+quitó.
