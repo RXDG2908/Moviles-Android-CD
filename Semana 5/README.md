@@ -31,8 +31,24 @@ Detalle, que recibe el número del elemento elegido.
 | 3 y 4 | Paquetes `navigation` y `screens`, y rutas en `Screen.kt` con una sealed class | Hecho |
 | 5 | `AppNavigation` con el `NavHost` y `MainActivity` que lo muestra | Hecho |
 | 6 | `HomeScreen` y `ListScreen` con `LazyColumn` | Hecho |
-| 7 | `DetailScreen` con el argumento `itemId` y `ProfileScreen` con `popUpTo` | Pendiente |
+| 7 | `DetailScreen` con el argumento `itemId` y `ProfileScreen` con `popUpTo` | Hecho |
 | 8 | Ejecutar y verificar el flujo completo | Pendiente |
+
+### Cómo funciona
+
+Las rutas están juntas en `Screen.kt`, una sealed class donde cada pantalla es un
+`object` con su nombre de ruta. `AppNavigation` crea el `navController` y el
+`NavHost`, que registra cada pantalla con `composable`. La ruta del detalle lleva el
+hueco `{itemId}`: la Lista navega con `createRoute(index + 1)` y el `NavHost` lee ese
+valor como `Int` (por `NavType.IntType`) antes de pasárselo a `DetailScreen`.
+
+La flecha de volver usa `popBackStack()`, que quita la pantalla de arriba. El botón
+"Ir al inicio" del Perfil usa `popUpTo` con `inclusive = true` para no ir apilando
+Inicios repetidos cada vez que se vuelve.
+
+Además de la dependencia de la guía se agregó `material-icons-core`, porque las
+plantillas nuevas de Android Studio ya no traen los íconos (la flecha de volver)
+dentro de Material 3.
 
 ## Trabajo 2 - Opción B: TECSUP Fit
 
@@ -76,7 +92,7 @@ y Confirmación, y la navegación secundaria es un menú lateral que se abre con
 - [x] Guía: Agrega Screen con las rutas de la guia en una sealed class
 - [x] Guía: Agrega AppNavigation con NavHost, HomeScreen y conecta MainActivity
 - [x] Guía: Agrega ListScreen con LazyColumn y registra la ruta list
-- [ ] Guía: Agrega DetailScreen con argumento itemId y ProfileScreen con popUpTo
+- [x] Guía: Agrega DetailScreen con argumento itemId y ProfileScreen con popUpTo
 - [ ] Guía: Agrega capturas del flujo de la guia al README
 - [ ] TECSUP Fit: Crea proyecto TecsupFit en Semana 5 con navigation-compose y color verde
 - [ ] TECSUP Fit: Agrega rutas en sealed class y datos de clases en TecsupFit
