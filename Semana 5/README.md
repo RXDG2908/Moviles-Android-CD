@@ -12,7 +12,7 @@ Clínica Salud+. Ninguna de las dos usa ViewModel: todo el estado se guarda con
 
 | Carpeta | Trabajo | Estado |
 | --- | --- | --- |
-| `Semana05_Navegacion` | Trabajo 1: guía de navegación | En progreso |
+| `Semana05_Navegacion` | Trabajo 1: guía de navegación | Terminado (rama main) |
 | `TecsupFit` | Trabajo 2, opción B: TECSUP Fit | Pendiente |
 | `ClinicaSalud` | Trabajo 2, opción A: Clínica Salud+ | Pendiente |
 
@@ -32,7 +32,7 @@ Detalle, que recibe el número del elemento elegido.
 | 5 | `AppNavigation` con el `NavHost` y `MainActivity` que lo muestra | Hecho |
 | 6 | `HomeScreen` y `ListScreen` con `LazyColumn` | Hecho |
 | 7 | `DetailScreen` con el argumento `itemId` y `ProfileScreen` con `popUpTo` | Hecho |
-| 8 | Ejecutar y verificar el flujo completo | Pendiente |
+| 8 | Ejecutar y verificar el flujo completo | Hecho |
 
 ### Cómo funciona
 
@@ -49,6 +49,12 @@ Inicios repetidos cada vez que se vuelve.
 Además de la dependencia de la guía se agregó `material-icons-core`, porque las
 plantillas nuevas de Android Studio ya no traen los íconos (la flecha de volver)
 dentro de Material 3.
+
+### Capturas
+
+| Inicio | Lista | Detalle | Perfil |
+| --- | --- | --- | --- |
+| ![Inicio](Semana05_Navegacion/capturas/1-inicio.png) | ![Lista](Semana05_Navegacion/capturas/2-lista.png) | ![Detalle](Semana05_Navegacion/capturas/3-detalle.png) | ![Perfil](Semana05_Navegacion/capturas/4-perfil.png) |
 
 ## Trabajo 2 - Opción B: TECSUP Fit
 
@@ -93,7 +99,7 @@ y Confirmación, y la navegación secundaria es un menú lateral que se abre con
 - [x] Guía: Agrega AppNavigation con NavHost, HomeScreen y conecta MainActivity
 - [x] Guía: Agrega ListScreen con LazyColumn y registra la ruta list
 - [x] Guía: Agrega DetailScreen con argumento itemId y ProfileScreen con popUpTo
-- [ ] Guía: Agrega capturas del flujo de la guia al README
+- [x] Guía: Agrega capturas del flujo de la guia al README
 - [ ] TECSUP Fit: Crea proyecto TecsupFit en Semana 5 con navigation-compose y color verde
 - [ ] TECSUP Fit: Agrega rutas en sealed class y datos de clases en TecsupFit
 - [ ] TECSUP Fit: Agrega NavHost y pantalla Inicio con Scaffold en TecsupFit
