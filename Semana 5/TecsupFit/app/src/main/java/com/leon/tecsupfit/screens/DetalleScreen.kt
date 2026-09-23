@@ -10,6 +10,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.leon.tecsupfit.data.clases
+import com.leon.tecsupfit.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,6 +64,20 @@ fun DetalleScreen(navController: NavController, claseId: Int) {
                         onClick = { horarioElegido = index }
                     )
                 }
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+            Button(
+                onClick = {
+                    navController.navigate(
+                        Screen.Confirmacion.createRoute(clase.id, horarioElegido)
+                    )
+                },
+                // No deja reservar sin elegir horario
+                enabled = horarioElegido != -1,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Reservar cupo")
             }
         }
     }
