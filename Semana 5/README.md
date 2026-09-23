@@ -251,7 +251,7 @@ La navegación sigue siendo la misma: el directorio abre el expediente con el `i
 | Commit | Qué se agregó | Estado |
 | --- | --- | --- |
 | G1 | Componentes `AvatarIniciales`, `CampoFormulario`, `OpcionCard`, `AlumnoCard` y `FilaInfo`, y los datos de 5 alumnos | Hecho |
-| G2 | Ruta `login` como inicio, pantalla Portal Académico y nueva Bienvenida | Pendiente |
+| G2 | Ruta `login` como inicio, pantalla Portal Académico y nueva Bienvenida | Hecho |
 | G3 | Directorio de Alumnos y Expediente Académico | Pendiente |
 | G4 | Configuración de Perfil, este prompt y las capturas | Pendiente |
 
@@ -301,6 +301,6 @@ La navegación sigue siendo la misma: el directorio abre el expediente con el `i
 - [x] Bloque 6 Encapsulamiento ClinicaSalud: lista privada de solo lectura y citas validadas
 - [x] Bloque 7 Integracion ClinicaSalud: documenta pilares y prompts en README y PROMPTS.md
 - [x] Mejora guia: agrega componentes independientes y datos de alumnos
-- [ ] Mejora guia: agrega Portal Academico como inicio y nuevo diseno de la Bienvenida
+- [x] Mejora guia: agrega Portal Academico como inicio y nuevo diseno de la Bienvenida
 - [ ] Mejora guia: nuevo diseno de Directorio de Alumnos y Expediente Academico
 - [ ] Mejora guia: nuevo diseno de Configuracion de Perfil y prompt en el README

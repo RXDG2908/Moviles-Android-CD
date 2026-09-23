@@ -6,6 +6,8 @@ package com.example.semana05_navegacion.navigation
 sealed class Screen(val route: String) {
 
     // Desarrollado por: Juan León
+    // Pantalla de inicio de sesión — ahora es el punto de entrada de la app
+    object Login   : Screen("login")
     // Pantalla de inicio — punto de entrada de la app
     object Home    : Screen("home")
     // Pantalla que muestra la lista de elementos
