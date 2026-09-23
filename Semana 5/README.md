@@ -215,7 +215,31 @@ GestorReservas      — guarda las reservas y opera con ellas
 | 4 | Herencia | `MedicoEspecialista` (requisito) y `MedicoPediatra` (edad máxima) heredan de `MedicoBase` | Hecho |
 | 5 | Polimorfismo | El perfil del médico y Agendar muestran indicaciones y duración de la consulta según el tipo, sin preguntar cuál es | Hecho |
 | 6 | Encapsulamiento | Lista privada de solo lectura, dos citas a la misma hora rechazadas y validaciones al crear un médico | Hecho |
-| 7 | Integración | Esta documentación y `ClinicaSalud/PROMPTS.md` | Pendiente |
+| 7 | Integración | Esta documentación y `ClinicaSalud/PROMPTS.md` | Hecho |
+
+#### Dónde está cada pilar
+
+| Pilar | Dónde se ve en el código |
+| --- | --- |
+| **POO** | `Agenda` (`data/Agenda.kt`): un solo objeto, creado con `remember` en `AppNavigation`, guarda las citas y hace `agendar()` y `cancelar()`. |
+| **Abstracción** | `MedicoBase` (`data/MedicoBase.kt`) es abstracta: declara `tipoAtencion` e `indicaciones()` sin decir cómo. |
+| **Herencia** | `MedicoEspecialista` agrega `requisito` y `MedicoPediatra` agrega `edadMaxima`; los dos heredan de `MedicoBase`. |
+| **Polimorfismo** | `MedicoScreen` muestra `tipoAtencion` e `indicaciones()`, y `AgendarScreen` muestra `duracionConsulta()` (30 minutos el especialista, 20 por defecto), sin preguntar el tipo de médico. |
+| **Encapsulamiento** | La lista de `Agenda` es privada y afuera solo se lee; `agendar()` rechaza dos citas a la misma fecha y hora; `MedicoBase` valida nombre y calificación en `init`. |
+
+```
+MedicoBase (abstracta)
+├── MedicoEspecialista  (requisito)
+└── MedicoPediatra      (edadMaxima)
+
+Agenda                 — guarda las citas y opera con ellas
+```
+
+#### Capturas
+
+| Especialista | Pediatra | Cita repetida | Menú ⋮ | Cancelar cita |
+| --- | --- | --- | --- | --- |
+| ![mejora-1-perfil-especialista](ClinicaSalud/capturas/mejora-1-perfil-especialista.png) | ![mejora-2-perfil-pediatra](ClinicaSalud/capturas/mejora-2-perfil-pediatra.png) | ![mejora-3-cita-repetida](ClinicaSalud/capturas/mejora-3-cita-repetida.png) | ![mejora-4-menu-tres-puntos](ClinicaSalud/capturas/mejora-4-menu-tres-puntos.png) | ![mejora-5-cancelar-cita](ClinicaSalud/capturas/mejora-5-cancelar-cita.png) |
 
 ## Avance
 
@@ -261,5 +285,5 @@ GestorReservas      — guarda las reservas y opera con ellas
 - [x] Bloque 4 Herencia ClinicaSalud: MedicoEspecialista y MedicoPediatra heredan de MedicoBase
 - [x] Bloque 5 Polimorfismo ClinicaSalud: indicaciones y duracion de consulta segun el tipo de medico
 - [x] Bloque 6 Encapsulamiento ClinicaSalud: lista privada de solo lectura y citas validadas
-- [ ] Bloque 7 Integracion ClinicaSalud: documenta pilares y prompts en README y PROMPTS.md
+- [x] Bloque 7 Integracion ClinicaSalud: documenta pilares y prompts en README y PROMPTS.md
 - [ ] Guía: mejora de la presentación con componentes independientes y el prompt en este README
