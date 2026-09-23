@@ -155,3 +155,30 @@ gestor, pero se dejó así a propósito: cerrarla es el trabajo del bloque 6.
 con su propio `tipo` y `detalleExtra()`. Se eliminó `ClaseGrupal`.
 
 **Qué se corrigió.** Nada.
+
+---
+
+## Bloque 5 — Polimorfismo: cada clase responde a su manera
+
+> **Contexto.** `ClaseCardio` y `ClaseBienestar` heredan de `ClaseGimnasio`, pero las
+> pantallas todavía no aprovechan la diferencia: todas las clases se ven igual.
+>
+> **Tarea.** Haz que cada tipo responda a su manera y que se vea en la app. En Inicio, cada
+> tarjeta muestra el tipo de clase; en Detalle se muestra el detalle extra y una
+> recomendación propia de cada tipo.
+>
+> **Restricciones.** Agrega en `ClaseGimnasio` una función abierta `recomendacion()` con
+> una recomendación general, que cada subclase reemplaza. Prohibido usar `is`, `when` sobre
+> el tipo o cualquier comprobación de clase en las pantallas. No cambies la navegación.
+>
+> **Criterio de aceptación.** El mismo código de Detalle muestra textos distintos para
+> Spinning y para Yoga, sin preguntar de qué tipo es cada clase.
+
+**Qué generó.** `open fun recomendacion()` en la clase base y su versión propia en cada
+subclase. Inicio muestra el tipo junto al horario, y Detalle muestra una tarjeta con el
+tipo, el detalle extra y la recomendación.
+
+**Qué se corrigió.** Nada. Se comprobó que las pantallas no tienen ningún `is` ni `when`
+sobre el tipo. Spinning muestra "Cardio · Quema aproximada: 500 kcal · Trae agua y una
+toalla", y Yoga, "Bienestar · Nivel recomendado: Principiante · Usa ropa cómoda y trae tu
+mat", con el mismo código.

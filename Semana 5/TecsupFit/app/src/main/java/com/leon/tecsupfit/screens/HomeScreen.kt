@@ -100,7 +100,7 @@ fun TarjetaClase(clase: ClaseGimnasio, onClick: () -> Unit) {
             Column {
                 Text(clase.nombre, fontWeight = FontWeight.Bold)
                 Text(
-                    text = "${clase.horario} · ${clase.sala}",
+                    text = "${clase.horario} · ${clase.sala} · ${clase.tipo}",
                     style = MaterialTheme.typography.bodySmall
                 )
             }

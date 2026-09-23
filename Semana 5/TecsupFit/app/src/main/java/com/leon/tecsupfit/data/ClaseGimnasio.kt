@@ -18,6 +18,9 @@ abstract class ClaseGimnasio(
 
     // Un dato propio de cada tipo de clase
     abstract fun detalleExtra(): String
+
+    // Recomendación general; cada tipo de clase puede cambiarla
+    open fun recomendacion(): String = "Llega 10 minutos antes de la clase"
 }
 
 // Clases de cardio: suben el ritmo cardíaco y queman calorías
@@ -37,6 +40,8 @@ class ClaseCardio(
     override val tipo: String = "Cardio"
 
     override fun detalleExtra(): String = "Quema aproximada: $calorias kcal"
+
+    override fun recomendacion(): String = "Trae agua y una toalla"
 }
 
 // Clases de bienestar: flexibilidad, postura y respiración
@@ -56,4 +61,6 @@ class ClaseBienestar(
     override val tipo: String = "Bienestar"
 
     override fun detalleExtra(): String = "Nivel recomendado: $nivel"
+
+    override fun recomendacion(): String = "Usa ropa cómoda y trae tu mat"
 }

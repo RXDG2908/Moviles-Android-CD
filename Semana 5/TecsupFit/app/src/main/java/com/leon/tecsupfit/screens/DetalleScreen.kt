@@ -52,6 +52,21 @@ fun DetalleScreen(navController: NavController, claseId: Int, gestor: GestorRese
             Text(clase.descripcion)
             Spacer(modifier = Modifier.height(12.dp))
             Text(clase.cupos)
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Cada tipo de clase responde a su manera (cardio o bienestar)
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                )
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(clase.tipo, fontWeight = FontWeight.Bold)
+                    Text(clase.detalleExtra())
+                    Text(clase.recomendacion())
+                }
+            }
             Spacer(modifier = Modifier.height(24.dp))
 
             Text("Elige un horario", fontWeight = FontWeight.Bold)

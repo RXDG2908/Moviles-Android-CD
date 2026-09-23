@@ -177,7 +177,7 @@ que corregir están en el `PROMPTS.md` de cada proyecto.
 | 2 | POO | `GestorReservas` guarda las reservas y hace reservar, cancelar y contar | Hecho |
 | 3 | Abstracción | `ClaseGimnasio` abstracta: el contrato de toda clase (tipo y detalle extra) | Hecho |
 | 4 | Herencia | `ClaseCardio` (calorías) y `ClaseBienestar` (nivel) heredan de `ClaseGimnasio` | Hecho |
-| 5 | Polimorfismo | Inicio y Detalle muestran el tipo, el detalle y la recomendación de cada clase sin preguntar cuál es | Pendiente |
+| 5 | Polimorfismo | Inicio y Detalle muestran el tipo, el detalle y la recomendación de cada clase sin preguntar cuál es | Hecho |
 | 6 | Encapsulamiento | Lista privada de solo lectura, reservas repetidas rechazadas y validaciones al crear una clase | Pendiente |
 | 7 | Integración | Esta documentación y `TecsupFit/PROMPTS.md` | Pendiente |
 
@@ -228,7 +228,7 @@ que corregir están en el `PROMPTS.md` de cada proyecto.
 - [x] Bloque 2 POO TecsupFit: GestorReservas guarda las reservas y sus operaciones
 - [x] Bloque 3 Abstraccion TecsupFit: ClaseGimnasio define el contrato de toda clase
 - [x] Bloque 4 Herencia TecsupFit: ClaseCardio y ClaseBienestar heredan de ClaseGimnasio
-- [ ] Bloque 5 Polimorfismo TecsupFit: cada tipo de clase muestra su detalle y su recomendacion
+- [x] Bloque 5 Polimorfismo TecsupFit: cada tipo de clase muestra su detalle y su recomendacion
 - [ ] Bloque 6 Encapsulamiento TecsupFit: lista privada de solo lectura y reservas validadas
 - [ ] Bloque 7 Integracion TecsupFit: documenta pilares y prompts en README y PROMPTS.md
 - [ ] Bloque 1 Mejora funcional ClinicaSalud: cancela citas desde el menu de tres puntos con AlertDialog
