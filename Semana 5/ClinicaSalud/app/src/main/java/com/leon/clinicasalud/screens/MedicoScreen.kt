@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.leon.clinicasalud.data.medicos
+import com.leon.clinicasalud.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,6 +62,13 @@ fun MedicoScreen(navController: NavController, medicoId: Int) {
             Spacer(modifier = Modifier.height(24.dp))
             Text(medico.descripcion, modifier = Modifier.fillMaxWidth())
 
+            Spacer(modifier = Modifier.weight(1f))
+            Button(
+                onClick = { navController.navigate(Screen.Agendar.createRoute(medico.id)) },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Agendar cita")
+            }
         }
     }
 }

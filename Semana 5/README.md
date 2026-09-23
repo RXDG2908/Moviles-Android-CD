@@ -119,7 +119,7 @@ y Confirmación, y la navegación secundaria es un menú lateral que se abre con
 | RF-A01 | Inicio con una `LazyRow` de chips de especialidad que filtran la `LazyColumn` de médicos, cada uno con nombre, especialidad y calificación | Hecho |
 | RF-A02 | Menú lateral con el ícono ☰ en la barra superior y los destinos Inicio, Mis citas, Historial médico y Perfil; la sección actual se resalta | Hecho |
 | RF-A03 | Historial médico y Perfil del paciente, a los que se entra desde el menú | Hecho |
-| RF-A04 | Perfil del médico que recibe el id del médico por la ruta, con el botón "Agendar cita" | Pendiente |
+| RF-A04 | Perfil del médico que recibe el id del médico por la ruta, con el botón "Agendar cita" | Hecho |
 | RF-A05 | Agendar cita: elegir una fecha y una hora (selección única, 3 opciones cada una); "Confirmar cita" se habilita solo con ambas elegidas | Pendiente |
 | RF-A06 | Confirmación con médico, fecha y hora; "Volver al inicio" limpia el historial | Pendiente |
 | RF-A07 | Mis citas: lista con el estado de cada cita (Confirmada y Completada con colores distintos); la cita nueva aparece al instante | Pendiente |
@@ -149,7 +149,7 @@ y Confirmación, y la navegación secundaria es un menú lateral que se abre con
 - [x] Clínica Salud+: Agrega LazyRow de especialidades y LazyColumn de medicos en Inicio
 - [x] Clínica Salud+: Agrega menu lateral con DrawerState y secciones Mis citas, Historial y Perfil
 - [x] Clínica Salud+: Agrega Perfil del medico con parametro medicoId
-- [ ] Clínica Salud+: Agrega Agendar cita con seleccion unica de fecha y hora
+- [x] Clínica Salud+: Agrega Agendar cita con seleccion unica de fecha y hora
 - [ ] Clínica Salud+: Agrega Confirmacion de cita con medico, fecha y hora y vuelta con popUpTo
 - [ ] Clínica Salud+: Guarda las citas con mutableStateListOf, muestra su estado y agrega capturas al README
 
