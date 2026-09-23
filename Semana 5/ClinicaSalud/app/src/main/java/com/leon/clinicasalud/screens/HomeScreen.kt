@@ -1,5 +1,6 @@
 package com.leon.clinicasalud.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -87,7 +88,12 @@ fun HomeScreen(navController: NavController) {
                 LazyColumn {
                     items(medicos) { medico ->
                         if (especialidadElegida == "Todas" || medico.especialidad == especialidadElegida) {
-                            TarjetaMedico(medico = medico)
+                            TarjetaMedico(
+                                medico = medico,
+                                onClick = {
+                                    navController.navigate(Screen.Medico.createRoute(medico.id))
+                                }
+                            )
                         }
                     }
                 }
@@ -98,11 +104,12 @@ fun HomeScreen(navController: NavController) {
 
 // Tarjeta de un médico: nombre, especialidad y calificación
 @Composable
-fun TarjetaMedico(medico: Medico) {
+fun TarjetaMedico(medico: Medico, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 8.dp)
+            .clickable { onClick() }
     ) {
         Row(
             modifier = Modifier.padding(16.dp),

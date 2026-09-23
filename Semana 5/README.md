@@ -148,7 +148,7 @@ y Confirmación, y la navegación secundaria es un menú lateral que se abre con
 - [x] Clínica Salud+: Agrega NavHost y pantalla Inicio con Scaffold en ClinicaSalud
 - [x] Clínica Salud+: Agrega LazyRow de especialidades y LazyColumn de medicos en Inicio
 - [x] Clínica Salud+: Agrega menu lateral con DrawerState y secciones Mis citas, Historial y Perfil
-- [ ] Clínica Salud+: Agrega Perfil del medico con parametro medicoId
+- [x] Clínica Salud+: Agrega Perfil del medico con parametro medicoId
 - [ ] Clínica Salud+: Agrega Agendar cita con seleccion unica de fecha y hora
 - [ ] Clínica Salud+: Agrega Confirmacion de cita con medico, fecha y hora y vuelta con popUpTo
 - [ ] Clínica Salud+: Guarda las citas con mutableStateListOf, muestra su estado y agrega capturas al README
