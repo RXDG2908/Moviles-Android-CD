@@ -176,7 +176,7 @@ que corregir están en el `PROMPTS.md` de cada proyecto.
 | 1 | Mejora funcional | Cancelar una reserva confirmada con un cuadro de confirmación, aviso cuando no quedan reservas próximas y reservas activas reales en el Perfil | Hecho |
 | 2 | POO | `GestorReservas` guarda las reservas y hace reservar, cancelar y contar | Hecho |
 | 3 | Abstracción | `ClaseGimnasio` abstracta: el contrato de toda clase (tipo y detalle extra) | Hecho |
-| 4 | Herencia | `ClaseCardio` (calorías) y `ClaseBienestar` (nivel) heredan de `ClaseGimnasio` | Pendiente |
+| 4 | Herencia | `ClaseCardio` (calorías) y `ClaseBienestar` (nivel) heredan de `ClaseGimnasio` | Hecho |
 | 5 | Polimorfismo | Inicio y Detalle muestran el tipo, el detalle y la recomendación de cada clase sin preguntar cuál es | Pendiente |
 | 6 | Encapsulamiento | Lista privada de solo lectura, reservas repetidas rechazadas y validaciones al crear una clase | Pendiente |
 | 7 | Integración | Esta documentación y `TecsupFit/PROMPTS.md` | Pendiente |
@@ -227,7 +227,7 @@ que corregir están en el `PROMPTS.md` de cada proyecto.
 - [x] Bloque 1 Mejora funcional TecsupFit: cancela reservas con AlertDialog, avisa sin reservas y cuenta las activas
 - [x] Bloque 2 POO TecsupFit: GestorReservas guarda las reservas y sus operaciones
 - [x] Bloque 3 Abstraccion TecsupFit: ClaseGimnasio define el contrato de toda clase
-- [ ] Bloque 4 Herencia TecsupFit: ClaseCardio y ClaseBienestar heredan de ClaseGimnasio
+- [x] Bloque 4 Herencia TecsupFit: ClaseCardio y ClaseBienestar heredan de ClaseGimnasio
 - [ ] Bloque 5 Polimorfismo TecsupFit: cada tipo de clase muestra su detalle y su recomendacion
 - [ ] Bloque 6 Encapsulamiento TecsupFit: lista privada de solo lectura y reservas validadas
 - [ ] Bloque 7 Integracion TecsupFit: documenta pilares y prompts en README y PROMPTS.md

@@ -132,3 +132,26 @@ gestor, pero se dejó así a propósito: cerrarla es el trabajo del bloque 6.
 `List<ClaseGimnasio>`.
 
 **Qué se corrigió.** Nada.
+
+---
+
+## Bloque 4 — Herencia: ClaseCardio y ClaseBienestar
+
+> **Contexto.** Existe la clase abstracta `ClaseGimnasio`, con una sola implementación
+> genérica, `ClaseGrupal`.
+>
+> **Tarea.** Crea dos subclases que hereden de `ClaseGimnasio` y modelen los tipos reales
+> de clases del gimnasio: `ClaseCardio` y `ClaseBienestar`.
+>
+> **Restricciones.** Cada subclase aporta un atributo propio con sentido: las calorías
+> aproximadas que se queman (cardio) y el nivel recomendado (bienestar). Cross Training,
+> Spinning y Box son cardio; Yoga funcional y Pilates son bienestar. Elimina `ClaseGrupal`.
+> Lo que ya se muestra en pantalla no cambia.
+>
+> **Criterio de aceptación.** La lista `clases` se construye con las dos subclases y la app
+> se ve igual.
+
+**Qué generó.** `ClaseCardio` (con `calorias`) y `ClaseBienestar` (con `nivel`), cada una
+con su propio `tipo` y `detalleExtra()`. Se eliminó `ClaseGrupal`.
+
+**Qué se corrigió.** Nada.

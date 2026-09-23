@@ -20,8 +20,8 @@ abstract class ClaseGimnasio(
     abstract fun detalleExtra(): String
 }
 
-// Clase concreta para las clases grupales del gimnasio
-class ClaseGrupal(
+// Clases de cardio: suben el ritmo cardíaco y queman calorías
+class ClaseCardio(
     id: Int,
     nombre: String,
     dia: String,
@@ -30,10 +30,30 @@ class ClaseGrupal(
     duracion: String,
     descripcion: String,
     cupos: String,
-    horarios: List<String>
+    horarios: List<String>,
+    val calorias: Int          // calorías aproximadas que se queman en la clase
 ) : ClaseGimnasio(id, nombre, dia, horario, sala, duracion, descripcion, cupos, horarios) {
 
-    override val tipo: String = "Grupal"
+    override val tipo: String = "Cardio"
 
-    override fun detalleExtra(): String = "Clase grupal con instructor"
+    override fun detalleExtra(): String = "Quema aproximada: $calorias kcal"
+}
+
+// Clases de bienestar: flexibilidad, postura y respiración
+class ClaseBienestar(
+    id: Int,
+    nombre: String,
+    dia: String,
+    horario: String,
+    sala: String,
+    duracion: String,
+    descripcion: String,
+    cupos: String,
+    horarios: List<String>,
+    val nivel: String          // nivel recomendado: Principiante, Intermedio...
+) : ClaseGimnasio(id, nombre, dia, horario, sala, duracion, descripcion, cupos, horarios) {
+
+    override val tipo: String = "Bienestar"
+
+    override fun detalleExtra(): String = "Nivel recomendado: $nivel"
 }
