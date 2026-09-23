@@ -11,7 +11,7 @@ class GestorReservas {
     )
 
     // Crea una reserva confirmada para la clase y el horario elegidos
-    fun reservar(clase: Clase, horario: String) {
+    fun reservar(clase: ClaseGimnasio, horario: String) {
         reservas.add(Reserva(clase.nombre, "Hoy, $horario", "Confirmada"))
     }
 

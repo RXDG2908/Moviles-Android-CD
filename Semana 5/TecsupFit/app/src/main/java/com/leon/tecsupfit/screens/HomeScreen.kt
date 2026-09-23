@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.leon.tecsupfit.data.Clase
+import com.leon.tecsupfit.data.ClaseGimnasio
 import com.leon.tecsupfit.data.clases
 import com.leon.tecsupfit.navigation.Screen
 
@@ -80,7 +80,7 @@ fun HomeScreen(navController: NavController) {
 
 // Tarjeta de una clase: nombre y horario
 @Composable
-fun TarjetaClase(clase: Clase, onClick: () -> Unit) {
+fun TarjetaClase(clase: ClaseGimnasio, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

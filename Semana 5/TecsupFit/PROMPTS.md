@@ -108,3 +108,27 @@ sus funciones.
 
 **Qué se corrigió.** Nada. Se notó que la lista `reservas` seguía siendo pública dentro del
 gestor, pero se dejó así a propósito: cerrarla es el trabajo del bloque 6.
+
+---
+
+## Bloque 3 — Abstracción: ClaseGimnasio
+
+> **Contexto.** Las clases del gimnasio son una `data class Clase` (id, nombre, día,
+> horario, sala, duración, descripción, cupos y horarios) en `Datos.kt`, y la usan Inicio,
+> Detalle, Confirmación y GestorReservas.
+>
+> **Tarea.** Crea una clase abstracta `ClaseGimnasio` que defina el contrato de toda clase
+> del gimnasio, y una implementación concreta `ClaseGrupal` para las clases que ya existen.
+>
+> **Restricciones.** La clase abstracta declara **qué** sabe decir una clase (su tipo y un
+> detalle extra), no **cómo**. Las pantallas y el gestor deben trabajar con el tipo
+> abstracto. Todavía no crees tipos distintos de clase. La app debe verse igual.
+>
+> **Criterio de aceptación.** `ClaseGimnasio` no se puede instanciar, la lista `clases` es
+> `List<ClaseGimnasio>` y todo funciona igual.
+
+**Qué generó.** `data/ClaseGimnasio.kt` con la clase abstracta (`abstract val tipo` y
+`abstract fun detalleExtra()`) y `ClaseGrupal`. La lista `clases` quedó como
+`List<ClaseGimnasio>`.
+
+**Qué se corrigió.** Nada.
