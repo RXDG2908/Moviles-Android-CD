@@ -15,13 +15,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.leon.clinicasalud.data.Agenda
 import com.leon.clinicasalud.data.Cita
 import com.leon.clinicasalud.navigation.Screen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CitasScreen(navController: NavController, citas: MutableList<Cita>) {
+fun CitasScreen(navController: NavController, agenda: Agenda) {
     // Cita que el usuario quiere cancelar (null = no se muestra el diálogo)
     var citaACancelar by remember { mutableStateOf<Cita?>(null) }
 
@@ -56,7 +57,7 @@ fun CitasScreen(navController: NavController, citas: MutableList<Cita>) {
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(citas) { cita ->
+                items(agenda.citas) { cita ->
                     // El color de la tarjeta cambia según el estado
                     val colorFondo =
                         if (cita.estado == "Confirmada") Color(0xFFEDE3F6) else Color(0xFFEEEEEE)
@@ -130,7 +131,7 @@ fun CitasScreen(navController: NavController, citas: MutableList<Cita>) {
             confirmButton = {
                 Button(
                     onClick = {
-                        citas.remove(cita)
+                        agenda.cancelar(cita)
                         citaACancelar = null
                     }
                 ) {

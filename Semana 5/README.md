@@ -210,7 +210,7 @@ GestorReservas      — guarda las reservas y opera con ellas
 | Bloque | Mejora | Qué se hizo | Estado |
 | --- | --- | --- | --- |
 | 1 | Mejora funcional | Cancelar una cita confirmada desde el menú de tres puntos, con un cuadro de confirmación | Hecho |
-| 2 | POO | `Agenda` guarda las citas y hace agendar y cancelar | Pendiente |
+| 2 | POO | `Agenda` guarda las citas y hace agendar y cancelar | Hecho |
 | 3 | Abstracción | `MedicoBase` abstracta: el contrato de todo médico (tipo de atención e indicaciones) | Pendiente |
 | 4 | Herencia | `MedicoEspecialista` (requisito) y `MedicoPediatra` (edad máxima) heredan de `MedicoBase` | Pendiente |
 | 5 | Polimorfismo | El perfil del médico y Agendar muestran indicaciones y duración de la consulta según el tipo, sin preguntar cuál es | Pendiente |
@@ -256,7 +256,7 @@ GestorReservas      — guarda las reservas y opera con ellas
 - [x] Bloque 6 Encapsulamiento TecsupFit: lista privada de solo lectura y reservas validadas
 - [x] Bloque 7 Integracion TecsupFit: documenta pilares y prompts en README y PROMPTS.md
 - [x] Bloque 1 Mejora funcional ClinicaSalud: cancela citas desde el menu de tres puntos con AlertDialog
-- [ ] Bloque 2 POO ClinicaSalud: Agenda guarda las citas y sus operaciones
+- [x] Bloque 2 POO ClinicaSalud: Agenda guarda las citas y sus operaciones
 - [ ] Bloque 3 Abstraccion ClinicaSalud: MedicoBase define el contrato de todo medico
 - [ ] Bloque 4 Herencia ClinicaSalud: MedicoEspecialista y MedicoPediatra heredan de MedicoBase
 - [ ] Bloque 5 Polimorfismo ClinicaSalud: indicaciones y duracion de consulta segun el tipo de medico

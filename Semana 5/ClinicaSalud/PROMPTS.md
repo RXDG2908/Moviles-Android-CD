@@ -58,3 +58,27 @@ bien a la primera.
 
 > Se descartó un "estado vacío" para Mis citas: la cita de ejemplo está Completada y no se
 > puede cancelar, así que la lista nunca queda vacía.
+
+---
+
+## Bloque 2 — POO: Agenda
+
+> **Contexto.** App ClinicaSalud en Jetpack Compose. Las citas son un
+> `mutableStateListOf<Cita>` creado en AppNavigation que se pasa suelto a Agendar y a Mis
+> citas, y cada pantalla agrega o quita directamente.
+>
+> **Tarea.** Convierte el manejo de citas en una clase `Agenda` con su propio estado (la
+> lista) y sus propias operaciones: agendar y cancelar.
+>
+> **Restricciones.** Sin ViewModel. El objeto se crea con remember en AppNavigation y se
+> pasa a las pantallas. Ninguna pantalla hace `add` ni `remove` sobre la lista. La app debe
+> verse igual.
+>
+> **Criterio de aceptación.** Agendar y cancelar funcionan igual que antes, y las pantallas
+> solo llaman a métodos de `Agenda`.
+
+**Qué generó.** `data/Agenda.kt` con `agendar()` y `cancelar()`. Agendar y Mis citas
+reciben la agenda y solo llaman a sus funciones.
+
+**Qué se corrigió.** Nada. La lista `citas` quedó pública dentro de la agenda, y se cierra
+en el bloque 6.

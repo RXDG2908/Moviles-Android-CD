@@ -1,14 +1,13 @@
 package com.leon.clinicasalud.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.leon.clinicasalud.data.Cita
+import com.leon.clinicasalud.data.Agenda
 import com.leon.clinicasalud.screens.AgendarScreen
 import com.leon.clinicasalud.screens.CitasScreen
 import com.leon.clinicasalud.screens.ConfirmacionScreen
@@ -21,11 +20,8 @@ import com.leon.clinicasalud.screens.PerfilScreen
 fun AppNavigation() {
     val navController = rememberNavController()
 
-    // Lista de citas que comparten Agendar y Mis citas.
-    // Empieza con una cita ya completada de ejemplo.
-    val citas = remember {
-        mutableStateListOf(Cita("Dr. Luis Vega", "Miércoles 15", "3:00 pm", "Completada"))
-    }
+    // Una sola agenda de citas para toda la app
+    val agenda = remember { Agenda() }
 
     NavHost(
         navController = navController,
@@ -35,7 +31,7 @@ fun AppNavigation() {
             HomeScreen(navController)
         }
         composable(Screen.Citas.route) {
-            CitasScreen(navController, citas)
+            CitasScreen(navController, agenda)
         }
         composable(Screen.Historial.route) {
             HistorialScreen(navController)
@@ -65,7 +61,7 @@ fun AppNavigation() {
             )
         ) { backStackEntry ->
             val medicoId = backStackEntry.arguments?.getInt("medicoId") ?: 1
-            AgendarScreen(navController, medicoId, citas)
+            AgendarScreen(navController, medicoId, agenda)
         }
         composable(
             route = Screen.Confirmacion.route,

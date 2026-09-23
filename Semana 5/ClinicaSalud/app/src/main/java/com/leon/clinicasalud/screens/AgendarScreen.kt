@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.leon.clinicasalud.data.Cita
+import com.leon.clinicasalud.data.Agenda
 import com.leon.clinicasalud.data.fechas
 import com.leon.clinicasalud.data.horas
 import com.leon.clinicasalud.data.medicos
@@ -17,7 +17,7 @@ import com.leon.clinicasalud.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AgendarScreen(navController: NavController, medicoId: Int, citas: MutableList<Cita>) {
+fun AgendarScreen(navController: NavController, medicoId: Int, agenda: Agenda) {
     val medico = medicos[medicoId - 1]
     // Fecha y hora elegidas: selección única (-1 = ninguna)
     var fechaElegida by remember { mutableStateOf(-1) }
@@ -75,7 +75,7 @@ fun AgendarScreen(navController: NavController, medicoId: Int, citas: MutableLis
             Spacer(modifier = Modifier.weight(1f))
             Button(
                 onClick = {
-                    citas.add(Cita(medico.nombre, fechas[fechaElegida], horas[horaElegida], "Confirmada"))
+                    agenda.agendar(medico, fechas[fechaElegida], horas[horaElegida])
                     navController.navigate(
                         Screen.Confirmacion.createRoute(medico.id, fechaElegida, horaElegida)
                     )
