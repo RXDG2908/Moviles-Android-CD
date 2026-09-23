@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.leon.tecsupfit.data.Clase
 import com.leon.tecsupfit.data.clases
+import com.leon.tecsupfit.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,7 +34,8 @@ fun HomeScreen(navController: NavController) {
                     }
                 }
             )
-        }
+        },
+        bottomBar = { BarraInferior(navController, Screen.Home.route) }
     ) { padding ->
         Column(
             modifier = Modifier
