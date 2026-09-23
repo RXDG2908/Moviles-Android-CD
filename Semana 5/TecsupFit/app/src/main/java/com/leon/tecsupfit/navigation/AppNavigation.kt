@@ -1,14 +1,13 @@
 package com.leon.tecsupfit.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.leon.tecsupfit.data.Reserva
+import com.leon.tecsupfit.data.GestorReservas
 import com.leon.tecsupfit.screens.ConfirmacionScreen
 import com.leon.tecsupfit.screens.DetalleScreen
 import com.leon.tecsupfit.screens.HomeScreen
@@ -20,11 +19,8 @@ import com.leon.tecsupfit.screens.RutinasScreen
 fun AppNavigation() {
     val navController = rememberNavController()
 
-    // Lista de reservas que comparten Detalle y Reservas.
-    // Empieza con una reserva ya completada de ejemplo.
-    val reservas = remember {
-        mutableStateListOf(Reserva("Yoga funcional", "Ayer, 7:00 am", "Completada"))
-    }
+    // Un solo gestor de reservas para toda la app
+    val gestor = remember { GestorReservas() }
 
     NavHost(
         navController = navController,
@@ -34,13 +30,13 @@ fun AppNavigation() {
             HomeScreen(navController)
         }
         composable(Screen.Reservas.route) {
-            ReservasScreen(navController, reservas)
+            ReservasScreen(navController, gestor)
         }
         composable(Screen.Rutinas.route) {
             RutinasScreen(navController)
         }
         composable(Screen.Perfil.route) {
-            PerfilScreen(navController, reservas)
+            PerfilScreen(navController, gestor)
         }
         composable(
             route = Screen.Detalle.route,
@@ -52,7 +48,7 @@ fun AppNavigation() {
             )
         ) { backStackEntry ->
             val claseId = backStackEntry.arguments?.getInt("claseId") ?: 1
-            DetalleScreen(navController, claseId, reservas)
+            DetalleScreen(navController, claseId, gestor)
         }
         composable(
             route = Screen.Confirmacion.route,

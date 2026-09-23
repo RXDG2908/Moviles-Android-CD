@@ -9,13 +9,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.leon.tecsupfit.data.Reserva
+import com.leon.tecsupfit.data.GestorReservas
 import com.leon.tecsupfit.data.clases
 import com.leon.tecsupfit.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetalleScreen(navController: NavController, claseId: Int, reservas: MutableList<Reserva>) {
+fun DetalleScreen(navController: NavController, claseId: Int, gestor: GestorReservas) {
     // Los id empiezan en 1 y la lista en 0: por eso claseId - 1
     val clase = clases[claseId - 1]
     // Horario elegido: selección única (-1 = ninguno)
@@ -70,9 +70,7 @@ fun DetalleScreen(navController: NavController, claseId: Int, reservas: MutableL
             Spacer(modifier = Modifier.weight(1f))
             Button(
                 onClick = {
-                    reservas.add(
-                        Reserva(clase.nombre, "Hoy, ${clase.horarios[horarioElegido]}", "Confirmada")
-                    )
+                    gestor.reservar(clase, clase.horarios[horarioElegido])
                     navController.navigate(
                         Screen.Confirmacion.createRoute(clase.id, horarioElegido)
                     )

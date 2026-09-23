@@ -79,3 +79,32 @@ uno por cada reserva confirmada, igual que el recorrido del prompt 1b.
 
 **Resultado.** El Perfil muestra 0 al empezar, 2 después de reservar dos clases y 1
 después de cancelar una.
+
+---
+
+## Bloque 2 — POO: GestorReservas
+
+> **Contexto.** App TecsupFit en Jetpack Compose. Las reservas son un
+> `mutableStateListOf<Reserva>` creado en AppNavigation que se pasa suelto a Detalle,
+> Reservas y Perfil, y cada pantalla hace sus propias operaciones: agregar, quitar, recorrer
+> para contar las confirmadas o para saber si hay alguna.
+>
+> **Tarea.** Convierte el manejo de reservas en una clase `GestorReservas` con su propio
+> estado (la lista) y sus propias operaciones: reservar, cancelar, contar las activas y
+> saber si hay confirmadas.
+>
+> **Restricciones.** Sin ViewModel. Crea el objeto con remember en AppNavigation y pásalo
+> a las pantallas. Las pantallas no deben volver a recorrer la lista ni agregar o quitar
+> directamente. La app debe verse y comportarse igual. Código que un alumno de cuarto ciclo
+> pueda explicar.
+>
+> **Criterio de aceptación.** Reservar, cancelar, el aviso de Reservas y el contador del
+> Perfil funcionan igual que antes, y ninguna pantalla contiene un `for` ni un `add` o
+> `remove` sobre la lista.
+
+**Qué generó.** `data/GestorReservas.kt` con `reservar()`, `cancelar()`,
+`reservasActivas()` y `hayConfirmadas()`. Las pantallas reciben el gestor y solo llaman a
+sus funciones.
+
+**Qué se corrigió.** Nada. Se notó que la lista `reservas` seguía siendo pública dentro del
+gestor, pero se dejó así a propósito: cerrarla es el trabajo del bloque 6.

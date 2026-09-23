@@ -13,22 +13,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.leon.tecsupfit.data.GestorReservas
 import com.leon.tecsupfit.data.Reserva
 import com.leon.tecsupfit.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReservasScreen(navController: NavController, reservas: MutableList<Reserva>) {
+fun ReservasScreen(navController: NavController, gestor: GestorReservas) {
     // Reserva que el usuario quiere cancelar (null = no se muestra el diálogo)
     var reservaACancelar by remember { mutableStateOf<Reserva?>(null) }
-
-    // Revisa si queda al menos una reserva confirmada
-    var hayConfirmadas = false
-    for (r in reservas) {
-        if (r.estado == "Confirmada") {
-            hayConfirmadas = true
-        }
-    }
 
     Scaffold(
         topBar = {
@@ -42,7 +35,7 @@ fun ReservasScreen(navController: NavController, reservas: MutableList<Reserva>)
                 .padding(16.dp)
         ) {
             // Aviso cuando no hay reservas próximas
-            if (!hayConfirmadas) {
+            if (!gestor.hayConfirmadas()) {
                 Card(modifier = Modifier.fillMaxWidth()) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text("No tienes reservas próximas", fontWeight = FontWeight.Bold)
@@ -56,7 +49,7 @@ fun ReservasScreen(navController: NavController, reservas: MutableList<Reserva>)
             }
 
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(reservas) { reserva ->
+                items(gestor.reservas) { reserva ->
                     // El color de la tarjeta cambia según el estado
                     val colorFondo =
                         if (reserva.estado == "Confirmada") Color(0xFFDFF3EA) else Color(0xFFEEEEEE)
@@ -108,7 +101,7 @@ fun ReservasScreen(navController: NavController, reservas: MutableList<Reserva>)
             confirmButton = {
                 Button(
                     onClick = {
-                        reservas.remove(reserva)
+                        gestor.cancelar(reserva)
                         reservaACancelar = null
                     }
                 ) {

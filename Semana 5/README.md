@@ -174,7 +174,7 @@ que corregir están en el `PROMPTS.md` de cada proyecto.
 | Bloque | Mejora | Qué se hizo | Estado |
 | --- | --- | --- | --- |
 | 1 | Mejora funcional | Cancelar una reserva confirmada con un cuadro de confirmación, aviso cuando no quedan reservas próximas y reservas activas reales en el Perfil | Hecho |
-| 2 | POO | `GestorReservas` guarda las reservas y hace reservar, cancelar y contar | Pendiente |
+| 2 | POO | `GestorReservas` guarda las reservas y hace reservar, cancelar y contar | Hecho |
 | 3 | Abstracción | `ClaseGimnasio` abstracta: el contrato de toda clase (tipo y detalle extra) | Pendiente |
 | 4 | Herencia | `ClaseCardio` (calorías) y `ClaseBienestar` (nivel) heredan de `ClaseGimnasio` | Pendiente |
 | 5 | Polimorfismo | Inicio y Detalle muestran el tipo, el detalle y la recomendación de cada clase sin preguntar cuál es | Pendiente |
@@ -225,7 +225,7 @@ que corregir están en el `PROMPTS.md` de cada proyecto.
 ### Rama mejora-ia
 
 - [x] Bloque 1 Mejora funcional TecsupFit: cancela reservas con AlertDialog, avisa sin reservas y cuenta las activas
-- [ ] Bloque 2 POO TecsupFit: GestorReservas guarda las reservas y sus operaciones
+- [x] Bloque 2 POO TecsupFit: GestorReservas guarda las reservas y sus operaciones
 - [ ] Bloque 3 Abstraccion TecsupFit: ClaseGimnasio define el contrato de toda clase
 - [ ] Bloque 4 Herencia TecsupFit: ClaseCardio y ClaseBienestar heredan de ClaseGimnasio
 - [ ] Bloque 5 Polimorfismo TecsupFit: cada tipo de clase muestra su detalle y su recomendacion
