@@ -214,3 +214,28 @@ reservada en ese horario".
 **Qué se corrigió.** Nada. Para comprobar el criterio se agregó a propósito
 `gestor.reservas.add(...)` en una pantalla: no compiló ("Unresolved reference"), y se
 quitó.
+
+---
+
+## Bloque 7 — Integración y documentación
+
+> **Contexto.** Los seis bloques anteriores están aplicados, cada uno en su propio commit.
+>
+> **Tarea.** Revisa el conjunto, prueba el flujo completo y documenta en el README de
+> Semana 5 qué pilar de la POO quedó en qué parte del código, junto con los prompts de cada
+> bloque en PROMPTS.md.
+>
+> **Restricciones.** La documentación señala clases y funciones concretas, no habla de los
+> pilares en general. Los prompts se transcriben tal como se usaron, con lo que hubo que
+> corregir. No se cambia código.
+>
+> **Criterio de aceptación.** Alguien que abra el código encuentra cada pilar sin buscarlo
+> a ciegas, y el flujo completo funciona.
+
+**Qué generó.** La sección "Rama mejora-ia" del README de Semana 5, con la tabla de
+pilares, la estructura de clases y las capturas, y este archivo completo.
+
+**Verificación final.** En el emulador: filtrar clases, ver el detalle de cada tipo,
+reservar, intentar reservar lo mismo otra vez, ver la reserva en Mis reservas, cancelarla
+con el diálogo, ver el aviso "No tienes reservas próximas" y el contador del Perfil
+bajando a 0.

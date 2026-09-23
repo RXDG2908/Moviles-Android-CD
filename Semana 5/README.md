@@ -179,7 +179,31 @@ que corregir están en el `PROMPTS.md` de cada proyecto.
 | 4 | Herencia | `ClaseCardio` (calorías) y `ClaseBienestar` (nivel) heredan de `ClaseGimnasio` | Hecho |
 | 5 | Polimorfismo | Inicio y Detalle muestran el tipo, el detalle y la recomendación de cada clase sin preguntar cuál es | Hecho |
 | 6 | Encapsulamiento | Lista privada de solo lectura, reservas repetidas rechazadas y validaciones al crear una clase | Hecho |
-| 7 | Integración | Esta documentación y `TecsupFit/PROMPTS.md` | Pendiente |
+| 7 | Integración | Esta documentación y `TecsupFit/PROMPTS.md` | Hecho |
+
+#### Dónde está cada pilar
+
+| Pilar | Dónde se ve en el código |
+| --- | --- |
+| **POO** | `GestorReservas` (`data/GestorReservas.kt`): un solo objeto, creado con `remember` en `AppNavigation`, guarda la lista y hace `reservar()`, `cancelar()`, `reservasActivas()` y `hayConfirmadas()`. Las pantallas solo le piden cosas. |
+| **Abstracción** | `ClaseGimnasio` (`data/ClaseGimnasio.kt`) es abstracta: declara `tipo` y `detalleExtra()` sin decir cómo. No se puede crear una directamente. |
+| **Herencia** | `ClaseCardio` agrega `calorias` y `ClaseBienestar` agrega `nivel`; las dos heredan los datos y el contrato de `ClaseGimnasio`. |
+| **Polimorfismo** | `DetalleScreen` llama a `clase.tipo`, `clase.detalleExtra()` y `clase.recomendacion()` sin preguntar de qué tipo es la clase: cada subclase responde a su manera. |
+| **Encapsulamiento** | La lista de `GestorReservas` es privada y afuera solo se lee; `reservar()` valida con `require` y rechaza reservas repetidas; `ClaseGimnasio` valida su nombre y sus horarios en `init`. |
+
+```
+ClaseGimnasio (abstracta)
+├── ClaseCardio       (calorias)
+└── ClaseBienestar    (nivel)
+
+GestorReservas      — guarda las reservas y opera con ellas
+```
+
+#### Capturas
+
+| Detalle cardio | Detalle bienestar | Reserva repetida | Cancelar reserva | Perfil |
+| --- | --- | --- | --- | --- |
+| ![mejora-1-detalle-cardio](TecsupFit/capturas/mejora-1-detalle-cardio.png) | ![mejora-2-detalle-bienestar](TecsupFit/capturas/mejora-2-detalle-bienestar.png) | ![mejora-3-reserva-repetida](TecsupFit/capturas/mejora-3-reserva-repetida.png) | ![mejora-4-cancelar-reserva](TecsupFit/capturas/mejora-4-cancelar-reserva.png) | ![mejora-5-perfil-activas](TecsupFit/capturas/mejora-5-perfil-activas.png) |
 
 ### Clínica Salud+
 
@@ -230,7 +254,7 @@ que corregir están en el `PROMPTS.md` de cada proyecto.
 - [x] Bloque 4 Herencia TecsupFit: ClaseCardio y ClaseBienestar heredan de ClaseGimnasio
 - [x] Bloque 5 Polimorfismo TecsupFit: cada tipo de clase muestra su detalle y su recomendacion
 - [x] Bloque 6 Encapsulamiento TecsupFit: lista privada de solo lectura y reservas validadas
-- [ ] Bloque 7 Integracion TecsupFit: documenta pilares y prompts en README y PROMPTS.md
+- [x] Bloque 7 Integracion TecsupFit: documenta pilares y prompts en README y PROMPTS.md
 - [ ] Bloque 1 Mejora funcional ClinicaSalud: cancela citas desde el menu de tres puntos con AlertDialog
 - [ ] Bloque 2 POO ClinicaSalud: Agenda guarda las citas y sus operaciones
 - [ ] Bloque 3 Abstraccion ClinicaSalud: MedicoBase define el contrato de todo medico
