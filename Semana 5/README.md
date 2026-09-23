@@ -241,6 +241,20 @@ Agenda                 — guarda las citas y opera con ellas
 | --- | --- | --- | --- | --- |
 | ![mejora-1-perfil-especialista](ClinicaSalud/capturas/mejora-1-perfil-especialista.png) | ![mejora-2-perfil-pediatra](ClinicaSalud/capturas/mejora-2-perfil-pediatra.png) | ![mejora-3-cita-repetida](ClinicaSalud/capturas/mejora-3-cita-repetida.png) | ![mejora-4-menu-tres-puntos](ClinicaSalud/capturas/mejora-4-menu-tres-puntos.png) | ![mejora-5-cancelar-cita](ClinicaSalud/capturas/mejora-5-cancelar-cita.png) |
 
+### Guía — mejora de la presentación
+
+La guía pide mejorar con IA la presentación de la app de navegación. La mejora cambia las cuatro
+pantallas por un portal académico y agrega un inicio de sesión al comienzo, con componentes
+independientes en `components/`, los datos en `data/` y **sin tocar `MainActivity` ni `ui/theme`**.
+La navegación sigue siendo la misma: el directorio abre el expediente con el `itemId` (Int).
+
+| Commit | Qué se agregó | Estado |
+| --- | --- | --- |
+| G1 | Componentes `AvatarIniciales`, `CampoFormulario`, `OpcionCard`, `AlumnoCard` y `FilaInfo`, y los datos de 5 alumnos | Hecho |
+| G2 | Ruta `login` como inicio, pantalla Portal Académico y nueva Bienvenida | Pendiente |
+| G3 | Directorio de Alumnos y Expediente Académico | Pendiente |
+| G4 | Configuración de Perfil, este prompt y las capturas | Pendiente |
+
 ## Avance
 
 ### Rama main
@@ -286,4 +300,7 @@ Agenda                 — guarda las citas y opera con ellas
 - [x] Bloque 5 Polimorfismo ClinicaSalud: indicaciones y duracion de consulta segun el tipo de medico
 - [x] Bloque 6 Encapsulamiento ClinicaSalud: lista privada de solo lectura y citas validadas
 - [x] Bloque 7 Integracion ClinicaSalud: documenta pilares y prompts en README y PROMPTS.md
-- [ ] Guía: mejora de la presentación con componentes independientes y el prompt en este README
+- [x] Mejora guia: agrega componentes independientes y datos de alumnos
+- [ ] Mejora guia: agrega Portal Academico como inicio y nuevo diseno de la Bienvenida
+- [ ] Mejora guia: nuevo diseno de Directorio de Alumnos y Expediente Academico
+- [ ] Mejora guia: nuevo diseno de Configuracion de Perfil y prompt en el README
