@@ -144,7 +144,7 @@ y Confirmación, y la navegación secundaria es un menú lateral que se abre con
 - [x] TECSUP Fit: Guarda las reservas con mutableStateListOf y muestra su estado en Reservas
 - [x] TECSUP Fit: Agrega estadisticas al Perfil de TecsupFit y capturas al README
 - [x] Clínica Salud+: Crea proyecto ClinicaSalud en Semana 5 con navigation-compose y color morado
-- [ ] Clínica Salud+: Agrega rutas en sealed class y datos de medicos en ClinicaSalud
+- [x] Clínica Salud+: Agrega rutas en sealed class y datos de medicos en ClinicaSalud
 - [ ] Clínica Salud+: Agrega NavHost y pantalla Inicio con Scaffold en ClinicaSalud
 - [ ] Clínica Salud+: Agrega LazyRow de especialidades y LazyColumn de medicos en Inicio
 - [ ] Clínica Salud+: Agrega menu lateral con DrawerState y secciones Mis citas, Historial y Perfil
