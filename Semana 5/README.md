@@ -101,7 +101,7 @@ y Confirmación, y la navegación secundaria es un menú lateral que se abre con
 - [x] Guía: Agrega DetailScreen con argumento itemId y ProfileScreen con popUpTo
 - [x] Guía: Agrega capturas del flujo de la guia al README
 - [x] TECSUP Fit: Crea proyecto TecsupFit en Semana 5 con navigation-compose y color verde
-- [ ] TECSUP Fit: Agrega rutas en sealed class y datos de clases en TecsupFit
+- [x] TECSUP Fit: Agrega rutas en sealed class y datos de clases en TecsupFit
 - [ ] TECSUP Fit: Agrega NavHost y pantalla Inicio con Scaffold en TecsupFit
 - [ ] TECSUP Fit: Agrega LazyRow de filtros y LazyColumn de clases en Inicio de TecsupFit
 - [ ] TECSUP Fit: Agrega bottomBar con 4 pestanas y pantallas Reservas, Rutinas y Perfil
