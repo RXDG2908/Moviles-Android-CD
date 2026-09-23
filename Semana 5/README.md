@@ -13,7 +13,7 @@ Clínica Salud+. Ninguna de las dos usa ViewModel: todo el estado se guarda con
 | Carpeta | Trabajo | Estado |
 | --- | --- | --- |
 | `Semana05_Navegacion` | Trabajo 1: guía de navegación | Terminado (rama main) |
-| `TecsupFit` | Trabajo 2, opción B: TECSUP Fit | Pendiente |
+| `TecsupFit` | Trabajo 2, opción B: TECSUP Fit | En progreso |
 | `ClinicaSalud` | Trabajo 2, opción A: Clínica Salud+ | Pendiente |
 
 Cada carpeta es un proyecto independiente de Android Studio. Para abrirlo: **File >
@@ -100,7 +100,7 @@ y Confirmación, y la navegación secundaria es un menú lateral que se abre con
 - [x] Guía: Agrega ListScreen con LazyColumn y registra la ruta list
 - [x] Guía: Agrega DetailScreen con argumento itemId y ProfileScreen con popUpTo
 - [x] Guía: Agrega capturas del flujo de la guia al README
-- [ ] TECSUP Fit: Crea proyecto TecsupFit en Semana 5 con navigation-compose y color verde
+- [x] TECSUP Fit: Crea proyecto TecsupFit en Semana 5 con navigation-compose y color verde
 - [ ] TECSUP Fit: Agrega rutas en sealed class y datos de clases en TecsupFit
 - [ ] TECSUP Fit: Agrega NavHost y pantalla Inicio con Scaffold en TecsupFit
 - [ ] TECSUP Fit: Agrega LazyRow de filtros y LazyColumn de clases en Inicio de TecsupFit
