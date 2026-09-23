@@ -14,7 +14,7 @@ Clínica Salud+. Ninguna de las dos usa ViewModel: todo el estado se guarda con
 | --- | --- | --- |
 | `Semana05_Navegacion` | Trabajo 1: guía de navegación | Terminado (rama main) |
 | `TecsupFit` | Trabajo 2, opción B: TECSUP Fit | Terminado (rama main) |
-| `ClinicaSalud` | Trabajo 2, opción A: Clínica Salud+ | En progreso |
+| `ClinicaSalud` | Trabajo 2, opción A: Clínica Salud+ | Terminado (rama main) |
 
 Cada carpeta es un proyecto independiente de Android Studio. Para abrirlo: **File >
 Open** y elegir la carpeta del proyecto (no la carpeta `Semana 5`).
@@ -122,7 +122,7 @@ y Confirmación, y la navegación secundaria es un menú lateral que se abre con
 | RF-A04 | Perfil del médico que recibe el id del médico por la ruta, con el botón "Agendar cita" | Hecho |
 | RF-A05 | Agendar cita: elegir una fecha y una hora (selección única, 3 opciones cada una); "Confirmar cita" se habilita solo con ambas elegidas | Hecho |
 | RF-A06 | Confirmación con médico, fecha y hora; "Volver al inicio" limpia el historial | Hecho |
-| RF-A07 | Mis citas: lista con el estado de cada cita (Confirmada y Completada con colores distintos); la cita nueva aparece al instante | Pendiente |
+| RF-A07 | Mis citas: lista con el estado de cada cita (Confirmada y Completada con colores distintos); la cita nueva aparece al instante | Hecho |
 
 ### Rutas
 
@@ -135,6 +135,31 @@ y Confirmación, y la navegación secundaria es un menú lateral que se abre con
 | `medico/{medicoId}` | Perfil del médico |
 | `agendar/{medicoId}` | Agendar cita |
 | `confirmacion/{medicoId}/{fechaIndex}/{horaIndex}` | Confirmación |
+
+### Respuestas para la sustentación
+
+**¿Cómo llega el médico elegido hasta la Confirmación?** Al tocar una tarjeta en Inicio
+se navega a `medico/{medicoId}`. El botón "Agendar cita" pasa el mismo id a
+`agendar/{medicoId}`, y al confirmar se navega a
+`confirmacion/{medicoId}/{fechaIndex}/{horaIndex}` con el id y las posiciones de la
+fecha y la hora elegidas. Cada pantalla busca los datos con esos números.
+
+**¿Por qué el menú lateral envuelve al Scaffold y no es un parámetro más?** Porque el
+menú se dibuja encima de toda la pantalla, incluida la barra superior. El Scaffold solo
+ordena sus huecos (barra superior, contenido y barra inferior); si el menú fuera uno de
+ellos quedaría encerrado ahí. Por eso `ModalNavigationDrawer` va afuera y el Scaffold
+completo va dentro. Abrirlo y cerrarlo es una animación, por eso se hace con
+`scope.launch { drawerState.open() }`.
+
+**¿Por qué la fecha y la hora se comportan como un RadioButton?** Cada fila depende de
+un solo estado (`fechaElegida` y `horaElegida`) que guarda la posición elegida. Al
+tocar un chip ese estado cambia y solo el chip que coincide sale relleno.
+
+### Capturas
+
+| Inicio | Menú lateral | Agendar | Confirmación | Mis citas |
+| --- | --- | --- | --- | --- |
+| ![Inicio](ClinicaSalud/capturas/1-inicio.png) | ![Menú](ClinicaSalud/capturas/2-menu-lateral.png) | ![Agendar](ClinicaSalud/capturas/3-agendar.png) | ![Confirmación](ClinicaSalud/capturas/4-confirmacion.png) | ![Mis citas](ClinicaSalud/capturas/5-mis-citas.png) |
 
 ## Avance
 
@@ -163,7 +188,7 @@ y Confirmación, y la navegación secundaria es un menú lateral que se abre con
 - [x] Clínica Salud+: Agrega Perfil del medico con parametro medicoId
 - [x] Clínica Salud+: Agrega Agendar cita con seleccion unica de fecha y hora
 - [x] Clínica Salud+: Agrega Confirmacion de cita con medico, fecha y hora y vuelta con popUpTo
-- [ ] Clínica Salud+: Guarda las citas con mutableStateListOf, muestra su estado y agrega capturas al README
+- [x] Clínica Salud+: Guarda las citas con mutableStateListOf, muestra su estado y agrega capturas al README
 
 ### Rama mejora-ia
 
