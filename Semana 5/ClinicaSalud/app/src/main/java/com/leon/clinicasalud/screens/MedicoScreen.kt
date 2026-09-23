@@ -61,6 +61,20 @@ fun MedicoScreen(navController: NavController, medicoId: Int) {
             }
             Spacer(modifier = Modifier.height(24.dp))
             Text(medico.descripcion, modifier = Modifier.fillMaxWidth())
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Cada tipo de médico responde a su manera (especialista o pediatra)
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                )
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(medico.tipoAtencion, fontWeight = FontWeight.Bold)
+                    Text(medico.indicaciones())
+                }
+            }
 
             Spacer(modifier = Modifier.weight(1f))
             Button(

@@ -16,6 +16,9 @@ abstract class MedicoBase(
 
     // Indicaciones que el paciente debe saber antes de la consulta
     abstract fun indicaciones(): String
+
+    // Minutos que dura la consulta; cada tipo de médico puede cambiarlo
+    open fun duracionConsulta(): Int = 20
 }
 
 // Especialista: atiende a adultos y pide algo para la consulta
@@ -33,6 +36,8 @@ class MedicoEspecialista(
     override val tipoAtencion: String = "Especialista"
 
     override fun indicaciones(): String = "Para tu consulta: $requisito"
+
+    override fun duracionConsulta(): Int = 30
 }
 
 // Pediatra: atiende a niños y adolescentes hasta cierta edad

@@ -131,3 +131,30 @@ y `abstract fun indicaciones()`) y `MedicoGeneral`. La lista `medicos` quedó co
 `MedicoGeneral`.
 
 **Qué se corrigió.** Nada.
+
+---
+
+## Bloque 5 — Polimorfismo: cada médico responde a su manera
+
+> **Contexto.** `MedicoEspecialista` y `MedicoPediatra` heredan de `MedicoBase`, pero las
+> pantallas no aprovechan la diferencia.
+>
+> **Tarea.** Haz que cada tipo responda a su manera. El Perfil del médico muestra su tipo
+> de atención y sus indicaciones; Agendar muestra la duración de la consulta, que depende
+> del tipo de médico.
+>
+> **Restricciones.** Agrega en `MedicoBase` una función abierta `duracionConsulta()` que
+> devuelva 20 minutos por defecto; el especialista la cambia a 30. Prohibido usar `is`,
+> `when` sobre el tipo o cualquier comprobación de clase. No cambies la navegación.
+>
+> **Criterio de aceptación.** El mismo código del Perfil del médico y de Agendar muestra
+> textos distintos para Ana Torres y para Luis Vega.
+
+**Qué generó.** `open fun duracionConsulta()` en la base (20 minutos) y la versión del
+especialista (30). El Perfil del médico muestra una tarjeta con el tipo de atención y las
+indicaciones, y Agendar muestra "Consulta de N minutos".
+
+**Qué se corrigió.** Nada. Ana Torres muestra "Especialista · Para tu consulta: trae tu
+último electrocardiograma · Consulta de 30 minutos", y Luis Vega, "Pediatría · Atiende
+pacientes de hasta 14 años · Consulta de 20 minutos". El pediatra no reemplaza
+`duracionConsulta()`, así que usa la de la base: también es polimorfismo.

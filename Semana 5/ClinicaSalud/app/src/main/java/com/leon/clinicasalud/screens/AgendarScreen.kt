@@ -45,6 +45,8 @@ fun AgendarScreen(navController: NavController, medicoId: Int, agenda: Agenda) {
                 .padding(24.dp)
         ) {
             Text(medico.nombre, fontWeight = FontWeight.Bold)
+            // La duración depende del tipo de médico
+            Text("Consulta de ${medico.duracionConsulta()} minutos", style = MaterialTheme.typography.bodySmall)
             Spacer(modifier = Modifier.height(16.dp))
 
             Text("Selecciona fecha")
