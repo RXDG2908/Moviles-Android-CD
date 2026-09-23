@@ -12,6 +12,7 @@ import androidx.navigation.NavController
 import com.leon.clinicasalud.data.fechas
 import com.leon.clinicasalud.data.horas
 import com.leon.clinicasalud.data.medicos
+import com.leon.clinicasalud.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,6 +71,19 @@ fun AgendarScreen(navController: NavController, medicoId: Int) {
                 }
             }
 
+            Spacer(modifier = Modifier.weight(1f))
+            Button(
+                onClick = {
+                    navController.navigate(
+                        Screen.Confirmacion.createRoute(medico.id, fechaElegida, horaElegida)
+                    )
+                },
+                // No deja confirmar sin elegir fecha y hora
+                enabled = fechaElegida != -1 && horaElegida != -1,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Confirmar cita")
+            }
         }
     }
 }

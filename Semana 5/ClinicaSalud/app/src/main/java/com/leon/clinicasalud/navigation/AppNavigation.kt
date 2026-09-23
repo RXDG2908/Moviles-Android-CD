@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.leon.clinicasalud.screens.AgendarScreen
 import com.leon.clinicasalud.screens.CitasScreen
+import com.leon.clinicasalud.screens.ConfirmacionScreen
 import com.leon.clinicasalud.screens.HistorialScreen
 import com.leon.clinicasalud.screens.HomeScreen
 import com.leon.clinicasalud.screens.MedicoScreen
@@ -56,6 +57,28 @@ fun AppNavigation() {
         ) { backStackEntry ->
             val medicoId = backStackEntry.arguments?.getInt("medicoId") ?: 1
             AgendarScreen(navController, medicoId)
+        }
+        composable(
+            route = Screen.Confirmacion.route,
+            arguments = listOf(
+                navArgument("medicoId") {
+                    type = NavType.IntType
+                    defaultValue = 1
+                },
+                navArgument("fechaIndex") {
+                    type = NavType.IntType
+                    defaultValue = 0
+                },
+                navArgument("horaIndex") {
+                    type = NavType.IntType
+                    defaultValue = 0
+                }
+            )
+        ) { backStackEntry ->
+            val medicoId = backStackEntry.arguments?.getInt("medicoId") ?: 1
+            val fechaIndex = backStackEntry.arguments?.getInt("fechaIndex") ?: 0
+            val horaIndex = backStackEntry.arguments?.getInt("horaIndex") ?: 0
+            ConfirmacionScreen(navController, medicoId, fechaIndex, horaIndex)
         }
     }
 }
