@@ -11,6 +11,12 @@ abstract class MedicoBase(
     val experiencia: String,
     val descripcion: String
 ) {
+    // Un médico no se puede crear sin nombre ni con una calificación fuera de 0 a 5
+    init {
+        require(nombre.isNotBlank()) { "El médico debe tener nombre" }
+        require(calificacion in 0.0..5.0) { "La calificación debe estar entre 0 y 5" }
+    }
+
     // Tipo de atención (lo decide cada médico concreto)
     abstract val tipoAtencion: String
 

@@ -22,6 +22,8 @@ fun AgendarScreen(navController: NavController, medicoId: Int, agenda: Agenda) {
     // Fecha y hora elegidas: selección única (-1 = ninguna)
     var fechaElegida by remember { mutableStateOf(-1) }
     var horaElegida by remember { mutableStateOf(-1) }
+    // Mensaje cuando la agenda rechaza la cita ("" = sin mensaje)
+    var mensajeError by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -56,7 +58,10 @@ fun AgendarScreen(navController: NavController, medicoId: Int, agenda: Agenda) {
                     ChipOpcion(
                         texto = fechas[index],
                         seleccionado = fechaElegida == index,
-                        onClick = { fechaElegida = index }
+                        onClick = {
+                            fechaElegida = index
+                            mensajeError = ""
+                        }
                     )
                 }
             }
@@ -69,18 +74,29 @@ fun AgendarScreen(navController: NavController, medicoId: Int, agenda: Agenda) {
                     ChipOpcion(
                         texto = horas[index],
                         seleccionado = horaElegida == index,
-                        onClick = { horaElegida = index }
+                        onClick = {
+                            horaElegida = index
+                            mensajeError = ""
+                        }
                     )
                 }
             }
 
             Spacer(modifier = Modifier.weight(1f))
+            if (mensajeError != "") {
+                Text(mensajeError, color = MaterialTheme.colorScheme.error)
+                Spacer(modifier = Modifier.height(8.dp))
+            }
             Button(
                 onClick = {
-                    agenda.agendar(medico, fechas[fechaElegida], horas[horaElegida])
-                    navController.navigate(
-                        Screen.Confirmacion.createRoute(medico.id, fechaElegida, horaElegida)
-                    )
+                    val seAgendo = agenda.agendar(medico, fechas[fechaElegida], horas[horaElegida])
+                    if (seAgendo) {
+                        navController.navigate(
+                            Screen.Confirmacion.createRoute(medico.id, fechaElegida, horaElegida)
+                        )
+                    } else {
+                        mensajeError = "Ya tienes una cita el ${fechas[fechaElegida]} a las ${horas[horaElegida]}"
+                    }
                 },
                 // No deja confirmar sin elegir fecha y hora
                 enabled = fechaElegida != -1 && horaElegida != -1,

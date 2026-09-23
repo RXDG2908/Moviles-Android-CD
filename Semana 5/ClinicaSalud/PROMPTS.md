@@ -158,3 +158,34 @@ indicaciones, y Agendar muestra "Consulta de N minutos".
 último electrocardiograma · Consulta de 30 minutos", y Luis Vega, "Pediatría · Atiende
 pacientes de hasta 14 años · Consulta de 20 minutos". El pediatra no reemplaza
 `duracionConsulta()`, así que usa la de la base: también es polimorfismo.
+
+---
+
+## Bloque 6 — Encapsulamiento: estado cerrado y validaciones
+
+> **Contexto.** Ya hay abstracción, herencia y polimorfismo, pero la lista `citas` de
+> `Agenda` es pública y mutable, se pueden agendar dos citas a la misma fecha y hora, y un
+> médico se puede crear sin nombre o con una calificación fuera de rango.
+>
+> **Tarea.** Cierra el estado: las citas solo cambian a través de la agenda, y la agenda
+> valida.
+>
+> **Restricciones.** La lista interna es privada y hacia afuera se entrega solo de
+> lectura. `agendar` rechaza una fecha u hora que no estén entre las opciones y no permite
+> dos citas confirmadas a la misma fecha y hora (devuelve si se pudo o no). `cancelar` solo
+> cancela citas confirmadas. `MedicoBase` valida al construirse que el nombre no esté vacío
+> y que la calificación esté entre 0 y 5. Si la agenda rechaza la cita, Agendar muestra un
+> mensaje en rojo y no navega.
+>
+> **Criterio de aceptación.** Ninguna pantalla puede modificar la lista (no compila si se
+> intenta), agendar dos citas a la misma fecha y hora muestra el mensaje, y lo demás
+> funciona igual.
+
+**Qué generó.** En `Agenda`, la lista pasó a `private val lista` y hacia afuera queda
+`val citas: List<Cita>` de solo lectura. `agendar()` valida con `require` y devuelve
+`false` si ya hay una cita confirmada a esa fecha y hora. `cancelar()` solo quita las
+confirmadas. En `MedicoBase`, un bloque `init` con dos `require`. Agendar muestra "Ya
+tienes una cita el Vie 27 a las 10:30 am".
+
+**Qué se corrigió.** Nada. Para comprobar el criterio se agregó a propósito
+`agenda.citas.add(...)` en una pantalla: no compiló ("Unresolved reference"), y se quitó.
