@@ -14,7 +14,7 @@ Clínica Salud+. Ninguna de las dos usa ViewModel: todo el estado se guarda con
 | --- | --- | --- |
 | `Semana05_Navegacion` | Trabajo 1: guía de navegación | Terminado (rama main) |
 | `TecsupFit` | Trabajo 2, opción B: TECSUP Fit | Terminado (rama main) |
-| `ClinicaSalud` | Trabajo 2, opción A: Clínica Salud+ | Pendiente |
+| `ClinicaSalud` | Trabajo 2, opción A: Clínica Salud+ | En progreso |
 
 Cada carpeta es un proyecto independiente de Android Studio. Para abrirlo: **File >
 Open** y elegir la carpeta del proyecto (no la carpeta `Semana 5`).
@@ -143,7 +143,7 @@ y Confirmación, y la navegación secundaria es un menú lateral que se abre con
 - [x] TECSUP Fit: Agrega Confirmacion de reserva con clase y horario y vuelta con popUpTo
 - [x] TECSUP Fit: Guarda las reservas con mutableStateListOf y muestra su estado en Reservas
 - [x] TECSUP Fit: Agrega estadisticas al Perfil de TecsupFit y capturas al README
-- [ ] Clínica Salud+: Crea proyecto ClinicaSalud en Semana 5 con navigation-compose y color morado
+- [x] Clínica Salud+: Crea proyecto ClinicaSalud en Semana 5 con navigation-compose y color morado
 - [ ] Clínica Salud+: Agrega rutas en sealed class y datos de medicos en ClinicaSalud
 - [ ] Clínica Salud+: Agrega NavHost y pantalla Inicio con Scaffold en ClinicaSalud
 - [ ] Clínica Salud+: Agrega LazyRow de especialidades y LazyColumn de medicos en Inicio
