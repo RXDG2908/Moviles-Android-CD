@@ -43,6 +43,33 @@ fun PerfilScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(12.dp))
             Text("Diego Ramos", fontWeight = FontWeight.Bold)
             Text("Plan Premium", style = MaterialTheme.typography.bodySmall)
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Estadísticas simples
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                Card(modifier = Modifier.weight(1f)) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text("14", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                        Text("Clases")
+                    }
+                }
+                Card(modifier = Modifier.weight(1f)) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text("3", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                        Text("Racha (semanas)")
+                    }
+                }
+            }
         }
     }
 }

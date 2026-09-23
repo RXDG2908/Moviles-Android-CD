@@ -13,7 +13,7 @@ Clínica Salud+. Ninguna de las dos usa ViewModel: todo el estado se guarda con
 | Carpeta | Trabajo | Estado |
 | --- | --- | --- |
 | `Semana05_Navegacion` | Trabajo 1: guía de navegación | Terminado (rama main) |
-| `TecsupFit` | Trabajo 2, opción B: TECSUP Fit | En progreso |
+| `TecsupFit` | Trabajo 2, opción B: TECSUP Fit | Terminado (rama main) |
 | `ClinicaSalud` | Trabajo 2, opción A: Clínica Salud+ | Pendiente |
 
 Cada carpeta es un proyecto independiente de Android Studio. Para abrirlo: **File >
@@ -71,7 +71,7 @@ Confirmación, y la navegación secundaria es una barra inferior con cuatro pest
 | RF-B04 | Selección única de horario: solo se puede elegir uno y "Reservar cupo" se habilita cuando hay uno elegido | Hecho |
 | RF-B05 | Confirmación con la clase y el horario; "Ver mis reservas" lleva a Reservas sin volver a pasar por el Detalle | Hecho |
 | RF-B06 | Mis reservas: lista con el estado de cada reserva (Confirmada en verde, Completada en gris); la reserva nueva aparece al instante | Hecho |
-| RF-B07 | Perfil con los datos del usuario y estadísticas simples (clases tomadas y racha) | Pendiente |
+| RF-B07 | Perfil con los datos del usuario y estadísticas simples (clases tomadas y racha) | Hecho |
 
 ### Rutas
 
@@ -83,6 +83,29 @@ Confirmación, y la navegación secundaria es una barra inferior con cuatro pest
 | `perfil` | Mi perfil |
 | `detalle/{claseId}` | Detalle de clase |
 | `confirmacion/{claseId}/{horarioIndex}` | Confirmación |
+
+### Respuestas para la sustentación
+
+**¿Cómo llega la clase elegida hasta la Confirmación?** Al tocar una tarjeta en Inicio se
+navega a `detalle/{claseId}` con el id de esa clase. El `NavHost` lee ese número y se
+lo pasa a `DetalleScreen`, que busca la clase en la lista. Al reservar se navega a
+`confirmacion/{claseId}/{horarioIndex}` con el mismo id y la posición del horario
+elegido, y la Confirmación vuelve a buscar la clase y el horario con esos dos números.
+
+**¿Cómo sabe la barra inferior qué ícono resaltar?** Cada pantalla llama a
+`BarraInferior` pasándole su propia ruta. Dentro, cada pestaña compara esa ruta con la
+suya y solo la que coincide queda marcada como seleccionada.
+
+**¿Por qué los chips de horario se comportan como un RadioButton?** Porque los tres
+dependen de un solo estado, `horarioElegido`, que guarda la posición del horario. Al
+tocar un chip ese estado cambia y se vuelven a dibujar todos: solo el que coincide sale
+relleno, así que nunca puede haber dos elegidos a la vez.
+
+### Capturas
+
+| Inicio | Detalle | Confirmación | Reservas | Perfil |
+| --- | --- | --- | --- | --- |
+| ![Inicio](TecsupFit/capturas/1-inicio.png) | ![Detalle](TecsupFit/capturas/2-detalle-horario.png) | ![Confirmación](TecsupFit/capturas/3-confirmacion.png) | ![Reservas](TecsupFit/capturas/4-reservas.png) | ![Perfil](TecsupFit/capturas/5-perfil.png) |
 
 ## Trabajo 2 - Opción A: Clínica Salud+
 
@@ -119,7 +142,7 @@ y Confirmación, y la navegación secundaria es un menú lateral que se abre con
 - [x] TECSUP Fit: Agrega Detalle de clase con parametro claseId y seleccion unica de horario
 - [x] TECSUP Fit: Agrega Confirmacion de reserva con clase y horario y vuelta con popUpTo
 - [x] TECSUP Fit: Guarda las reservas con mutableStateListOf y muestra su estado en Reservas
-- [ ] TECSUP Fit: Agrega estadisticas al Perfil de TecsupFit y capturas al README
+- [x] TECSUP Fit: Agrega estadisticas al Perfil de TecsupFit y capturas al README
 - [ ] Clínica Salud+: Crea proyecto ClinicaSalud en Semana 5 con navigation-compose y color morado
 - [ ] Clínica Salud+: Agrega rutas en sealed class y datos de medicos en ClinicaSalud
 - [ ] Clínica Salud+: Agrega NavHost y pantalla Inicio con Scaffold en ClinicaSalud
