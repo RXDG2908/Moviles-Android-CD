@@ -18,18 +18,36 @@ abstract class MedicoBase(
     abstract fun indicaciones(): String
 }
 
-// Médico concreto para los médicos actuales de la clínica
-class MedicoGeneral(
+// Especialista: atiende a adultos y pide algo para la consulta
+class MedicoEspecialista(
     id: Int,
     nombre: String,
     especialidad: String,
     calificacion: Double,
     resenas: Int,
     experiencia: String,
-    descripcion: String
+    descripcion: String,
+    val requisito: String         // lo que el paciente debe traer o hacer
 ) : MedicoBase(id, nombre, especialidad, calificacion, resenas, experiencia, descripcion) {
 
-    override val tipoAtencion: String = "Consulta general"
+    override val tipoAtencion: String = "Especialista"
 
-    override fun indicaciones(): String = "Llega 15 minutos antes de tu cita"
+    override fun indicaciones(): String = "Para tu consulta: $requisito"
+}
+
+// Pediatra: atiende a niños y adolescentes hasta cierta edad
+class MedicoPediatra(
+    id: Int,
+    nombre: String,
+    especialidad: String,
+    calificacion: Double,
+    resenas: Int,
+    experiencia: String,
+    descripcion: String,
+    val edadMaxima: Int           // edad máxima de los pacientes que atiende
+) : MedicoBase(id, nombre, especialidad, calificacion, resenas, experiencia, descripcion) {
+
+    override val tipoAtencion: String = "Pediatría"
+
+    override fun indicaciones(): String = "Atiende pacientes de hasta $edadMaxima años"
 }

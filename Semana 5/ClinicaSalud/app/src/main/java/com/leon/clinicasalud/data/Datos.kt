@@ -9,12 +9,15 @@ data class Cita(
 )
 
 val medicos: List<MedicoBase> = listOf(
-    MedicoGeneral(1, "Dra. Ana Torres", "Cardiología", 4.9, 128, "12 años exp.",
-        "Especialista en arritmias e hipertensión, formación en la Clínica Mayo."),
-    MedicoGeneral(2, "Dr. Luis Vega", "Pediatría", 4.7, 96, "8 años exp.",
-        "Atención de niños y adolescentes, control de crecimiento y vacunas."),
-    MedicoGeneral(3, "Dra. Rosa Díaz", "Dermatología", 4.8, 74, "10 años exp.",
-        "Tratamiento de enfermedades de la piel y dermatología estética.")
+    MedicoEspecialista(1, "Dra. Ana Torres", "Cardiología", 4.9, 128, "12 años exp.",
+        "Especialista en arritmias e hipertensión, formación en la Clínica Mayo.",
+        "trae tu último electrocardiograma"),
+    MedicoPediatra(2, "Dr. Luis Vega", "Pediatría", 4.7, 96, "8 años exp.",
+        "Atención de niños y adolescentes, control de crecimiento y vacunas.",
+        14),
+    MedicoEspecialista(3, "Dra. Rosa Díaz", "Dermatología", 4.8, 74, "10 años exp.",
+        "Tratamiento de enfermedades de la piel y dermatología estética.",
+        "ven sin cremas ni maquillaje en la zona a revisar")
 )
 
 // Opciones de fecha y hora para agendar

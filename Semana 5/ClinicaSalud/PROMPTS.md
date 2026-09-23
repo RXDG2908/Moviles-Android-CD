@@ -107,3 +107,27 @@ y `abstract fun indicaciones()`) y `MedicoGeneral`. La lista `medicos` quedó co
 `List<MedicoBase>`.
 
 **Qué se corrigió.** Nada.
+
+---
+
+## Bloque 4 — Herencia: MedicoEspecialista y MedicoPediatra
+
+> **Contexto.** Existe la clase abstracta `MedicoBase`, con una sola implementación
+> genérica, `MedicoGeneral`.
+>
+> **Tarea.** Crea dos subclases que modelen los médicos reales de la clínica:
+> `MedicoEspecialista` y `MedicoPediatra`.
+>
+> **Restricciones.** Cada subclase aporta un atributo propio con sentido. El especialista
+> tiene un requisito para la consulta (algo que el paciente debe traer o hacer). El
+> pediatra tiene la edad máxima de los pacientes que atiende. Ana Torres y Rosa Díaz son
+> especialistas; Luis Vega es pediatra. Elimina `MedicoGeneral`. La app debe verse igual.
+>
+> **Criterio de aceptación.** La lista `medicos` se construye con las dos subclases y la
+> app se ve igual.
+
+**Qué generó.** `MedicoEspecialista` (con `requisito`) y `MedicoPediatra` (con
+`edadMaxima`), cada una con su propio `tipoAtencion` e `indicaciones()`. Se eliminó
+`MedicoGeneral`.
+
+**Qué se corrigió.** Nada.
