@@ -253,7 +253,60 @@ La navegación sigue siendo la misma: el directorio abre el expediente con el `i
 | G1 | Componentes `AvatarIniciales`, `CampoFormulario`, `OpcionCard`, `AlumnoCard` y `FilaInfo`, y los datos de 5 alumnos | Hecho |
 | G2 | Ruta `login` como inicio, pantalla Portal Académico y nueva Bienvenida | Hecho |
 | G3 | Directorio de Alumnos y Expediente Académico | Hecho |
-| G4 | Configuración de Perfil, este prompt y las capturas | Pendiente |
+| G4 | Configuración de Perfil, este prompt y las capturas | Hecho |
+
+#### Prompt
+
+Se usa sobre el proyecto de la rama `main` (la app de la guía sin cambios):
+
+```text
+**Contexto.** Proyecto Android `Semana05_Navegacion` (paquete `com.example.semana05_navegacion`) hecho con Jetpack Compose y Navigation Compose. Tiene `navigation/Screen.kt` (sealed class con las rutas `home`, `list`, `profile` y `detail/{itemId}`), `navigation/AppNavigation.kt` (NavHost con esas cuatro pantallas; el detalle recibe `itemId` como `NavType.IntType`) y `screens/` con `HomeScreen`, `ListScreen`, `DetailScreen` y `ProfileScreen`, todas muy simples. `MainActivity` solo llama a `AppNavigation()`.
+
+**Tarea.** Rediseña la presentación de la app como un portal académico de 5 pantallas, manteniendo la misma navegación, y agrega una pantalla de inicio de sesión al comienzo.
+
+**Restricciones.**
+1. **No modifiques `MainActivity.kt`** ni la carpeta `ui/theme`. Usa los colores de `MaterialTheme.colorScheme` (el primario es el morado de Material 3).
+2. **Componentes independientes:** cada pieza reutilizable va en su propio archivo dentro de un paquete nuevo `components/`: `AvatarIniciales.kt`, `CampoFormulario.kt`, `OpcionCard.kt`, `AlumnoCard.kt` y `FilaInfo.kt`. Las pantallas solo arman esos componentes.
+3. **Datos separados:** crea `data/Alumno.kt` con una `data class Alumno(id, nombre, carrera, codigo, correo, facultad, biografia)` y una lista `alumnos` con estos 5:
+   - 1 · Juan León · Ingeniería de Sistemas · 2024-0001 · juan.leon@example.com · Ingeniería y Tecnología · "Estudiante destacado con interés en desarrollo Android."
+   - 2 · Maria Garcia · Arquitectura · 2024-0002 · maria.garcia@example.com · Arquitectura y Diseño · "Apasionada por el diseño sostenible y el urbanismo."
+   - 3 · Carlos Perez · Medicina · 2024-0003 · carlos.perez@example.com · Ciencias de la Salud · "Interesado en la investigación clínica y la salud pública."
+   - 4 · Ana Lopez · Derecho · 2024-0004 · ana.lopez@example.com · Derecho y Ciencias Políticas · "Enfocada en derecho digital y protección de datos."
+   - 5 · Luis Ramirez · Administración · 2024-0005 · luis.ramirez@example.com · Ciencias Empresariales · "Emprendedor con interés en gestión de proyectos."
+4. **Navegación:** agrega `object Login : Screen("login")` en `Screen.kt` y regístralo en `AppNavigation` como `startDestination`. Las demás rutas no cambian; el detalle sigue recibiendo `itemId` (Int) y ahora muestra al alumno con ese id.
+5. **Sin imágenes:** las fotos se reemplazan por `AvatarIniciales` (círculo con las iniciales del nombre). Usa solo íconos de `Icons.Default` / `Icons.AutoMirrored.Filled` que ya trae el proyecto (sin agregar dependencias).
+6. Como la actividad usa `enableEdgeToEdge()`, las pantallas sin barra superior deben aplicar `systemBarsPadding()` para no quedar debajo de la barra de estado.
+
+**Diseño de cada pantalla.**
+
+- **`components/AvatarIniciales(nombre, tamano: Dp, conBorde: Boolean = false)`**: círculo de color `primaryContainer` con las iniciales (máximo 2) en negrita y color `primary`; si `conBorde`, borde blanco de 4 dp.
+- **`components/CampoFormulario(valor, onCambio, etiqueta, icono, esContrasena = false)`**: `OutlinedTextField` de ancho completo, esquinas de 12 dp, ícono al inicio; si es contraseña, oculta el texto con puntos y al final muestra un texto "Ver" / "Ocultar" que lo alterna.
+- **`components/OpcionCard(icono, titulo, subtitulo, onClick)`**: Card blanca de ancho completo, esquinas de 20 dp, elevación de 4 dp; a la izquierda un recuadro de 56 dp `primaryContainer` con esquinas de 12 dp y el ícono en `primary`; a la derecha el título en negrita y el subtítulo en gris.
+- **`components/AlumnoCard(alumno, onClick)`**: Card de ancho completo, esquinas de 16 dp, elevación de 2 dp; `AvatarIniciales` de 56 dp, nombre en negrita (18 sp), carrera en `primary` (14 sp) y un ícono `KeyboardArrowRight` gris al final.
+- **`components/FilaInfo(icono, etiqueta, valor, conFondo = false)`**: fila con el ícono en `primary` (si `conFondo`, dentro de un recuadro gris claro de 44 dp con esquinas de 12 dp), y a la derecha la etiqueta pequeña en gris y el valor en negrita.
+
+1. **`screens/LoginScreen` — "Portal Académico"**: fondo con degradado vertical de `#E9DDFF` a `#FDFBFF`; en el centro una Card (esquinas de 24 dp, elevación de 8 dp, fondo `#F3EDF7`) con: "Portal Académico" (28 sp, negrita, `primary`), "Accede a tu cuenta" (gris), `CampoFormulario` "Correo Institucional" con ícono Email, `CampoFormulario` "Contraseña" con ícono Lock y `esContrasena = true`, botón de ancho completo "INICIAR SESIÓN" (50 dp de alto, esquinas de 12 dp, texto en negrita) que navega a `home` quitando `login` del historial, y un texto "¿Olvidaste tu contraseña?" en gris.
+2. **`screens/HomeScreen` — Bienvenida**: fondo con degradado vertical de `primary` a `#F3EDF7`; "Bienvenido,\nJuan León" centrado, blanco, 32 sp, negrita; "¿Qué deseas gestionar hoy?" blanco semitransparente; dos `OpcionCard`: "Directorio de Alumnos" / "Ver y gestionar estudiantes" (ícono List, va a `list`) y "Mi Perfil Académico" / "Datos personales y progreso" (ícono Person, va a `profile`); abajo, centrado, "Cerrar Sesión Segura" en rojo (`error`) con ícono ExitToApp, que vuelve a `login` limpiando el historial.
+3. **`screens/ListScreen` — "Directorio de Alumnos"**: `Scaffold` con `TopAppBar` de fondo `primaryContainer`, título en negrita y flecha de volver; `LazyColumn` (padding de 16 dp, 12 dp entre tarjetas) con un `AlumnoCard` por alumno que navega a `detail/{id}`.
+4. **`screens/DetailScreen` — "Expediente Académico"**: `TopAppBar` con flecha de volver; cabecera de 180 dp con degradado vertical de `primary` a `#5A4A7A` y esquinas inferiores de 32 dp; `AvatarIniciales` de 120 dp con borde, centrado y montado sobre el borde inferior de la cabecera; nombre (26 sp, negrita) y carrera (`primary`); una Card (esquinas de 20 dp, fondo `surfaceVariant`) con `FilaInfo` "ID Estudiante" (AccountBox), "Correo Electrónico" (Email) y "Facultad" (Info), un `HorizontalDivider` y "Biografía" con su texto.
+5. **`screens/ProfileScreen` — "Configuración de Perfil"**: `TopAppBar` con flecha de volver; cabecera de 200 dp con degradado horizontal de `#5B4A9E` a `#7A4F63`, con `AvatarIniciales` de 100 dp con borde y "Juan León Suiyon" en blanco; sección "INFORMACIÓN PERSONAL" (texto pequeño, `primary`, negrita) con `FilaInfo(conFondo = true)`: Nombre Completo (Person) "Juan León Suiyon", Correo (Email) "juan.leon@tecsup.edu.pe", Teléfono (Phone) "+51 987 654 321"; sección "ACADÉMICO": Carrera (Info) "Ingeniería de Software", Ciclo Actual (DateRange) "VI Ciclo"; abajo, un botón de ancho completo "Cerrar Sesión" con fondo `#F9DEDC`, texto e ícono ExitToApp en `error`, que vuelve a `login` limpiando el historial.
+
+**Criterio de aceptación.** La app compila sin tocar `MainActivity` ni `ui/theme`; abre en el login; "INICIAR SESIÓN" lleva a la bienvenida y el botón atrás ya no vuelve al login; las dos tarjetas de la bienvenida abren el directorio y la configuración; tocar un alumno abre su expediente con sus propios datos (el `itemId` llega como Int); "Cerrar Sesión" desde la bienvenida o la configuración vuelve al login y el botón atrás no regresa a la app.
+```
+
+#### Qué generó y qué se revisó
+
+Se aplicó el prompt y se comprobó el criterio de aceptación en el emulador: la app abre en el
+login, el botón atrás ya no vuelve al login, cada alumno abre su propio expediente y, después de
+cerrar sesión, el botón atrás no regresa a la app. `MainActivity` y `ui/theme` quedaron sin
+cambios. No hubo que corregir código. Las fotos del diseño original se reemplazaron por
+iniciales para no depender de imágenes.
+
+#### Capturas
+
+| Portal Académico | Bienvenida | Directorio | Expediente | Configuración |
+| --- | --- | --- | --- | --- |
+| ![mejora-1-portal-academico](Semana05_Navegacion/capturas/mejora-1-portal-academico.png) | ![mejora-2-bienvenida](Semana05_Navegacion/capturas/mejora-2-bienvenida.png) | ![mejora-3-directorio](Semana05_Navegacion/capturas/mejora-3-directorio.png) | ![mejora-4-expediente](Semana05_Navegacion/capturas/mejora-4-expediente.png) | ![mejora-5-configuracion](Semana05_Navegacion/capturas/mejora-5-configuracion.png) |
 
 ## Avance
 
@@ -303,4 +356,4 @@ La navegación sigue siendo la misma: el directorio abre el expediente con el `i
 - [x] Mejora guia: agrega componentes independientes y datos de alumnos
 - [x] Mejora guia: agrega Portal Academico como inicio y nuevo diseno de la Bienvenida
 - [x] Mejora guia: nuevo diseno de Directorio de Alumnos y Expediente Academico
-- [ ] Mejora guia: nuevo diseno de Configuracion de Perfil y prompt en el README
+- [x] Mejora guia: nuevo diseno de Configuracion de Perfil y prompt en el README
