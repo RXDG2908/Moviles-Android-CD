@@ -96,7 +96,12 @@ fun AppNavegacion() {
                 PedidosScreen(onAbrirMenu = abrirMenu)
             }
             composable(Screen.Favoritos.route) {
-                FavoritosScreen(onAbrirMenu = abrirMenu)
+                FavoritosScreen(
+                    navController = navController,
+                    favoritos = favoritos,
+                    onCambiarFavorito = cambiarFavorito,
+                    onAbrirMenu = abrirMenu
+                )
             }
             composable(Screen.Perfil.route) {
                 PerfilScreen(onAbrirMenu = abrirMenu)
