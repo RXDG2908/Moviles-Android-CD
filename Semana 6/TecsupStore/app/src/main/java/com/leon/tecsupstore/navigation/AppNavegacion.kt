@@ -7,6 +7,8 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavType
@@ -31,6 +33,14 @@ fun AppNavegacion() {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+
+    // Ids de los productos marcados como favoritos.
+    // Vive aquí (arriba de todo) para que la usen las tarjetas y también el menú lateral.
+    val favoritos = remember { mutableStateListOf<Int>() }
+    // Si ya estaba lo quita, si no estaba lo agrega
+    val cambiarFavorito: (Int) -> Unit = { id ->
+        if (id in favoritos) favoritos.remove(id) else favoritos.add(id)
+    }
 
     // Ruta de la pantalla que se ve ahora: cambia sola cada vez que se navega
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -73,7 +83,12 @@ fun AppNavegacion() {
             startDestination = Screen.Home.route
         ) {
             composable(Screen.Home.route) {
-                HomeScreen(navController = navController, onAbrirMenu = abrirMenu)
+                HomeScreen(
+                    navController = navController,
+                    favoritos = favoritos,
+                    onCambiarFavorito = cambiarFavorito,
+                    onAbrirMenu = abrirMenu
+                )
             }
             composable(Screen.Pedidos.route) {
                 PedidosScreen(onAbrirMenu = abrirMenu)

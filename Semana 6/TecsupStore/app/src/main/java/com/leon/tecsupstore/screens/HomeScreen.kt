@@ -15,7 +15,12 @@ import com.leon.tecsupstore.data.secciones
 import com.leon.tecsupstore.navigation.Screen
 
 @Composable
-fun HomeScreen(navController: NavController, onAbrirMenu: () -> Unit) {
+fun HomeScreen(
+    navController: NavController,
+    favoritos: List<Int>,
+    onCambiarFavorito: (Int) -> Unit,
+    onAbrirMenu: () -> Unit
+) {
     // Sección elegida en el LazyRow (empieza en "Mas vendidos")
     var seccionElegida by remember { mutableStateOf(secciones[0]) }
 
@@ -57,6 +62,8 @@ fun HomeScreen(navController: NavController, onAbrirMenu: () -> Unit) {
                 items(seccionElegida.productos) { producto ->
                     TarjetaProducto(
                         producto = producto,
+                        esFavorito = producto.id in favoritos,
+                        onCambiarFavorito = { onCambiarFavorito(producto.id) },
                         onClick = { navController.navigate(Screen.Detalle.createRoute(producto.id)) }
                     )
                 }

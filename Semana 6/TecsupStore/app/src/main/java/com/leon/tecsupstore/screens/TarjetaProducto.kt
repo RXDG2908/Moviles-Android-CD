@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.NorthEast
 import androidx.compose.material.icons.filled.ShoppingBasket
@@ -26,9 +27,16 @@ import com.leon.tecsupstore.data.Producto
 import com.leon.tecsupstore.ui.theme.LilaClaro
 import com.leon.tecsupstore.ui.theme.LilaTecsup
 
-// Tarjeta de un producto: imagen, nombre, precio y el ícono de 3 puntos
+// Tarjeta de un producto: imagen, nombre, precio y el ícono de 3 puntos.
+// "esFavorito" llega desde afuera; "onCambiarFavorito" avisa que se tocó Favoritos
+// (la tarjeta no guarda la lista: solo la usa y avisa).
 @Composable
-fun TarjetaProducto(producto: Producto, onClick: () -> Unit) {
+fun TarjetaProducto(
+    producto: Producto,
+    esFavorito: Boolean,
+    onCambiarFavorito: () -> Unit,
+    onClick: () -> Unit
+) {
     // Estado del menú de esta tarjeta: cada tarjeta tiene el suyo
     var expanded by remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -51,10 +59,22 @@ fun TarjetaProducto(producto: Producto, onClick: () -> Unit) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(producto.nombre, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = producto.precioTexto,
-                    color = MaterialTheme.colorScheme.primary
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = producto.precioTexto,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    // Corazón morado al lado del precio si es favorito
+                    if (esFavorito) {
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Icon(
+                            imageVector = Icons.Default.Favorite,
+                            contentDescription = "Favorito",
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+                }
             }
             // El menú va en un Box junto al ícono para que se abra pegado a él
             Box(modifier = Modifier.align(Alignment.Top)) {
@@ -76,12 +96,17 @@ fun TarjetaProducto(producto: Producto, onClick: () -> Unit) {
                     border = BorderStroke(1.dp, Color.LightGray)
                 ) {
                     DropdownMenuItem(
-                        text = { Text("Favoritos") },
+                        // El texto cambia si el producto ya está en favoritos
+                        text = { Text(if (esFavorito) "Quitar de favoritos" else "Favoritos") },
                         // leadingIcon: el ícono que va a la izquierda del texto
-                        leadingIcon = { IconoMenu(Icons.Default.Favorite) },
+                        leadingIcon = {
+                            IconoMenu(if (esFavorito) Icons.Default.FavoriteBorder else Icons.Default.Favorite)
+                        },
                         onClick = {
                             expanded = false
-                            Toast.makeText(context, "${producto.nombre} agregado a favoritos", Toast.LENGTH_SHORT).show()
+                            val mensaje = if (esFavorito) "quitado de favoritos" else "agregado a favoritos"
+                            onCambiarFavorito()
+                            Toast.makeText(context, "${producto.nombre} $mensaje", Toast.LENGTH_SHORT).show()
                         }
                     )
                     // Separador entre una opción y otra
