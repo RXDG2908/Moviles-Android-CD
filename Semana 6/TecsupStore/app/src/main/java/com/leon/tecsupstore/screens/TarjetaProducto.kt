@@ -1,5 +1,6 @@
 package com.leon.tecsupstore.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.leon.tecsupstore.data.Producto
@@ -25,6 +27,7 @@ import com.leon.tecsupstore.ui.theme.LilaTecsup
 fun TarjetaProducto(producto: Producto, onClick: () -> Unit) {
     // Estado del menú de esta tarjeta: cada tarjeta tiene el suyo
     var expanded by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     Card(
         modifier = Modifier
@@ -49,18 +52,43 @@ fun TarjetaProducto(producto: Producto, onClick: () -> Unit) {
                     color = MaterialTheme.colorScheme.primary
                 )
             }
-            // Ícono ⋮ arriba a la derecha: por ahora solo cambia el estado
-            IconButton(
-                onClick = { expanded = true },
-                modifier = Modifier.align(Alignment.Top)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.MoreVert,
-                    contentDescription = "Mas opciones",
-                    modifier = Modifier
-                        .background(if (expanded) Color.Transparent else Color.White, CircleShape)
-                        .padding(4.dp)
-                )
+            // El menú va en un Box junto al ícono para que se abra pegado a él
+            Box(modifier = Modifier.align(Alignment.Top)) {
+                IconButton(onClick = { expanded = true }) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = "Mas opciones",
+                        modifier = Modifier
+                            .background(if (expanded) Color.Transparent else Color.White, CircleShape)
+                            .padding(4.dp)
+                    )
+                }
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }   // tocar afuera lo cierra
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("Favoritos") },
+                        onClick = {
+                            expanded = false
+                            Toast.makeText(context, "${producto.nombre} agregado a favoritos", Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Compartir") },
+                        onClick = {
+                            expanded = false
+                            Toast.makeText(context, "Compartiendo ${producto.nombre}", Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Reportar") },
+                        onClick = {
+                            expanded = false
+                            Toast.makeText(context, "${producto.nombre} reportado", Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                }
             }
         }
     }
