@@ -1,6 +1,7 @@
 package com.leon.tecsupstore.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,10 +11,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -23,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -96,17 +102,43 @@ fun HomeScreen(navController: NavController) {
         }
     }
 }
-
 @Composable
 fun TarjetaProducto(producto: Producto, onClick: () -> Unit) {
+    // Hito 1: estado que controla si el menu de 3 puntos esta abierto o cerrado.
+    // Cada tarjeta tiene SU PROPIA variable "expanded" (porque esta dentro de la
+    // funcion), asi que abrir el menu de un producto no afecta a los demas.
+    var expanded by remember { mutableStateOf(false) }
+
     Card(
         onClick = onClick,
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier.width(140.dp)
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
-            Text(text = producto.nombre, fontWeight = FontWeight.Bold)
-            Text(text = "S/ %.2f".format(producto.precio))
+        // Usamos un Box (en vez de un Column suelto) porque necesitamos superponer
+        // el icono de 3 puntos sobre el contenido de la tarjeta, en vez de que
+        // ocupe su propio espacio en el flujo normal.
+        Box(modifier = Modifier.fillMaxWidth()) {
+
+            // Contenido normal de la tarjeta: nombre y precio del producto.
+            Column(modifier = Modifier.padding(12.dp)) {
+                Text(text = producto.nombre, fontWeight = FontWeight.Bold)
+                Text(text = "S/ %.2f".format(producto.precio))
+            }
+
+            // Icono de 3 puntos (menu contextual), alineado en la esquina
+            // superior derecha de la tarjeta.
+            IconButton(
+                onClick = { expanded = true },
+                modifier = Modifier.align(Alignment.TopEnd)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = "Mas opciones"
+                )
+            }
+
+            // El DropdownMenu se agrega en el Hito 2, pero ya queda el lugar
+            // (dentro del mismo Box) listo para anclarlo al icono de arriba.
         }
     }
 }
