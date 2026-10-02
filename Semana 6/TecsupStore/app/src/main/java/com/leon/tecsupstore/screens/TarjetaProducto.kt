@@ -8,13 +8,17 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.NorthEast
 import androidx.compose.material.icons.filled.ShoppingBasket
+import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -65,24 +69,35 @@ fun TarjetaProducto(producto: Producto, onClick: () -> Unit) {
                 }
                 DropdownMenu(
                     expanded = expanded,
-                    onDismissRequest = { expanded = false }   // tocar afuera lo cierra
+                    onDismissRequest = { expanded = false },  // tocar afuera lo cierra
+                    // Menú blanco, con esquinas redondeadas y un borde gris fino
+                    shape = RoundedCornerShape(12.dp),
+                    containerColor = Color.White,
+                    border = BorderStroke(1.dp, Color.LightGray)
                 ) {
                     DropdownMenuItem(
                         text = { Text("Favoritos") },
+                        // leadingIcon: el ícono que va a la izquierda del texto
+                        leadingIcon = { IconoMenu(Icons.Default.Favorite) },
                         onClick = {
                             expanded = false
                             Toast.makeText(context, "${producto.nombre} agregado a favoritos", Toast.LENGTH_SHORT).show()
                         }
                     )
+                    // Separador entre una opción y otra
+                    HorizontalDivider(modifier = Modifier.padding(horizontal = 12.dp))
                     DropdownMenuItem(
                         text = { Text("Compartir") },
+                        leadingIcon = { IconoMenu(Icons.Default.NorthEast) },
                         onClick = {
                             expanded = false
                             Toast.makeText(context, "Compartiendo ${producto.nombre}", Toast.LENGTH_SHORT).show()
                         }
                     )
+                    HorizontalDivider(modifier = Modifier.padding(horizontal = 12.dp))
                     DropdownMenuItem(
                         text = { Text("Reportar") },
+                        leadingIcon = { IconoMenu(Icons.Outlined.Warning) },
                         onClick = {
                             expanded = false
                             Toast.makeText(context, "${producto.nombre} reportado", Toast.LENGTH_SHORT).show()
@@ -92,6 +107,12 @@ fun TarjetaProducto(producto: Producto, onClick: () -> Unit) {
             }
         }
     }
+}
+
+// Ícono pequeño y negro para las opciones del menú
+@Composable
+fun IconoMenu(icono: ImageVector) {
+    Icon(icono, contentDescription = null, tint = Color.Black, modifier = Modifier.size(18.dp))
 }
 
 // Cuadro lila con la canasta: hace de imagen del producto
