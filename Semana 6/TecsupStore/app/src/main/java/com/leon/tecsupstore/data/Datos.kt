@@ -20,6 +20,22 @@ data class Seccion(
     val productos: List<Producto>
 )
 
+// Un pedido ya hecho por el usuario
+data class Pedido(
+    val codigo: String,
+    val producto: String,
+    val fecha: String,
+    val estado: String            // "En camino" o "Entregado"
+)
+
+// Usuario con la sesión iniciada (sale en el Perfil y en el menú)
+data class Usuario(
+    val nombre: String,
+    val correo: String
+)
+
+val usuario = Usuario("Maria Rojas", "maria@tecsup.edu.pe")
+
 val productos = listOf(
     Producto(1, "Audifonos", 89.00, "Audifonos inalambricos con cancelacion de ruido y 20 horas de bateria."),
     Producto(2, "Smartwatch", 199.00, "Reloj inteligente con monitor de ritmo cardiaco y notificaciones."),
@@ -36,4 +52,10 @@ val secciones = listOf(
     Seccion("Mas vendidos", productos.filter { it.id in listOf(1, 2, 3) }),
     Seccion("Ofertas", productos.filter { it.id in listOf(4, 5, 6) }),
     Seccion("Para el hogar", productos.filter { it.id in listOf(7, 8) })
+)
+
+val pedidos = listOf(
+    Pedido("#1024", "Smartwatch", "28/09", "En camino"),
+    Pedido("#0987", "Funda celular", "15/09", "Entregado"),
+    Pedido("#0950", "Audifonos", "02/09", "Entregado")
 )

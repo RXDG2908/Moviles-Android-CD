@@ -9,11 +9,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.leon.tecsupstore.navigation.Screen
 
 // Lo que se ve DENTRO del menú lateral (va en drawerContent).
-// "onCerrar" avisa a AppNavegacion que debe cerrar el drawer.
+// "rutaActual" indica qué opción se resalta.
+// "onIrA" avisa a AppNavegacion a qué ruta debe ir (y que cierre el drawer).
 @Composable
-fun AppDrawer(onCerrar: () -> Unit) {
+fun AppDrawer(rutaActual: String?, onIrA: (String) -> Unit) {
     // ModalDrawerSheet: la hoja blanca que sale desde la izquierda
     ModalDrawerSheet(drawerContainerColor = Color.White) {
         Text(
@@ -24,30 +26,30 @@ fun AppDrawer(onCerrar: () -> Unit) {
         HorizontalDivider(modifier = Modifier.padding(horizontal = 24.dp))
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Destinos principales: por ahora solo cierran el menú
+        // Destinos principales: el que coincide con la ruta actual sale resaltado
         NavigationDrawerItem(
             icon = { Icon(Icons.Default.RadioButtonUnchecked, contentDescription = null) },
             label = { Text("Inicio") },
-            selected = false,
-            onClick = onCerrar
+            selected = rutaActual == Screen.Home.route,
+            onClick = { onIrA(Screen.Home.route) }
         )
         NavigationDrawerItem(
             icon = { Icon(Icons.Default.RadioButtonUnchecked, contentDescription = null) },
             label = { Text("Mis pedidos") },
-            selected = false,
-            onClick = onCerrar
+            selected = rutaActual == Screen.Pedidos.route,
+            onClick = { onIrA(Screen.Pedidos.route) }
         )
         NavigationDrawerItem(
             icon = { Icon(Icons.Default.RadioButtonUnchecked, contentDescription = null) },
             label = { Text("Favoritos") },
-            selected = false,
-            onClick = onCerrar
+            selected = rutaActual == Screen.Favoritos.route,
+            onClick = { onIrA(Screen.Favoritos.route) }
         )
         NavigationDrawerItem(
             icon = { Icon(Icons.Default.RadioButtonUnchecked, contentDescription = null) },
             label = { Text("Perfil") },
-            selected = false,
-            onClick = onCerrar
+            selected = rutaActual == Screen.Perfil.route,
+            onClick = { onIrA(Screen.Perfil.route) }
         )
     }
 }
