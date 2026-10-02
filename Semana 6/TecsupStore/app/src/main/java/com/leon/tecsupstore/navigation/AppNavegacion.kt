@@ -59,6 +59,8 @@ fun AppNavegacion() {
         drawerContent = {
             AppDrawer(
                 rutaActual = rutaActual,
+                // El tamaño de la lista se lee aquí: si cambia, el badge se redibuja solo
+                cantidadFavoritos = favoritos.size,
                 onIrA = { ruta ->
                     scope.launch { drawerState.close() }
                     // Cambia de sección sin apilar pantallas: deja solo Inicio debajo

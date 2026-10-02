@@ -23,8 +23,14 @@ import com.leon.tecsupstore.ui.theme.LilaTecsup
 // "rutaActual" indica qué opción se resalta.
 // "onIrA" avisa a AppNavegacion a qué ruta debe ir (y que cierre el drawer).
 // "onCerrarSesion" avisa que se tocó Cerrar sesion.
+// "cantidadFavoritos" es cuántos productos se marcaron desde el DropdownMenu.
 @Composable
-fun AppDrawer(rutaActual: String?, onIrA: (String) -> Unit, onCerrarSesion: () -> Unit) {
+fun AppDrawer(
+    rutaActual: String?,
+    cantidadFavoritos: Int,
+    onIrA: (String) -> Unit,
+    onCerrarSesion: () -> Unit
+) {
     // ModalDrawerSheet: la hoja blanca que sale desde la izquierda
     ModalDrawerSheet(drawerContainerColor = Color.White) {
         // Encabezado: avatar con iniciales, nombre y correo del usuario
@@ -45,22 +51,37 @@ fun AppDrawer(rutaActual: String?, onIrA: (String) -> Unit, onCerrarSesion: () -
         // Destinos principales: el que coincide con la ruta actual sale resaltado
         ItemMenu("Inicio", rutaActual == Screen.Home.route) { onIrA(Screen.Home.route) }
         ItemMenu("Mis pedidos", rutaActual == Screen.Pedidos.route) { onIrA(Screen.Pedidos.route) }
-        ItemMenu("Favoritos", rutaActual == Screen.Favoritos.route) { onIrA(Screen.Favoritos.route) }
+        // Favoritos lleva el badge con el contador
+        ItemMenu("Favoritos", rutaActual == Screen.Favoritos.route, contador = cantidadFavoritos) {
+            onIrA(Screen.Favoritos.route)
+        }
         ItemMenu("Perfil", rutaActual == Screen.Perfil.route) { onIrA(Screen.Perfil.route) }
         // Cerrar sesion nunca queda resaltado porque no es una pantalla
-        ItemMenu("Cerrar sesion", false, onCerrarSesion)
+        ItemMenu("Cerrar sesion", false, onClick = onCerrarSesion)
     }
 }
 
 // Una opción del menú: la elegida tiene fondo lila y texto morado en negrita,
-// el resto queda en blanco con texto negro
+// el resto queda en blanco con texto negro.
+// "contador" es opcional: si es mayor que 0 se dibuja un badge morado a la derecha.
 @Composable
-fun ItemMenu(texto: String, seleccionado: Boolean, onClick: () -> Unit) {
+fun ItemMenu(texto: String, seleccionado: Boolean, contador: Int = 0, onClick: () -> Unit) {
     NavigationDrawerItem(
         icon = { Icon(Icons.Default.RadioButtonUnchecked, contentDescription = null) },
         label = { Text(texto, fontWeight = if (seleccionado) FontWeight.Bold else FontWeight.Normal) },
         selected = seleccionado,
         onClick = onClick,
+        // badge: lo que va a la derecha del texto; con 0 favoritos no se muestra nada
+        badge = {
+            if (contador > 0) {
+                Badge(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ) {
+                    Text("$contador")
+                }
+            }
+        },
         shape = RoundedCornerShape(12.dp),
         colors = NavigationDrawerItemDefaults.colors(
             selectedContainerColor = LilaTecsup,
