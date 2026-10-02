@@ -1,11 +1,14 @@
 package com.leon.tecsupstore.navigation
 
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,6 +30,7 @@ fun AppNavegacion() {
     // Estado del menú lateral y scope para abrirlo/cerrarlo (son animaciones)
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     // Ruta de la pantalla que se ve ahora: cambia sola cada vez que se navega
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -51,6 +55,14 @@ fun AppNavegacion() {
                     navController.navigate(ruta) {
                         popUpTo(Screen.Home.route)
                         launchSingleTop = true
+                    }
+                },
+                onCerrarSesion = {
+                    scope.launch { drawerState.close() }
+                    // Sin login todavía: solo avisa y vuelve a Inicio limpiando el historial
+                    Toast.makeText(context, "Sesion cerrada", Toast.LENGTH_SHORT).show()
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Home.route) { inclusive = true }
                     }
                 }
             )
@@ -84,6 +96,12 @@ fun AppNavegacion() {
                 val productoId = backStackEntry.arguments?.getInt("productoId") ?: 1
                 DetalleProductoScreen(navController, productoId)
             }
+        }
+
+        // Con el menú abierto, "Atrás" solo lo cierra (en vez de volver o salir).
+        // Va después del NavHost para que tenga prioridad sobre su propio "Atrás".
+        BackHandler(enabled = drawerState.isOpen) {
+            scope.launch { drawerState.close() }
         }
     }
 }

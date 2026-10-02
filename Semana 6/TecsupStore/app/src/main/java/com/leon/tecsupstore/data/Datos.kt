@@ -32,7 +32,11 @@ data class Pedido(
 data class Usuario(
     val nombre: String,
     val correo: String
-)
+) {
+    // "Maria Rojas" -> "MR": primera letra de cada palabra
+    val iniciales: String
+        get() = nombre.split(" ").take(2).joinToString("") { it.take(1) }
+}
 
 val usuario = Usuario("Maria Rojas", "maria@tecsup.edu.pe")
 

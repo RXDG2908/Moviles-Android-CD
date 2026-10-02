@@ -33,6 +33,8 @@ fun PerfilScreen(onAbrirMenu: () -> Unit) {
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Avatar(iniciales = usuario.iniciales, tamano = 96.dp)
+            Spacer(modifier = Modifier.height(16.dp))
             Text(usuario.nombre, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
             Text(usuario.correo, color = Color.Gray)
         }
