@@ -29,6 +29,10 @@ import com.saludplus.citas.data.repository.Repositorio
 import com.saludplus.citas.data.model.Medico
 import com.saludplus.citas.ui.theme.Estrella
 import com.saludplus.citas.ui.theme.Verde
+import com.saludplus.citas.ui.theme.VerdeClaro
+import com.saludplus.citas.ui.theme.Amarillo
+import com.saludplus.citas.ui.theme.AmarilloClaro
+import com.saludplus.citas.ui.theme.RojoClaro
 import com.saludplus.citas.ui.theme.VerdeChip
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.ChildCare
@@ -392,6 +396,33 @@ fun IconoEspecialidad(especialidadId: Int, tamano: Int = 44) {
         contentAlignment = Alignment.Center
     ) {
         Icon(icono, contentDescription = null, tint = color)
+    }
+}
+
+// Colores de semáforo según los cupos libres de un día: (color del texto, color de fondo).
+// Verde = muchos cupos (6 o más), amarillo = pocos (3 a 5), rojo = últimos (1 o 2).
+fun coloresCupos(libres: Int): Pair<Color, Color> {
+    return when {
+        libres >= 6 -> Verde to VerdeClaro
+        libres >= 3 -> Amarillo to AmarilloClaro
+        else -> Rojo to RojoClaro
+    }
+}
+
+// Leyenda de colores: un puntito de color y su texto, uno al lado del otro.
+@Composable
+fun Leyenda(elementos: List<Pair<Color, String>>) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        elementos.forEach { (color, texto) ->
+            Box(
+                modifier = Modifier
+                    .size(10.dp)
+                    .clip(CircleShape)
+                    .background(color)
+            )
+            Text(" $texto", color = TextoGris, fontSize = 11.sp)
+            Spacer(Modifier.width(10.dp))
+        }
     }
 }
 

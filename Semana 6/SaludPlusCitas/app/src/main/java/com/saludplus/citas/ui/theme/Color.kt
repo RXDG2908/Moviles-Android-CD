@@ -26,6 +26,11 @@ val Morado = Color(0xFF9657FC)
 val Naranja = Color(0xFFF29035)
 val Rojo = Color(0xFFE43B44)
 
+// Semáforo de cupos (calendario y disponibilidad del médico)
+val Amarillo = Color(0xFFD99A00)         // pocos cupos
+val AmarilloClaro = Color(0xFFFFF4D1)
+val RojoClaro = Color(0xFFFCE4E6)        // últimos cupos
+
 // Detalles
 val Estrella = Color(0xFFE09C41)         // calificación del médico
 val VerdeChip = Color(0xFFD4FCEC)        // fondo del chip "Disponible hoy"

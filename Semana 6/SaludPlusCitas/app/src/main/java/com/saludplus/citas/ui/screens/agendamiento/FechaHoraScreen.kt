@@ -49,6 +49,13 @@ import com.saludplus.citas.ui.theme.Blanco
 import com.saludplus.citas.ui.theme.GrisSuave
 import com.saludplus.citas.ui.theme.TextoGris
 import com.saludplus.citas.ui.theme.TextoOscuro
+import androidx.compose.ui.text.style.TextDecoration
+import com.saludplus.citas.ui.components.Leyenda
+import com.saludplus.citas.ui.components.coloresCupos
+import com.saludplus.citas.ui.theme.Amarillo
+import com.saludplus.citas.ui.theme.Rojo
+import com.saludplus.citas.ui.theme.Verde
+import com.saludplus.citas.ui.theme.VerdeClaro
 import java.time.LocalDate
 
 // Pantalla 6 - Fecha y hora: elegir un día y un horario libre del médico.
@@ -66,9 +73,9 @@ fun FechaHoraScreen(navController: NavController, medicoId: Int) {
     // Cada día se guarda como "yyyy-MM-dd", igual que en Cita.fecha
     val hoy = remember { LocalDate.now() }
     var semana by remember { mutableStateOf(0) }
-    val diasDeLaSemana = diasHabiles(hoy.plusWeeks(semana.toLong()))
-    // Solo los días en que el médico atiende y que aún tienen horarios libres
-    val dias = Repositorio.diasDisponibles(medicoId, diasDeLaSemana)
+    val dias = diasHabiles(hoy.plusWeeks(semana.toLong()))
+    // ¿Queda al menos un día con cupos en esta semana?
+    val hayCupos = dias.any { Repositorio.cuposLibres(medicoId, it) > 0 }
 
     // Horarios libres del día elegido. Como "citas" es mutableStateListOf,
     // si alguien reserva un horario, esta lista se vuelve a calcular sola.
@@ -119,7 +126,7 @@ fun FechaHoraScreen(navController: NavController, medicoId: Int) {
                 }
                 // El mes y el año salen del primer día mostrado: cambian solos con la semana
                 Text(
-                    mesYAnio(diasDeLaSemana[0]),
+                    mesYAnio(dias[0]),
                     color = TextoOscuro,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
@@ -139,68 +146,131 @@ fun FechaHoraScreen(navController: NavController, medicoId: Int) {
             }
             Spacer(Modifier.height(14.dp))
 
-            // Días disponibles: el elegido se pinta de azul
-            if (dias.isEmpty()) {
-                Text(
-                    "El médico no tiene días disponibles esta semana. Prueba con la semana siguiente.",
-                    color = TextoGris,
-                    fontSize = 13.sp
-                )
-            }
+            // Días como butacas de cine: todos se ven, pero solo se pueden tocar los que
+            // tienen cupos. El color dice cuántos quedan; el elegido se pinta de azul.
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 dias.forEach { dia ->
                     val fecha = dia.toString()          // LocalDate -> "2026-10-12"
                     val elegido = fecha == fechaElegida
+                    val atiende = Repositorio.atiende(medicoId, dia)
+                    val libres = Repositorio.cuposLibres(medicoId, dia)
+                    val bloqueado = libres == 0
+                    val (colorCupos, fondoCupos) = coloresCupos(libres)
+
+                    // Colores según el estado del día
+                    val fondo = when {
+                        elegido -> AzulSalud
+                        bloqueado -> GrisSuave
+                        else -> fondoCupos
+                    }
+                    val colorTexto = when {
+                        elegido -> Blanco
+                        bloqueado -> TextoGris
+                        else -> TextoOscuro
+                    }
+                    // Debajo del número: cupos libres o por qué está bloqueado
+                    val detalle = when {
+                        !atiende -> "No atiende"
+                        bloqueado -> "Lleno"
+                        libres == 1 -> "1 cupo"
+                        else -> "$libres cupos"
+                    }
+
                     Column(
                         modifier = Modifier
                             .weight(1f)
                             .clip(RoundedCornerShape(12.dp))
-                            .background(if (elegido) AzulSalud else Blanco)
-                            .clickable {
+                            .background(fondo)
+                            // Un día bloqueado no se puede elegir
+                            .clickable(enabled = !bloqueado) {
                                 // Al cambiar de día la hora se reinicia y los horarios se recalculan
                                 fechaElegida = fecha
                                 horaElegida = null
                             }
-                            .padding(vertical = 10.dp),
+                            .padding(vertical = 8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(nombreDiaCorto(dia), color = if (elegido) Blanco else TextoGris, fontSize = 12.sp)
                         Text(
                             dia.dayOfMonth.toString(),
-                            color = if (elegido) Blanco else TextoOscuro,
+                            color = colorTexto,
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            textDecoration = if (bloqueado) TextDecoration.LineThrough else null
+                        )
+                        Text(
+                            detalle,
+                            color = when {
+                                elegido -> Blanco
+                                bloqueado -> TextoGris
+                                else -> colorCupos
+                            },
+                            fontSize = 9.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            maxLines = 1
                         )
                     }
                 }
-                // Espacios vacíos: los días mantienen su tamaño aunque sean menos de 5
-                repeat(5 - dias.size) { Spacer(Modifier.weight(1f)) }
             }
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(8.dp))
+            Leyenda(
+                listOf(
+                    Verde to "Muchos cupos",
+                    Amarillo to "Pocos",
+                    Rojo to "Últimos",
+                    TextoGris to "Bloqueado"
+                )
+            )
+            Spacer(Modifier.height(16.dp))
 
-            // Horarios disponibles en 3 columnas
-            if (fechaElegida == null) {
-                if (dias.isNotEmpty()) {
-                    Text("Elige un día para ver los horarios", color = TextoGris, fontSize = 13.sp)
-                }
+            // Horarios del día elegido en 3 columnas: los ocupados o ya pasados se ven
+            // tachados y en gris (como butacas vendidas) y no se pueden tocar
+            if (!hayCupos) {
+                Text(
+                    "El médico no tiene cupos esta semana. Prueba con la semana siguiente.",
+                    color = TextoGris,
+                    fontSize = 13.sp
+                )
+            } else if (fechaElegida == null) {
+                Text("Elige un día para ver los horarios", color = TextoGris, fontSize = 13.sp)
             } else {
+                Leyenda(
+                    listOf(
+                        Verde to "Libre",
+                        TextoGris to "Ocupado",
+                        AzulSalud to "Elegido"
+                    )
+                )
+                Spacer(Modifier.height(10.dp))
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(3),
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    items(horarios) { hora ->
+                    items(Repositorio.horariosBase) { hora ->
                         val elegida = hora == horaElegida
+                        val libre = hora in horarios
                         Text(
                             hora,
-                            color = if (elegida) Blanco else TextoOscuro,
+                            color = when {
+                                elegida -> Blanco
+                                libre -> Verde
+                                else -> TextoGris
+                            },
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
                             textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                            textDecoration = if (libre) null else TextDecoration.LineThrough,
                             modifier = Modifier
                                 .clip(RoundedCornerShape(10.dp))
-                                .background(if (elegida) AzulSalud else GrisSuave)
-                                .clickable { horaElegida = hora }
+                                .background(
+                                    when {
+                                        elegida -> AzulSalud
+                                        libre -> VerdeClaro
+                                        else -> GrisSuave
+                                    }
+                                )
+                                .clickable(enabled = libre) { horaElegida = hora }
                                 .padding(vertical = 12.dp)
                         )
                     }

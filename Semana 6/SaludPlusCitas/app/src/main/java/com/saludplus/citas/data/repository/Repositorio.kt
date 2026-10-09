@@ -10,6 +10,7 @@ import com.saludplus.citas.data.model.Medico
 import com.saludplus.citas.data.model.Sede
 import com.saludplus.citas.data.model.Usuario
 import java.time.LocalDate
+import java.time.LocalTime
 
 // Repositorio único de la app (object = una sola instancia para todas las pantallas).
 // Todos los datos viven en colecciones en memoria: NO usar base de datos
@@ -119,6 +120,30 @@ object Repositorio {
     // mutableStateListOf: cuando se agrega o quita una cita, las pantallas
     // que la leen se vuelven a dibujar solas.
     val citas = mutableStateListOf<Cita>()
+
+    // Citas de ejemplo de otros pacientes para los próximos 28 días, así el calendario
+    // muestra días con muchos, pocos o ningún cupo (como las butacas de un cine).
+    // Tienen el teléfono vacío: no aparecen en "Mis citas" de ningún usuario.
+    init {
+        val hoy = LocalDate.now()
+        var id = 1
+        for (medico in medicos) {
+            for (i in 0 until 28) {
+                val dia = hoy.plusDays(i.toLong())
+                if (dia.dayOfWeek.value !in medico.diasAtencion) continue
+                // Cuántos de los 9 horarios ya están ocupados: 0, 2, 4, 7 o 9 (lleno)
+                val ocupados = listOf(0, 2, 4, 7, 9)[(medico.id + dia.dayOfMonth) % 5]
+                // Se reparten las horas ocupadas a lo largo del día (no siempre las primeras)
+                val horas = horariosBase.filterIndexed { indice, _ ->
+                    (indice * 5 + medico.id + dia.dayOfMonth) % 9 < ocupados
+                }
+                for (hora in horas) {
+                    citas.add(Cita(id, "", medico.id, dia.toString(), hora, sedeId = medico.sedes.first()))
+                    id++
+                }
+            }
+        }
+    }
 
     // ---------- Usuarios ----------
 
@@ -246,23 +271,36 @@ object Repositorio {
 
     // Horarios libres de ese médico en esa fecha:
     // 1) horas ya ocupadas = citas del médico y fecha (filter) -> sus horas (map)
-    // 2) se devuelven los horariosBase que no estén ocupados (filter)
+    // 2) se devuelven los horariosBase que no estén ocupados ni hayan pasado (filter)
     fun horariosDisponibles(medicoId: Int, fecha: String): List<String> {
         val ocupados = citas
             .filter { it.medicoId == medicoId && it.fecha == fecha }
             .map { it.hora }
-        return horariosBase.filter { it !in ocupados }
+        return horariosBase.filter { it !in ocupados && !horaYaPaso(fecha, it) }
     }
 
-    // De los días recibidos, solo los que el médico atiende (diasAtencion) y que
-    // todavía tienen al menos un horario libre (filter). Como usa horariosDisponibles,
-    // un día con todas sus horas reservadas deja de aparecer solo.
-    fun diasDisponibles(medicoId: Int, dias: List<LocalDate>): List<LocalDate> {
-        val medico = obtenerMedico(medicoId) ?: return emptyList()
-        return dias.filter {
-            it.dayOfWeek.value in medico.diasAtencion &&
-                horariosDisponibles(medicoId, it.toString()).isNotEmpty()
-        }
+    // true si la fecha es hoy y esa hora ya pasó (no se puede reservar)
+    fun horaYaPaso(fecha: String, hora: String): Boolean {
+        return fecha == LocalDate.now().toString() && LocalTime.parse(hora).isBefore(LocalTime.now())
+    }
+
+    // true si el médico atiende ese día de la semana (diasAtencion)
+    fun atiende(medicoId: Int, dia: LocalDate): Boolean {
+        val medico = obtenerMedico(medicoId) ?: return false
+        return dia.dayOfWeek.value in medico.diasAtencion
+    }
+
+    // Cupos libres de ese médico en ese día: 0 si no atiende o si ya está lleno
+    fun cuposLibres(medicoId: Int, dia: LocalDate): Int {
+        if (!atiende(medicoId, dia)) return 0
+        return horariosDisponibles(medicoId, dia.toString()).size
+    }
+
+    // Primer día (desde hoy, hasta 4 semanas) en que el médico tiene cupos (find),
+    // o null si no tiene ninguno
+    fun proximoDiaConCupos(medicoId: Int): LocalDate? {
+        val hoy = LocalDate.now()
+        return (0 until 28).map { hoy.plusDays(it.toLong()) }.find { cuposLibres(medicoId, it) > 0 }
     }
 
     // Crea y guarda la cita del usuario actual.
