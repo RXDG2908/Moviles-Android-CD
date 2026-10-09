@@ -36,13 +36,13 @@ fun AppNavigation() {
         composable(Rutas.REGISTRO) { RegistroScreen(navController) }
         composable(
             route = Rutas.LOGIN,
-            arguments = listOf(navArgument("telefono") {
+            arguments = listOf(navArgument("correo") {
                 type = NavType.StringType
                 defaultValue = ""
             })
         ) { entry ->
-            val telefono = entry.arguments?.getString("telefono") ?: ""
-            LoginScreen(navController, telefono)
+            val correo = entry.arguments?.getString("correo") ?: ""
+            LoginScreen(navController, correo)
         }
         composable(Rutas.TERMINOS) { TerminosScreen(navController) }
 

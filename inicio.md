@@ -210,8 +210,13 @@ Muéstrale al usuario este resumen, con los datos reales:
 
 ## Guion de la demo (para el usuario)
 
-**Usuario de prueba:** teléfono `987654321`, contraseña `123456` (Juan Pérez). También
-se puede registrar uno nuevo.
+**Usuario de prueba:**
+
+- Rama `main`: teléfono `987654321`, contraseña `123456` (Juan Pérez).
+- Rama `mejora-ia`: correo `juan@correo.com`, contraseña `123456` (Juan Pérez). En esta
+  rama se inicia sesión con **correo**, no con teléfono.
+
+También se puede registrar uno nuevo.
 
 ### Rama `main` — Fase 1 (sin IA)
 
@@ -226,8 +231,9 @@ se puede registrar uno nuevo.
 
 ### Rama `mejora-ia` — Fase 2 (con IA) + mejoras del profesor
 
-1. **Re-login:** al registrarse **no entra directo**. Va a Login con el teléfono ya
-   escrito y el aviso "Cuenta creada, inicia sesión".
+1. **Inicio de sesión con correo y re-login:** al registrarse (el correo es
+   obligatorio) **no entra directo**. Va a Login con el correo ya escrito y el aviso
+   "Cuenta creada, inicia sesión".
 2. **Inicio:** "Mis citas" ya no está en los mosaicos; en su lugar está **Mis doctores**.
 3. **Agendar cita → Elige tu sede** (Independencia o La Molina) → Especialidades →
    Médicos **solo de esa sede**.

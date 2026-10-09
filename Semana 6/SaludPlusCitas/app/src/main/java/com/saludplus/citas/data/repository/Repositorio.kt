@@ -73,11 +73,14 @@ object Repositorio {
 
     // ---------- Usuarios ----------
 
-    // Si ya existe un usuario con el mismo teléfono (any), no se registra.
+    // Si ya existe un usuario con el mismo teléfono o el mismo correo (any), no se registra.
     // Si no, se agrega a la lista (add).
     // NO toca usuarioActual: después de registrarse hay que iniciar sesión.
     fun registrarUsuario(usuario: Usuario): Boolean {
-        if (usuarios.any { it.telefono == usuario.telefono }) return false
+        if (usuarios.any {
+                it.telefono == usuario.telefono || it.correo.equals(usuario.correo, ignoreCase = true)
+            }
+        ) return false
         usuarios.add(usuario)
         return true
     }
@@ -86,6 +89,17 @@ object Repositorio {
     // Si existe, queda como usuarioActual (sesión iniciada).
     fun iniciarSesion(telefono: String, contrasena: String): Boolean {
         val usuario = usuarios.find { it.telefono == telefono && it.contrasena == contrasena }
+        usuarioActual = usuario
+        return usuario != null
+    }
+
+    // Inicio de sesión con correo y contraseña (el que usa LoginScreen).
+    // Busca el usuario (find); el correo no distingue mayúsculas ni espacios.
+    // Si existe, queda como usuarioActual (sesión iniciada).
+    fun iniciarSesionConCorreo(correo: String, contrasena: String): Boolean {
+        val usuario = usuarios.find {
+            it.correo.equals(correo.trim(), ignoreCase = true) && it.contrasena == contrasena
+        }
         usuarioActual = usuario
         return usuario != null
     }

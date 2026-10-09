@@ -1,13 +1,15 @@
 package com.saludplus.citas.navigation
 
+import android.net.Uri
+
 // Todas las rutas de la app. Las que llevan {parametro} reciben un dato
 // de la pantalla anterior; para armarlas se usan las funciones de abajo.
 object Rutas {
     // Autenticación
     const val SPLASH = "splash"
     const val REGISTRO = "registro"
-    // Login recibe el teléfono opcional (lo manda Registro para dejarlo escrito)
-    const val LOGIN = "login?telefono={telefono}"
+    // Login recibe el correo opcional (lo manda Registro para dejarlo escrito)
+    const val LOGIN = "login?correo={correo}"
     const val TERMINOS = "terminos"
 
     // Inicio y barra inferior (NavigationBar)
@@ -36,7 +38,8 @@ object Rutas {
     // Detalle de una cita (reto extra)
     const val DETALLE_CITA = "detalle_cita/{citaId}"
 
-    fun login(telefono: String = "") = "login?telefono=$telefono"
+    // Uri.encode: el correo puede tener caracteres especiales (por ejemplo "+")
+    fun login(correo: String = "") = "login?correo=${Uri.encode(correo)}"
     fun sedes(destino: String = IR_A_ESPECIALIDADES, id: Int = 0) = "sedes?destino=$destino&id=$id"
     fun medicos(especialidadId: Int) = "medicos/$especialidadId"
     fun fechaHora(medicoId: Int) = "fecha_hora/$medicoId"

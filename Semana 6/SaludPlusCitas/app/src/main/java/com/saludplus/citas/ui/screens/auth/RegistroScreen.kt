@@ -71,7 +71,8 @@ fun RegistroScreen(navController: NavController) {
 
         CampoFormulario("Nombre completo", nombre, { nombre = it }, Icons.Default.Person)
         CampoFormulario("Teléfono", telefono, { telefono = it }, Icons.Default.Call, KeyboardType.Phone)
-        CampoFormulario("Correo (opcional)", correo, { correo = it }, Icons.Default.Email, KeyboardType.Email)
+        // El correo es obligatorio: con él se inicia sesión
+        CampoFormulario("Correo", correo, { correo = it }, Icons.Default.Email, KeyboardType.Email)
         CampoFormulario("Contraseña", contrasena, { contrasena = it }, Icons.Default.Lock, KeyboardType.Password, esContrasena = true)
 
         // Mensaje de error de las validaciones
@@ -83,11 +84,11 @@ fun RegistroScreen(navController: NavController) {
             teclado?.hide()
             // Validaciones
             error = when {
-                nombre.isBlank() || telefono.isBlank() || contrasena.isBlank() ->
-                    "Completa nombre, teléfono y contraseña"
+                nombre.isBlank() || telefono.isBlank() || correo.isBlank() || contrasena.isBlank() ->
+                    "Completa nombre, teléfono, correo y contraseña"
                 telefono.length != 9 || !telefono.all { it.isDigit() } ->
                     "El teléfono debe tener 9 dígitos"
-                correo.isNotBlank() && !correo.contains("@") -> "Ingresa un correo válido"
+                !correo.contains("@") || !correo.contains(".") -> "Ingresa un correo válido"
                 contrasena.length < 6 -> "La contraseña debe tener al menos 6 caracteres"
                 else -> ""
             }
@@ -95,13 +96,13 @@ fun RegistroScreen(navController: NavController) {
                 // add a la lista de usuarios (any evita teléfonos repetidos)
                 val nuevo = Usuario(nombre.trim(), telefono, correo.trim(), contrasena)
                 if (Repositorio.registrarUsuario(nuevo)) {
-                    // Registrarse NO inicia sesión: se va a Login con el teléfono ya escrito
+                    // Registrarse NO inicia sesión: se va a Login con el correo ya escrito
                     // y Registro sale del historial (Atrás no vuelve al formulario)
-                    navController.navigate(Rutas.login(telefono)) {
+                    navController.navigate(Rutas.login(correo.trim())) {
                         popUpTo(Rutas.REGISTRO) { inclusive = true }
                     }
                 } else {
-                    error = "Ya existe una cuenta con ese teléfono"
+                    error = "Ya existe una cuenta con ese teléfono o correo"
                 }
             }
         }

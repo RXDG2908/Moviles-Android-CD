@@ -198,3 +198,28 @@ un commit cada uno:
   médico" el problema se notaba más, por eso se volvió a agregar como parte de las mejoras
   del profesor.
 
+## Prompt 7
+
+> Para iniciar sesión es con correo y contraseña, no Número!!! Corregir eso urgente en mejora-ia
+
+### Respuesta resumida
+
+El inicio de sesión pasó de teléfono a **correo y contraseña**:
+
+- **Login** pide "Correo" (teclado de correo) y contraseña. Los mensajes de error ahora
+  hablan del correo.
+- **Repositorio:** nueva función `iniciarSesionConCorreo(correo, contrasena)` (`find`;
+  el correo no distingue mayúsculas). `iniciarSesion(telefono, contrasena)` se mantiene
+  sin cambios porque el prompt de las mejoras pide no cambiar nombres ni parámetros de
+  las funciones existentes.
+- **Registro:** el correo deja de ser opcional, se valida que tenga "@" y ".", y
+  `registrarUsuario` rechaza también un correo ya registrado (`any`).
+- **Re-login:** después de registrarse, Login abre con el **correo** ya escrito (la ruta
+  pasó a `login?correo={correo}`, con `Uri.encode` para caracteres especiales).
+- El teléfono se sigue pidiendo en el Registro porque identifica las citas del paciente.
+
+### Qué se tuvo que corregir
+
+- La primera versión de las mejoras usaba el teléfono para iniciar sesión, igual que el
+  código esqueleto. Se cambió al correo según lo indicado.
+
