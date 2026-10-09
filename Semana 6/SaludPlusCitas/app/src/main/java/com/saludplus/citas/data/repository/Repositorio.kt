@@ -157,11 +157,9 @@ object Repositorio {
     }
 
     // Todos los médicos agrupados por especialidad (groupBy), cada grupo de mejor
-    // a menor calificación (sortedByDescending). Si "texto" no está vacío, solo
-    // quedan los médicos cuyo nombre lo contiene; las especialidades sin médicos no salen.
-    fun medicosAgrupadosPorEspecialidad(texto: String = ""): Map<Especialidad, List<Medico>> {
+    // a menor calificación (sortedByDescending).
+    fun medicosAgrupadosPorEspecialidad(): Map<Especialidad, List<Medico>> {
         val grupos = medicos
-            .filter { it.nombre.contains(texto.trim(), ignoreCase = true) }
             .sortedByDescending { it.calificacion }
             .groupBy { it.especialidadId }
 

@@ -46,8 +46,12 @@ import com.saludplus.citas.ui.theme.TextoOscuro
 @Composable
 fun MisDoctoresScreen(navController: NavController) {
     var busqueda by remember { mutableStateOf("") }
-    // Cada vez que cambia "busqueda" se vuelven a calcular los grupos
-    val grupos = Repositorio.medicosAgrupadosPorEspecialidad(busqueda)
+    // Cada vez que cambia "busqueda" se vuelven a calcular los grupos:
+    // en cada especialidad quedan los médicos cuyo nombre contiene el texto
+    // (filter + contains, ignoreCase) y las especialidades sin médicos no salen
+    val grupos = Repositorio.medicosAgrupadosPorEspecialidad()
+        .mapValues { (_, medicos) -> medicos.filter { it.nombre.contains(busqueda.trim(), ignoreCase = true) } }
+        .filterValues { it.isNotEmpty() }
 
     Scaffold(
         containerColor = Blanco,

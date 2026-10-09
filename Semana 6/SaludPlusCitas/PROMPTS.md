@@ -101,7 +101,8 @@ orden y con un commit por mejora.
 4. **Mis doctores** (commit "Agrega mis doctores agrupados por especialidad"). Nuevo
    mosaico en el Inicio y nueva pantalla `MisDoctoresScreen`. Muestra todos los médicos
    agrupados con `medicosAgrupadosPorEspecialidad()` (`groupBy` + `sortedByDescending`),
-   con un encabezado por especialidad y un buscador por nombre. Al tocar un médico se va
+   con un encabezado por especialidad y un buscador por nombre (`filter` + `contains`,
+   `ignoreCase`) que filtra en la pantalla. Al tocar un médico se va
    a Fecha y hora (pasando antes por Sedes si hace falta).
 
 ### Qué se tuvo que corregir
@@ -123,3 +124,20 @@ orden y con un commit por mejora.
   correr `./gradlew assembleDebug`. Se revisó el código a mano (imports, paréntesis y
   llaves, y que las funciones de `Rutas` y `Repositorio` existan). Falta compilar y probar
   en Android Studio.
+
+## Prompt 4
+
+> Este si es con IA, seguir al pie de la letra todo, IA potenciada
+
+### Respuesta resumida
+
+La IA revisó las 4 mejoras punto por punto contra `mejorasprofe.md` y encontró una
+diferencia: la función `medicosAgrupadosPorEspecialidad()` tenía un parámetro `texto`
+para el buscador, pero el prompt la pide sin parámetros, con el tipo
+`Map<Especialidad, List<Medico>>`. Se dejó sin parámetros, y el buscador de
+`MisDoctoresScreen` filtra en la pantalla cada grupo por nombre (`filter` + `contains`,
+`ignoreCase`) y oculta las especialidades que quedan vacías.
+
+### Qué se tuvo que corregir
+
+- La firma de `medicosAgrupadosPorEspecialidad()`, para que sea igual a la del prompt.
