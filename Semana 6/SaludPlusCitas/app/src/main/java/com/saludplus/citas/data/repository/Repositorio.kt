@@ -85,39 +85,41 @@ object Repositorio {
 
     // ---------- Especialidades ----------
 
-    // TODO: devolver las especialidades cuyo nombre contenga el texto
-    //  (filter + contains, sin importar mayúsculas). Texto vacío = todas.
+    // Especialidades cuyo nombre contiene el texto (filter + contains).
+    // Con el texto vacío devuelve todas.
     fun buscarEspecialidades(texto: String): List<Especialidad> {
-        return emptyList()
+        return especialidades.filter { it.nombre.contains(texto.trim(), ignoreCase = true) }
     }
 
-    // TODO: devolver las primeras "cantidad" especialidades (take).
+    // Las primeras especialidades de la lista (take).
     fun especialidadesDestacadas(cantidad: Int = 3): List<Especialidad> {
-        return emptyList()
+        return especialidades.take(cantidad)
     }
 
-    // TODO: buscar la especialidad por id (find).
+    // Busca la especialidad por id (find).
     fun obtenerEspecialidad(id: Int): Especialidad? {
-        return null
+        return especialidades.find { it.id == id }
     }
 
     // ---------- Médicos ----------
 
-    // TODO: buscar el médico por id (find).
+    // Busca el médico por id (find).
     fun obtenerMedico(id: Int): Medico? {
-        return null
+        return medicos.find { it.id == id }
     }
 
-    // TODO: médicos de esa especialidad (filter), ordenados por calificación
-    //  de mayor a menor (sortedByDescending).
+    // Médicos de la especialidad (filter), de mejor a menor calificación
+    // (sortedByDescending).
     fun medicosPorEspecialidad(especialidadId: Int): List<Medico> {
-        return emptyList()
+        return medicos
+            .filter { it.especialidadId == especialidadId }
+            .sortedByDescending { it.calificacion }
     }
 
-    // TODO: igual que medicosPorEspecialidad, pero además filtrando por
-    //  nombre que contenga el texto.
+    // Igual que medicosPorEspecialidad, pero además por nombre (contains).
     fun buscarMedicos(especialidadId: Int, texto: String): List<Medico> {
-        return emptyList()
+        return medicosPorEspecialidad(especialidadId)
+            .filter { it.nombre.contains(texto.trim(), ignoreCase = true) }
     }
 
     // ---------- Citas ----------
