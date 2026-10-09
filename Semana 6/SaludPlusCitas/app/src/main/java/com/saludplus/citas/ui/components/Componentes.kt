@@ -17,6 +17,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Star
+import com.saludplus.citas.data.model.Especialidad
+import com.saludplus.citas.data.model.Medico
+import com.saludplus.citas.ui.theme.Estrella
+import com.saludplus.citas.ui.theme.Verde
+import com.saludplus.citas.ui.theme.VerdeChip
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.ChildCare
 import androidx.compose.material.icons.filled.Description
@@ -69,9 +80,80 @@ import androidx.compose.ui.graphics.Color
 private val RosaClaro = Color(0xFFFCE8EC)
 
 // Componentes reutilizables por crear en este paquete (sugerencia):
-// TODO: TarjetaEspecialidad(especialidad, onClick)
-// TODO: TarjetaMedico(medico, onClick)
 // TODO: TarjetaCita(cita, onClick)
+
+// Fila de una especialidad: ícono, nombre, descripción y flecha.
+@Composable
+fun TarjetaEspecialidad(especialidad: Especialidad, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .clickable(onClick = onClick)
+            .padding(vertical = 10.dp, horizontal = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconoEspecialidad(especialidad.id)
+        Spacer(Modifier.width(14.dp))
+        Column(Modifier.weight(1f)) {
+            Text(especialidad.nombre, color = TextoOscuro, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+            Text(especialidad.descripcion, color = TextoGris, fontSize = 12.sp)
+        }
+        Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = TextoGris)
+    }
+}
+
+// Avatar circular del médico.
+@Composable
+fun AvatarMedico(tamano: Int = 56) {
+    Box(
+        modifier = Modifier
+            .size(tamano.dp)
+            .clip(CircleShape)
+            .background(AzulClaro),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(Icons.Default.Person, contentDescription = null, tint = AzulSalud, modifier = Modifier.size((tamano * 0.6).dp))
+    }
+}
+
+// Tarjeta de un médico: avatar, nombre, cargo, calificación y disponibilidad.
+@Composable
+fun TarjetaMedico(medico: Medico, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(14.dp))
+            .border(1.dp, GrisSuave, RoundedCornerShape(14.dp))
+            .clickable(onClick = onClick)
+            .padding(12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        AvatarMedico()
+        Spacer(Modifier.width(12.dp))
+        Column(Modifier.weight(1f)) {
+            Text(medico.nombre, color = TextoOscuro, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+            Text(medico.cargo, color = TextoGris, fontSize = 12.sp)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Default.Star, contentDescription = null, tint = Estrella, modifier = Modifier.size(16.dp))
+                Text(" ${medico.calificacion} (${medico.resenas})", color = TextoGris, fontSize = 12.sp)
+            }
+            Spacer(Modifier.height(6.dp))
+            // Chip de disponibilidad
+            Text(
+                medico.disponibilidad,
+                color = Verde,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(VerdeChip)
+                    .padding(horizontal = 8.dp, vertical = 3.dp)
+            )
+        }
+    }
+}
 
 // Barra inferior (NavigationBar) con los 4 destinos principales.
 // "rutaActual" indica qué pestaña se pinta de azul.
@@ -109,7 +191,11 @@ fun BarraInferior(navController: NavController, rutaActual: String) {
 // Barra superior blanca con flecha para volver y el título a su lado.
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BarraSuperior(titulo: String, onVolver: () -> Unit) {
+fun BarraSuperior(
+    titulo: String,
+    acciones: @Composable RowScope.() -> Unit = {},
+    onVolver: () -> Unit
+) {
     TopAppBar(
         title = { Text(titulo, fontWeight = FontWeight.Bold, fontSize = 18.sp) },
         navigationIcon = {
@@ -117,6 +203,7 @@ fun BarraSuperior(titulo: String, onVolver: () -> Unit) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
             }
         },
+        actions = acciones,
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Blanco,
             titleContentColor = TextoOscuro,
