@@ -95,7 +95,11 @@ fun RegistroScreen(navController: NavController) {
                 // add a la lista de usuarios (any evita teléfonos repetidos)
                 val nuevo = Usuario(nombre.trim(), telefono, correo.trim(), contrasena)
                 if (Repositorio.registrarUsuario(nuevo)) {
-                    navController.navigate(Rutas.LOGIN)
+                    // Registrarse NO inicia sesión: se va a Login con el teléfono ya escrito
+                    // y Registro sale del historial (Atrás no vuelve al formulario)
+                    navController.navigate(Rutas.login(telefono)) {
+                        popUpTo(Rutas.REGISTRO) { inclusive = true }
+                    }
                 } else {
                     error = "Ya existe una cuenta con ese teléfono"
                 }
@@ -122,7 +126,7 @@ fun RegistroScreen(navController: NavController) {
                 color = AzulSalud,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.clickable { navController.navigate(Rutas.LOGIN) }
+                modifier = Modifier.clickable { navController.navigate(Rutas.login()) }
             )
         }
     }

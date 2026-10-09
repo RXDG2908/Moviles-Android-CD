@@ -57,6 +57,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -387,6 +388,19 @@ fun IconoEspecialidad(especialidadId: Int, tamano: Int = 44) {
     ) {
         Icon(icono, contentDescription = null, tint = color)
     }
+}
+
+// Protección de las pantallas que necesitan sesión (agendamiento).
+// Si nadie inició sesión, manda a Login y devuelve false para que la pantalla no se dibuje.
+@Composable
+fun SesionIniciada(navController: NavController): Boolean {
+    val usuario = Repositorio.usuarioActual
+    LaunchedEffect(usuario) {
+        if (usuario == null) {
+            navController.navigate(Rutas.login()) { launchSingleTop = true }
+        }
+    }
+    return usuario != null
 }
 
 // Contenido temporal de las pantallas que aún no están terminadas.

@@ -75,7 +75,7 @@ fun SplashScreen(navController: NavController) {
 
         // Botones
         BotonPrincipal("Comenzar") { navController.navigate(Rutas.REGISTRO) }
-        TextButton(onClick = { navController.navigate(Rutas.LOGIN) }) {
+        TextButton(onClick = { navController.navigate(Rutas.login()) }) {
             Text("Ya tengo una cuenta", color = AzulSalud, fontWeight = FontWeight.SemiBold)
         }
     }

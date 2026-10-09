@@ -6,7 +6,8 @@ object Rutas {
     // Autenticación
     const val SPLASH = "splash"
     const val REGISTRO = "registro"
-    const val LOGIN = "login"
+    // Login recibe el teléfono opcional (lo manda Registro para dejarlo escrito)
+    const val LOGIN = "login?telefono={telefono}"
     const val TERMINOS = "terminos"
 
     // Inicio y barra inferior (NavigationBar)
@@ -26,6 +27,7 @@ object Rutas {
     // Detalle de una cita (reto extra)
     const val DETALLE_CITA = "detalle_cita/{citaId}"
 
+    fun login(telefono: String = "") = "login?telefono=$telefono"
     fun medicos(especialidadId: Int) = "medicos/$especialidadId"
     fun fechaHora(medicoId: Int) = "fecha_hora/$medicoId"
     fun confirmarCita(medicoId: Int, fecha: String, hora: String) =

@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.saludplus.citas.data.repository.Repositorio
 import com.saludplus.citas.navigation.Rutas
+import com.saludplus.citas.ui.components.SesionIniciada
 import com.saludplus.citas.ui.components.BarraSuperior
 import com.saludplus.citas.ui.components.BotonPrincipal
 import com.saludplus.citas.ui.components.FilaDato
@@ -48,6 +49,9 @@ import com.saludplus.citas.ui.theme.TextoOscuro
 // crea la cita y va a "Cita agendada" borrando el flujo de agendamiento (popUpTo).
 @Composable
 fun ConfirmarCitaScreen(navController: NavController, medicoId: Int, fecha: String, hora: String) {
+    // Sin sesión no se puede agendar: se manda a Login
+    if (!SesionIniciada(navController)) return
+
     val medico = Repositorio.obtenerMedico(medicoId)
     var motivo by remember { mutableStateOf("") }
     var error by remember { mutableStateOf("") }

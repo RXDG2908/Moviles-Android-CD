@@ -32,7 +32,16 @@ fun AppNavigation() {
         // Autenticación
         composable(Rutas.SPLASH) { SplashScreen(navController) }
         composable(Rutas.REGISTRO) { RegistroScreen(navController) }
-        composable(Rutas.LOGIN) { LoginScreen(navController) }
+        composable(
+            route = Rutas.LOGIN,
+            arguments = listOf(navArgument("telefono") {
+                type = NavType.StringType
+                defaultValue = ""
+            })
+        ) { entry ->
+            val telefono = entry.arguments?.getString("telefono") ?: ""
+            LoginScreen(navController, telefono)
+        }
         composable(Rutas.TERMINOS) { TerminosScreen(navController) }
 
         // Inicio y destinos de la barra inferior

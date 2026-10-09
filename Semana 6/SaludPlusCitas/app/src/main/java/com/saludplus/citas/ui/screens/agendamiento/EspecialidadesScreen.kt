@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.saludplus.citas.data.repository.Repositorio
 import com.saludplus.citas.navigation.Rutas
+import com.saludplus.citas.ui.components.SesionIniciada
 import com.saludplus.citas.ui.components.BarraSuperior
 import com.saludplus.citas.ui.components.TarjetaEspecialidad
 import com.saludplus.citas.ui.theme.Blanco
@@ -36,6 +37,9 @@ import com.saludplus.citas.ui.theme.TextoGris
 // Pantalla 4 - Especialidades: buscador + LazyColumn que se filtra en tiempo real.
 @Composable
 fun EspecialidadesScreen(navController: NavController) {
+    // Sin sesión no se puede agendar: se manda a Login
+    if (!SesionIniciada(navController)) return
+
     var busqueda by remember { mutableStateOf("") }
     // Cada vez que cambia "busqueda" se vuelve a calcular la lista (filter + contains)
     val especialidades = Repositorio.buscarEspecialidades(busqueda)

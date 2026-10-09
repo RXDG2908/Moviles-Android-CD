@@ -64,6 +64,7 @@ object Repositorio {
 
     // Si ya existe un usuario con el mismo teléfono (any), no se registra.
     // Si no, se agrega a la lista (add).
+    // NO toca usuarioActual: después de registrarse hay que iniciar sesión.
     fun registrarUsuario(usuario: Usuario): Boolean {
         if (usuarios.any { it.telefono == usuario.telefono }) return false
         usuarios.add(usuario)

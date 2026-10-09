@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.saludplus.citas.data.repository.Repositorio
 import com.saludplus.citas.navigation.Rutas
+import com.saludplus.citas.ui.components.SesionIniciada
 import com.saludplus.citas.ui.components.BarraSuperior
 import com.saludplus.citas.ui.components.BotonPrincipal
 import com.saludplus.citas.ui.components.ResumenMedico
@@ -52,6 +53,9 @@ import java.time.LocalDate
 // Pantalla 6 - Fecha y hora: elegir un día y un horario libre del médico.
 @Composable
 fun FechaHoraScreen(navController: NavController, medicoId: Int) {
+    // Sin sesión no se puede agendar: se manda a Login
+    if (!SesionIniciada(navController)) return
+
     val medico = Repositorio.obtenerMedico(medicoId)
     var fechaElegida by remember { mutableStateOf<String?>(null) }
     var horaElegida by remember { mutableStateOf<String?>(null) }

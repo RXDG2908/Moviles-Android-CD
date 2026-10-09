@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.saludplus.citas.data.repository.Repositorio
 import com.saludplus.citas.navigation.Rutas
+import com.saludplus.citas.ui.components.SesionIniciada
 import com.saludplus.citas.ui.components.BarraSuperior
 import com.saludplus.citas.ui.components.TarjetaMedico
 import com.saludplus.citas.ui.theme.Blanco
@@ -38,6 +39,9 @@ import com.saludplus.citas.ui.theme.TextoGris
 // los médicos de esa especialidad, de mejor a menor calificación.
 @Composable
 fun MedicosScreen(navController: NavController, especialidadId: Int) {
+    // Sin sesión no se puede agendar: se manda a Login
+    if (!SesionIniciada(navController)) return
+
     val especialidad = Repositorio.obtenerEspecialidad(especialidadId)
     var mostrarBusqueda by remember { mutableStateOf(false) }
     var busqueda by remember { mutableStateOf("") }
