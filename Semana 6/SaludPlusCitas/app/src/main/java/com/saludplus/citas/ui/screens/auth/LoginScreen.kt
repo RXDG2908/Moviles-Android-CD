@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -43,6 +44,7 @@ fun LoginScreen(navController: NavController) {
     var telefono by remember { mutableStateOf("") }
     var contrasena by remember { mutableStateOf("") }
     var error by remember { mutableStateOf("") }
+    val teclado = LocalSoftwareKeyboardController.current
 
     Scaffold(
         containerColor = Blanco,
@@ -69,6 +71,7 @@ fun LoginScreen(navController: NavController) {
             }
 
             BotonPrincipal("Iniciar sesión") {
+                teclado?.hide()
                 if (telefono.isBlank() || contrasena.isBlank()) {
                     error = "Ingresa tu teléfono y contraseña"
                 } else if (Repositorio.iniciarSesion(telefono, contrasena)) {
