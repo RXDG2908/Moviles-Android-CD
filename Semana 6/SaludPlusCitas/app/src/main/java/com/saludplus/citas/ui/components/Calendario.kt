@@ -30,6 +30,9 @@ fun diasHabiles(desde: LocalDate, cantidad: Int = 5): List<LocalDate> {
 // LocalDate -> "Mar" (dayOfWeek.value va de 1 = lunes a 7 = domingo)
 fun nombreDiaCorto(fecha: LocalDate): String = diasCortos[fecha.dayOfWeek.value - 1]
 
+// Días de atención de un médico: [1, 3, 5] -> "Lun, Mié, Vie"
+fun diasDeAtencion(dias: List<Int>): String = dias.joinToString(", ") { diasCortos[it - 1] }
+
 // LocalDate -> "Octubre 2026"
 fun mesYAnio(fecha: LocalDate): String = "${meses[fecha.monthValue - 1]} ${fecha.year}"
 

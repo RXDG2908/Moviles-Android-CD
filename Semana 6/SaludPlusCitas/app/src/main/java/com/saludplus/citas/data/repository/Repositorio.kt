@@ -9,6 +9,7 @@ import com.saludplus.citas.data.model.Especialidad
 import com.saludplus.citas.data.model.Medico
 import com.saludplus.citas.data.model.Sede
 import com.saludplus.citas.data.model.Usuario
+import java.time.LocalDate
 
 // Repositorio único de la app (object = una sola instancia para todas las pantallas).
 // Todos los datos viven en colecciones en memoria: NO usar base de datos
@@ -36,18 +37,18 @@ object Repositorio {
     )
 
     val medicos = listOf(
-        Medico(1, "Dr. Carlos Medina", 1, "Médico general", "10234", 4.7, 140, "Disponible hoy", listOf(1)),
-        Medico(2, "Dra. Lucía Fernández", 1, "Médica general", "10876", 4.6, 98, "Disponible mañana", listOf(2)),
-        Medico(3, "Dr. Jorge Salas", 2, "Pediatra", "11452", 4.8, 112, "Disponible hoy", listOf(1)),
-        Medico(4, "Dra. Carmen Ruiz", 2, "Pediatra", "11978", 4.5, 64, "Disponible esta semana", listOf(2)),
-        Medico(5, "Dra. Ana Torres", 3, "Ginecóloga", "12345", 4.9, 120, "Disponible hoy", listOf(1)),
-        Medico(6, "Dra. Claudia Rojas", 3, "Ginecóloga", "12611", 4.8, 95, "Disponible mañana", listOf(2)),
-        Medico(7, "Dr. Luis Ramírez", 3, "Ginecólogo", "12890", 4.7, 88, "Disponible hoy", listOf(1)),
-        Medico(8, "Dra. Mariana Soto", 3, "Ginecóloga", "13104", 4.6, 76, "Disponible esta semana", listOf(2)),
-        Medico(9, "Dr. Miguel Paredes", 4, "Cardiólogo", "13567", 4.8, 101, "Disponible hoy"),
-        Medico(10, "Dra. Rosa Díaz", 5, "Dermatóloga", "14022", 4.7, 83, "Disponible mañana"),
-        Medico(11, "Dr. Andrés Castro", 6, "Traumatólogo", "14455", 4.6, 70, "Disponible hoy"),
-        Medico(12, "Dra. Sofía Vargas", 7, "Oftalmóloga", "14901", 4.9, 91, "Disponible esta semana")
+        Medico(1, "Dr. Carlos Medina", 1, "Médico general", "10234", 4.7, 140, "Disponible hoy", listOf(1), diasAtencion = listOf(1, 2, 3, 4, 5)),
+        Medico(2, "Dra. Lucía Fernández", 1, "Médica general", "10876", 4.6, 98, "Disponible mañana", listOf(2), diasAtencion = listOf(2, 4)),
+        Medico(3, "Dr. Jorge Salas", 2, "Pediatra", "11452", 4.8, 112, "Disponible hoy", listOf(1), diasAtencion = listOf(1, 3, 5)),
+        Medico(4, "Dra. Carmen Ruiz", 2, "Pediatra", "11978", 4.5, 64, "Disponible esta semana", listOf(2), diasAtencion = listOf(2, 4)),
+        Medico(5, "Dra. Ana Torres", 3, "Ginecóloga", "12345", 4.9, 120, "Disponible hoy", listOf(1), diasAtencion = listOf(1, 2, 3)),
+        Medico(6, "Dra. Claudia Rojas", 3, "Ginecóloga", "12611", 4.8, 95, "Disponible mañana", listOf(2), diasAtencion = listOf(4, 5)),
+        Medico(7, "Dr. Luis Ramírez", 3, "Ginecólogo", "12890", 4.7, 88, "Disponible hoy", listOf(1), diasAtencion = listOf(1, 3, 5)),
+        Medico(8, "Dra. Mariana Soto", 3, "Ginecóloga", "13104", 4.6, 76, "Disponible esta semana", listOf(2), diasAtencion = listOf(2, 4)),
+        Medico(9, "Dr. Miguel Paredes", 4, "Cardiólogo", "13567", 4.8, 101, "Disponible hoy", diasAtencion = listOf(1, 3)),
+        Medico(10, "Dra. Rosa Díaz", 5, "Dermatóloga", "14022", 4.7, 83, "Disponible mañana", diasAtencion = listOf(2, 5)),
+        Medico(11, "Dr. Andrés Castro", 6, "Traumatólogo", "14455", 4.6, 70, "Disponible hoy", diasAtencion = listOf(1, 2, 4)),
+        Medico(12, "Dra. Sofía Vargas", 7, "Oftalmóloga", "14901", 4.9, 91, "Disponible esta semana", diasAtencion = listOf(3, 5))
     )
 
     // Sedes (locales) de la clínica
@@ -184,6 +185,17 @@ object Repositorio {
             .filter { it.medicoId == medicoId && it.fecha == fecha }
             .map { it.hora }
         return horariosBase.filter { it !in ocupados }
+    }
+
+    // De los días recibidos, solo los que el médico atiende (diasAtencion) y que
+    // todavía tienen al menos un horario libre (filter). Como usa horariosDisponibles,
+    // un día con todas sus horas reservadas deja de aparecer solo.
+    fun diasDisponibles(medicoId: Int, dias: List<LocalDate>): List<LocalDate> {
+        val medico = obtenerMedico(medicoId) ?: return emptyList()
+        return dias.filter {
+            it.dayOfWeek.value in medico.diasAtencion &&
+                horariosDisponibles(medicoId, it.toString()).isNotEmpty()
+        }
     }
 
     // Crea y guarda la cita del usuario actual.

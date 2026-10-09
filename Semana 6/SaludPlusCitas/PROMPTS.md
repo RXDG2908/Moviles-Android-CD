@@ -141,3 +141,34 @@ para el buscador, pero el prompt la pide sin parámetros, con el tipo
 ### Qué se tuvo que corregir
 
 - La firma de `medicosAgrupadosPorEspecialidad()`, para que sea igual a la del prompt.
+
+## Prompt 5
+
+> Mejora o anotación, verificar si esta asi en el app: el profe dijo ; no todos los dias
+> del calendarios deben estar disponibles, solo poner los dias que esta disponibles,
+> supongo que se refiere al doctor.
+
+### Respuesta resumida
+
+La IA revisó la Pantalla 6 y confirmó que no estaba así: todos los médicos mostraban los
+mismos 5 días hábiles, y solo se quitaban las horas reservadas (un día lleno igual
+aparecía, con la grilla vacía). Se agregó:
+
+- **`diasAtencion` en `Medico`** (1 = lunes ... 5 = viernes, con valor por defecto de
+  lunes a viernes). Cada médico del Repositorio tiene sus propios días; por ejemplo, la
+  Dra. Lucía Fernández atiende martes y jueves.
+- **`Repositorio.diasDisponibles(medicoId, dias)`**: de los días de la semana mostrada
+  deja solo los que el médico atiende y que todavía tienen al menos un horario libre
+  (`filter` + `horariosDisponibles`). Como lee la lista de citas, un día que se llena
+  desaparece solo.
+- **Pantalla 6**: muestra solo esos días, debajo del médico pone "Atiende: Mar, Jue" y,
+  si esa semana no hay días disponibles, avisa que se pruebe con la semana siguiente. Las
+  flechas, el mes y el reinicio de la hora siguen igual.
+
+### Qué se tuvo que corregir
+
+- El mes se calculaba con el primer día mostrado (`dias[0]`). Ahora puede no haber días
+  disponibles en la semana, así que se calcula con el primer día hábil de esa semana.
+- Con menos de 5 días, cada día se estiraba a todo el ancho. Se agregaron espacios vacíos
+  para que mantengan su tamaño.
+

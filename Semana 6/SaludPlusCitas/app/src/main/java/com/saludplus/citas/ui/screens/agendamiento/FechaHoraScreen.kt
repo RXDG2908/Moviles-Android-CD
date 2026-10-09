@@ -40,6 +40,7 @@ import com.saludplus.citas.ui.components.SesionIniciada
 import com.saludplus.citas.ui.components.BarraSuperior
 import com.saludplus.citas.ui.components.BotonPrincipal
 import com.saludplus.citas.ui.components.ResumenMedico
+import com.saludplus.citas.ui.components.diasDeAtencion
 import com.saludplus.citas.ui.components.diasHabiles
 import com.saludplus.citas.ui.components.mesYAnio
 import com.saludplus.citas.ui.components.nombreDiaCorto
@@ -65,7 +66,9 @@ fun FechaHoraScreen(navController: NavController, medicoId: Int) {
     // Cada día se guarda como "yyyy-MM-dd", igual que en Cita.fecha
     val hoy = remember { LocalDate.now() }
     var semana by remember { mutableStateOf(0) }
-    val dias = diasHabiles(hoy.plusWeeks(semana.toLong()))
+    val diasDeLaSemana = diasHabiles(hoy.plusWeeks(semana.toLong()))
+    // Solo los días en que el médico atiende y que aún tienen horarios libres
+    val dias = Repositorio.diasDisponibles(medicoId, diasDeLaSemana)
 
     // Horarios libres del día elegido. Como "citas" es mutableStateListOf,
     // si alguien reserva un horario, esta lista se vuelve a calcular sola.
@@ -92,7 +95,11 @@ fun FechaHoraScreen(navController: NavController, medicoId: Int) {
                 .padding(padding)
                 .padding(horizontal = 20.dp)
         ) {
-            if (medico != null) ResumenMedico(medico)
+            if (medico != null) {
+                ResumenMedico(medico)
+                Spacer(Modifier.height(8.dp))
+                Text("Atiende: ${diasDeAtencion(medico.diasAtencion)}", color = TextoGris, fontSize = 13.sp)
+            }
             Spacer(Modifier.height(20.dp))
 
             // Mes y año con flechas para cambiar de semana
@@ -103,7 +110,7 @@ fun FechaHoraScreen(navController: NavController, medicoId: Int) {
                 }
                 // El mes y el año salen del primer día mostrado: cambian solos con la semana
                 Text(
-                    mesYAnio(dias[0]),
+                    mesYAnio(diasDeLaSemana[0]),
                     color = TextoOscuro,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
@@ -117,7 +124,14 @@ fun FechaHoraScreen(navController: NavController, medicoId: Int) {
             }
             Spacer(Modifier.height(14.dp))
 
-            // Días: el elegido se pinta de azul
+            // Días disponibles: el elegido se pinta de azul
+            if (dias.isEmpty()) {
+                Text(
+                    "El médico no tiene días disponibles esta semana. Prueba con la semana siguiente.",
+                    color = TextoGris,
+                    fontSize = 13.sp
+                )
+            }
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 dias.forEach { dia ->
                     val fecha = dia.toString()          // LocalDate -> "2026-10-12"
@@ -144,12 +158,16 @@ fun FechaHoraScreen(navController: NavController, medicoId: Int) {
                         )
                     }
                 }
+                // Espacios vacíos: los días mantienen su tamaño aunque sean menos de 5
+                repeat(5 - dias.size) { Spacer(Modifier.weight(1f)) }
             }
             Spacer(Modifier.height(20.dp))
 
             // Horarios disponibles en 3 columnas
             if (fechaElegida == null) {
-                Text("Elige un día para ver los horarios", color = TextoGris, fontSize = 13.sp)
+                if (dias.isNotEmpty()) {
+                    Text("Elige un día para ver los horarios", color = TextoGris, fontSize = 13.sp)
+                }
             } else {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(3),

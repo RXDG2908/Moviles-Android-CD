@@ -10,5 +10,7 @@ data class Medico(
     val calificacion: Double,   // ej. 4.9
     val resenas: Int,           // ej. 120
     val disponibilidad: String, // ej. "Disponible hoy"
-    val sedes: List<Int> = listOf(1, 2)  // ids de las sedes donde atiende
+    val sedes: List<Int> = listOf(1, 2), // ids de las sedes donde atiende
+    // Días de la semana en que atiende: 1 = lunes ... 5 = viernes
+    val diasAtencion: List<Int> = listOf(1, 2, 3, 4, 5)
 )
