@@ -1,27 +1,133 @@
 package com.saludplus.citas.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.saludplus.citas.ui.theme.AzulClaro
+import com.saludplus.citas.ui.theme.AzulSalud
+import com.saludplus.citas.ui.theme.Blanco
+import com.saludplus.citas.ui.theme.GrisSuave
+import com.saludplus.citas.ui.theme.TextoGris
+import com.saludplus.citas.ui.theme.TextoOscuro
 
 // Componentes reutilizables por crear en este paquete (sugerencia):
-// TODO: BarraSuperior(titulo, onVolver)        -> barra superior con flecha de volver
-// TODO: BotonPrincipal(texto, habilitado, onClick) -> botón azul de ancho completo
 // TODO: TarjetaEspecialidad(especialidad, onClick)
 // TODO: TarjetaMedico(medico, onClick)
 // TODO: TarjetaCita(cita, onClick)
 // TODO: BarraInferior(navController, rutaActual) -> NavigationBar: Inicio, Citas, Resultados, Perfil
+
+// Barra superior blanca con flecha para volver y el título a su lado.
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BarraSuperior(titulo: String, onVolver: () -> Unit) {
+    TopAppBar(
+        title = { Text(titulo, fontWeight = FontWeight.Bold, fontSize = 18.sp) },
+        navigationIcon = {
+            IconButton(onClick = onVolver) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Blanco,
+            titleContentColor = TextoOscuro,
+            navigationIconContentColor = TextoOscuro
+        )
+    )
+}
+
+// Botón azul de ancho completo con esquinas redondeadas.
+@Composable
+fun BotonPrincipal(texto: String, habilitado: Boolean = true, onClick: () -> Unit) {
+    Button(
+        onClick = onClick,
+        enabled = habilitado,
+        shape = RoundedCornerShape(10.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = AzulSalud),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(48.dp)
+    ) {
+        Text(texto, fontWeight = FontWeight.Bold)
+    }
+}
+
+// Campo del formulario como en el diseño: ícono en un cuadro celeste a la
+// izquierda, y a la derecha la etiqueta en gris sobre el campo de texto.
+@Composable
+fun CampoFormulario(
+    etiqueta: String,
+    valor: String,
+    onCambio: (String) -> Unit,
+    icono: ImageVector,
+    teclado: KeyboardType = KeyboardType.Text,
+    esContrasena: Boolean = false
+) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        // Cuadro celeste con el ícono
+        Box(
+            modifier = Modifier
+                .size(44.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(AzulClaro),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(icono, contentDescription = null, tint = AzulSalud)
+        }
+        Spacer(Modifier.width(12.dp))
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Text(etiqueta, color = TextoGris, fontSize = 12.sp)
+            OutlinedTextField(
+                value = valor,
+                onValueChange = onCambio,
+                singleLine = true,
+                shape = RoundedCornerShape(10.dp),
+                visualTransformation = if (esContrasena) PasswordVisualTransformation() else VisualTransformation.None,
+                keyboardOptions = KeyboardOptions(keyboardType = teclado),
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedBorderColor = GrisSuave,
+                    focusedBorderColor = AzulSalud
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
+}
 
 // Contenido temporal de las pantallas que aún no están terminadas.
 // Al completar una pantalla, borra la llamada a PantallaEnConstruccion.
