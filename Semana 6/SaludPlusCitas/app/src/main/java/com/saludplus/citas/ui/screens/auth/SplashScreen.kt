@@ -47,7 +47,7 @@ fun SplashScreen(navController: NavController) {
         Image(
             painter = painterResource(R.drawable.logo_saludplus),
             contentDescription = "Logo Clínica SaludPlus",
-            modifier = Modifier.size(width = 84.dp, height = 70.dp)
+            modifier = Modifier.size(88.dp)
         )
         Spacer(Modifier.height(8.dp))
 
