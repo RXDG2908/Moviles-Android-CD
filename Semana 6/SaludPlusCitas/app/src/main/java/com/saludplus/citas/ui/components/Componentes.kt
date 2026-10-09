@@ -17,7 +17,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.ChildCare
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.navigation.NavController
+import com.saludplus.citas.navigation.Rutas
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Female
 import androidx.compose.material.icons.filled.Healing
@@ -64,7 +72,39 @@ private val RosaClaro = Color(0xFFFCE8EC)
 // TODO: TarjetaEspecialidad(especialidad, onClick)
 // TODO: TarjetaMedico(medico, onClick)
 // TODO: TarjetaCita(cita, onClick)
-// TODO: BarraInferior(navController, rutaActual) -> NavigationBar: Inicio, Citas, Resultados, Perfil
+
+// Barra inferior (NavigationBar) con los 4 destinos principales.
+// "rutaActual" indica qué pestaña se pinta de azul.
+@Composable
+fun BarraInferior(navController: NavController, rutaActual: String) {
+    val destinos = listOf(
+        Triple(Rutas.HOME, "Inicio", Icons.Default.Home),
+        Triple(Rutas.MIS_CITAS, "Citas", Icons.Default.CalendarMonth),
+        Triple(Rutas.RESULTADOS, "Resultados", Icons.Default.Description),
+        Triple(Rutas.PERFIL, "Perfil", Icons.Default.Person)
+    )
+    NavigationBar(containerColor = Blanco) {
+        destinos.forEach { (ruta, texto, icono) ->
+            NavigationBarItem(
+                selected = ruta == rutaActual,
+                onClick = {
+                    if (ruta != rutaActual) {
+                        navController.navigate(ruta) { launchSingleTop = true }
+                    }
+                },
+                icon = { Icon(icono, contentDescription = texto) },
+                label = { Text(texto, fontSize = 11.sp) },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = AzulSalud,
+                    selectedTextColor = AzulSalud,
+                    unselectedIconColor = TextoGris,
+                    unselectedTextColor = TextoGris,
+                    indicatorColor = Blanco
+                )
+            )
+        }
+    }
+}
 
 // Barra superior blanca con flecha para volver y el título a su lado.
 @OptIn(ExperimentalMaterial3Api::class)

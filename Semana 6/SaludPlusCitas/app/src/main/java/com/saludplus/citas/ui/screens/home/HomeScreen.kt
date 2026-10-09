@@ -45,6 +45,7 @@ import androidx.navigation.NavController
 import com.saludplus.citas.data.model.Especialidad
 import com.saludplus.citas.data.repository.Repositorio
 import com.saludplus.citas.navigation.Rutas
+import com.saludplus.citas.ui.components.BarraInferior
 import com.saludplus.citas.ui.components.IconoEspecialidad
 import com.saludplus.citas.ui.theme.AzulClaro
 import com.saludplus.citas.ui.theme.AzulSalud
@@ -59,14 +60,17 @@ import com.saludplus.citas.ui.theme.TextoOscuro
 import com.saludplus.citas.ui.theme.Verde
 import com.saludplus.citas.ui.theme.VerdeClaro
 
-// Pantalla 3 - Inicio: saludo, 4 accesos y especialidades destacadas.
-// TODO: bottomBar con NavigationBar de 4 destinos: Inicio, Citas, Resultados, Perfil.
+// Pantalla 3 - Inicio: saludo, 4 accesos, especialidades destacadas
+// y barra inferior (NavigationBar) con Inicio, Citas, Resultados y Perfil.
 @Composable
 fun HomeScreen(navController: NavController) {
     // Solo el primer nombre para el saludo ("Juan Pérez" -> "Juan")
     val nombre = Repositorio.usuarioActual?.nombre?.substringBefore(" ") ?: ""
 
-    Scaffold(containerColor = Blanco) { padding ->
+    Scaffold(
+        containerColor = Blanco,
+        bottomBar = { BarraInferior(navController, Rutas.HOME) }
+    ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
