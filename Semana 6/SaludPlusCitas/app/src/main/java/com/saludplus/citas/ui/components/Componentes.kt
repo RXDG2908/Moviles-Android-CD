@@ -17,6 +17,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ChildCare
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Female
+import androidx.compose.material.icons.filled.Healing
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Spa
+import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,8 +50,15 @@ import com.saludplus.citas.ui.theme.AzulClaro
 import com.saludplus.citas.ui.theme.AzulSalud
 import com.saludplus.citas.ui.theme.Blanco
 import com.saludplus.citas.ui.theme.GrisSuave
+import com.saludplus.citas.ui.theme.Naranja
+import com.saludplus.citas.ui.theme.NaranjaClaro
+import com.saludplus.citas.ui.theme.Rojo
 import com.saludplus.citas.ui.theme.TextoGris
 import com.saludplus.citas.ui.theme.TextoOscuro
+import androidx.compose.ui.graphics.Color
+
+// Fondo rosado claro de los íconos rojos (Ginecología, Cardiología)
+private val RosaClaro = Color(0xFFFCE8EC)
 
 // Componentes reutilizables por crear en este paquete (sugerencia):
 // TODO: TarjetaEspecialidad(especialidad, onClick)
@@ -126,6 +140,29 @@ fun CampoFormulario(
                 modifier = Modifier.fillMaxWidth()
             )
         }
+    }
+}
+
+// Ícono de cada especialidad, con su color y fondo claro (como en el diseño).
+@Composable
+fun IconoEspecialidad(especialidadId: Int, tamano: Int = 44) {
+    val (icono, color, fondo) = when (especialidadId) {
+        1 -> Triple(Icons.Default.Person, AzulSalud, AzulClaro)          // Medicina General
+        2 -> Triple(Icons.Default.ChildCare, Naranja, NaranjaClaro)      // Pediatría
+        3 -> Triple(Icons.Default.Female, Rojo, RosaClaro)               // Ginecología
+        4 -> Triple(Icons.Default.Favorite, Rojo, RosaClaro)             // Cardiología
+        5 -> Triple(Icons.Default.Spa, Naranja, NaranjaClaro)            // Dermatología
+        6 -> Triple(Icons.Default.Healing, AzulSalud, AzulClaro)         // Traumatología
+        else -> Triple(Icons.Default.Visibility, AzulSalud, AzulClaro)   // Oftalmología
+    }
+    Box(
+        modifier = Modifier
+            .size(tamano.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(fondo),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(icono, contentDescription = null, tint = color)
     }
 }
 
