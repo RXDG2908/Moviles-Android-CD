@@ -106,6 +106,12 @@ object Repositorio {
         sedeActual = obtenerSede(id)
     }
 
+    // Sedes donde atiende ese médico (filter).
+    fun sedesDelMedico(medicoId: Int): List<Sede> {
+        val medico = obtenerMedico(medicoId) ?: return emptyList()
+        return sedes.filter { it.id in medico.sedes }
+    }
+
     // ---------- Especialidades ----------
 
     // Especialidades cuyo nombre contiene el texto (filter + contains).
@@ -148,6 +154,26 @@ object Repositorio {
     fun buscarMedicos(especialidadId: Int, texto: String): List<Medico> {
         return medicosPorEspecialidad(especialidadId)
             .filter { it.nombre.contains(texto.trim(), ignoreCase = true) }
+    }
+
+    // Todos los médicos agrupados por especialidad (groupBy), cada grupo de mejor
+    // a menor calificación (sortedByDescending). Si "texto" no está vacío, solo
+    // quedan los médicos cuyo nombre lo contiene; las especialidades sin médicos no salen.
+    fun medicosAgrupadosPorEspecialidad(texto: String = ""): Map<Especialidad, List<Medico>> {
+        val grupos = medicos
+            .filter { it.nombre.contains(texto.trim(), ignoreCase = true) }
+            .sortedByDescending { it.calificacion }
+            .groupBy { it.especialidadId }
+
+        // Se arma el mapa en el orden de la lista de especialidades
+        val resultado = mutableMapOf<Especialidad, List<Medico>>()
+        for (especialidad in especialidades) {
+            val lista = grupos[especialidad.id]
+            if (lista != null) {
+                resultado[especialidad] = lista
+            }
+        }
+        return resultado
     }
 
     // ---------- Citas ----------

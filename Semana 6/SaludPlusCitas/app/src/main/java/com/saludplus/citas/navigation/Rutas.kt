@@ -16,6 +16,7 @@ object Rutas {
     const val RESULTADOS = "resultados"
     const val PERFIL = "perfil"
     const val NOTIFICACIONES = "notificaciones"
+    const val MIS_DOCTORES = "mis_doctores"
 
     // Flujo de agendamiento
     // Sedes: "destino" dice a qué pantalla ir después de elegir la sede
@@ -25,6 +26,7 @@ object Rutas {
     const val IR_A_ESPECIALIDADES = "especialidades"
     const val IR_A_MEDICOS = "medicos"
     const val IR_A_MIS_CITAS = "mis_citas"
+    const val IR_A_FECHA_HORA = "fecha_hora"
     const val ESPECIALIDADES = "especialidades"
     const val MEDICOS = "medicos/{especialidadId}"
     const val FECHA_HORA = "fecha_hora/{medicoId}"

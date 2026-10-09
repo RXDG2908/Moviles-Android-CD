@@ -17,6 +17,7 @@ import com.saludplus.citas.ui.screens.auth.SplashScreen
 import com.saludplus.citas.ui.screens.auth.TerminosScreen
 import com.saludplus.citas.ui.screens.citas.DetalleCitaScreen
 import com.saludplus.citas.ui.screens.citas.MisCitasScreen
+import com.saludplus.citas.ui.screens.doctores.MisDoctoresScreen
 import com.saludplus.citas.ui.screens.home.HomeScreen
 import com.saludplus.citas.ui.screens.notificaciones.NotificacionesScreen
 import com.saludplus.citas.ui.screens.perfil.PerfilScreen
@@ -51,6 +52,7 @@ fun AppNavigation() {
         composable(Rutas.RESULTADOS) { ResultadosScreen(navController) }
         composable(Rutas.PERFIL) { PerfilScreen(navController) }
         composable(Rutas.NOTIFICACIONES) { NotificacionesScreen(navController) }
+        composable(Rutas.MIS_DOCTORES) { MisDoctoresScreen(navController) }
 
         // Flujo de agendamiento: primero se elige la sede
         composable(

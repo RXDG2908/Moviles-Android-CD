@@ -64,12 +64,15 @@ fun SedesScreen(navController: NavController, destino: String, id: Int) {
             item {
                 Text("¿En qué sede quieres atenderte?", color = TextoGris, fontSize = 14.sp)
             }
-            items(Repositorio.sedes) { sede ->
+            // Si se va a Fecha y hora de un médico, solo salen las sedes donde atiende
+            val sedes = if (destino == Rutas.IR_A_FECHA_HORA) Repositorio.sedesDelMedico(id) else Repositorio.sedes
+            items(sedes) { sede ->
                 TarjetaSede(sede) {
                     // Se guarda la sede y se continúa al destino
                     Repositorio.seleccionarSede(sede.id)
                     when (destino) {
                         Rutas.IR_A_MEDICOS -> navController.navigate(Rutas.medicos(id))
+                        Rutas.IR_A_FECHA_HORA -> navController.navigate(Rutas.fechaHora(id))
                         // Mis citas: Sedes sale del historial (Atrás no vuelve a elegir sede)
                         Rutas.IR_A_MIS_CITAS -> navController.navigate(Rutas.MIS_CITAS) {
                             popUpTo(Rutas.SEDES) { inclusive = true }
