@@ -1,0 +1,35 @@
+package com.saludplus.citas.navigation
+
+// Todas las rutas de la app. Las que llevan {parametro} reciben un dato
+// de la pantalla anterior; para armarlas se usan las funciones de abajo.
+object Rutas {
+    // Autenticación
+    const val SPLASH = "splash"
+    const val REGISTRO = "registro"
+    const val LOGIN = "login"
+    const val TERMINOS = "terminos"
+
+    // Inicio y barra inferior (NavigationBar)
+    const val HOME = "home"
+    const val MIS_CITAS = "mis_citas"
+    const val RESULTADOS = "resultados"
+    const val PERFIL = "perfil"
+    const val NOTIFICACIONES = "notificaciones"
+
+    // Flujo de agendamiento
+    const val ESPECIALIDADES = "especialidades"
+    const val MEDICOS = "medicos/{especialidadId}"
+    const val FECHA_HORA = "fecha_hora/{medicoId}"
+    const val CONFIRMAR_CITA = "confirmar_cita/{medicoId}/{fecha}/{hora}"
+    const val CITA_EXITOSA = "cita_exitosa/{citaId}"
+
+    // Detalle de una cita (reto extra)
+    const val DETALLE_CITA = "detalle_cita/{citaId}"
+
+    fun medicos(especialidadId: Int) = "medicos/$especialidadId"
+    fun fechaHora(medicoId: Int) = "fecha_hora/$medicoId"
+    fun confirmarCita(medicoId: Int, fecha: String, hora: String) =
+        "confirmar_cita/$medicoId/$fecha/$hora"
+    fun citaExitosa(citaId: Int) = "cita_exitosa/$citaId"
+    fun detalleCita(citaId: Int) = "detalle_cita/$citaId"
+}
