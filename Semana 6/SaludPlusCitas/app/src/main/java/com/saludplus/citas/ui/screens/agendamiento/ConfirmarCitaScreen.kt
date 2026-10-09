@@ -36,7 +36,7 @@ import com.saludplus.citas.ui.components.BarraSuperior
 import com.saludplus.citas.ui.components.BotonPrincipal
 import com.saludplus.citas.ui.components.FilaDato
 import com.saludplus.citas.ui.components.ResumenMedico
-import com.saludplus.citas.ui.components.fechaCorta
+import com.saludplus.citas.ui.components.fechaLarga
 import com.saludplus.citas.ui.components.rangoHora
 import com.saludplus.citas.ui.theme.AzulSalud
 import com.saludplus.citas.ui.theme.Blanco
@@ -82,7 +82,8 @@ fun ConfirmarCitaScreen(navController: NavController, medicoId: Int, fecha: Stri
         ) {
             if (medico != null) ResumenMedico(medico, mostrarCmp = true)
 
-            FilaDato(Icons.Default.CalendarMonth, "Fecha", fechaCorta(fecha))
+            // "2026-09-16" -> "Miércoles 16 de setiembre 2026"
+            FilaDato(Icons.Default.CalendarMonth, "Fecha", fechaLarga(fecha))
             FilaDato(Icons.Default.Schedule, "Hora", rangoHora(hora))
             FilaDato(Icons.Default.MedicalServices, "Tipo de atención", "Consulta presencial")
             FilaDato(Icons.Default.LocationOn, "Dirección", "Av. Los Olivos 123, Lima")
