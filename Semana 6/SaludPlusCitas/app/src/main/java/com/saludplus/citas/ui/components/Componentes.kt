@@ -213,7 +213,12 @@ fun BarraInferior(navController: NavController, rutaActual: String) {
                 selected = ruta == rutaActual,
                 onClick = {
                     if (ruta != rutaActual) {
-                        navController.navigate(ruta) { launchSingleTop = true }
+                        if (ruta == Rutas.MIS_CITAS && Repositorio.sedeActual == null) {
+                            // Mis citas depende de la sede: si no hay, primero se elige
+                            navController.navigate(Rutas.sedes(Rutas.IR_A_MIS_CITAS))
+                        } else {
+                            navController.navigate(ruta) { launchSingleTop = true }
+                        }
                     }
                 },
                 icon = { Icon(icono, contentDescription = texto) },

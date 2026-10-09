@@ -24,6 +24,7 @@ object Rutas {
     // Posibles destinos después de elegir la sede
     const val IR_A_ESPECIALIDADES = "especialidades"
     const val IR_A_MEDICOS = "medicos"
+    const val IR_A_MIS_CITAS = "mis_citas"
     const val ESPECIALIDADES = "especialidades"
     const val MEDICOS = "medicos/{especialidadId}"
     const val FECHA_HORA = "fecha_hora/{medicoId}"

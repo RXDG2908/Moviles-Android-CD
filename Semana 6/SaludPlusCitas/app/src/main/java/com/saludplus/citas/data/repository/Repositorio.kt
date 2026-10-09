@@ -191,6 +191,15 @@ object Repositorio {
             .sortedWith(compareBy<Cita> { it.fecha }.thenBy { it.hora })
     }
 
+    // Citas del usuario actual en esa sede (filter), ordenadas por fecha
+    // y luego por hora, igual que citasDelUsuario.
+    fun citasDelUsuarioPorSede(sedeId: Int): List<Cita> {
+        val telefono = usuarioActual?.telefono ?: return emptyList()
+        return citas
+            .filter { it.telefonoUsuario == telefono && it.sedeId == sedeId }
+            .sortedWith(compareBy<Cita> { it.fecha }.thenBy { it.hora })
+    }
+
     // TODO (reto extra): quitar la cita con ese id (removeIf) y devolver si se quitó.
     fun cancelarCita(citaId: Int): Boolean {
         return false

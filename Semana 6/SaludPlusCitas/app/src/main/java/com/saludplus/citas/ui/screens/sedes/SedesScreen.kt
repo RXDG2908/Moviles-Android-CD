@@ -70,6 +70,11 @@ fun SedesScreen(navController: NavController, destino: String, id: Int) {
                     Repositorio.seleccionarSede(sede.id)
                     when (destino) {
                         Rutas.IR_A_MEDICOS -> navController.navigate(Rutas.medicos(id))
+                        // Mis citas: Sedes sale del historial (Atrás no vuelve a elegir sede)
+                        Rutas.IR_A_MIS_CITAS -> navController.navigate(Rutas.MIS_CITAS) {
+                            popUpTo(Rutas.SEDES) { inclusive = true }
+                            launchSingleTop = true
+                        }
                         else -> navController.navigate(Rutas.ESPECIALIDADES)
                     }
                 }

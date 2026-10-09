@@ -23,7 +23,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Description
-import androidx.compose.material.icons.filled.EventAvailable
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
@@ -57,8 +56,6 @@ import com.saludplus.citas.ui.theme.Naranja
 import com.saludplus.citas.ui.theme.NaranjaClaro
 import com.saludplus.citas.ui.theme.TextoGris
 import com.saludplus.citas.ui.theme.TextoOscuro
-import com.saludplus.citas.ui.theme.Verde
-import com.saludplus.citas.ui.theme.VerdeClaro
 
 // Pantalla 3 - Inicio: saludo, 4 accesos, especialidades destacadas
 // y barra inferior (NavigationBar) con Inicio, Citas, Resultados y Perfil.
@@ -92,14 +89,12 @@ fun HomeScreen(navController: NavController) {
             Text("¿Qué deseas hacer hoy?", color = TextoGris, fontSize = 14.sp)
             Spacer(Modifier.height(20.dp))
 
-            // Mosaicos de acceso (2 x 2)
+            // Mosaicos de acceso. "Mis citas" ya no está aquí: se ve desde la
+            // pestaña Citas de la barra inferior, después de elegir la sede
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 // Antes de agendar siempre se elige la sede
                 Mosaico("Agendar cita", Icons.Default.CalendarMonth, AzulSalud, AzulClaro, Modifier.weight(1f)) {
                     navController.navigate(Rutas.sedes())
-                }
-                Mosaico("Mis citas", Icons.Default.EventAvailable, Verde, VerdeClaro, Modifier.weight(1f)) {
-                    navController.navigate(Rutas.MIS_CITAS)
                 }
             }
             Spacer(Modifier.height(12.dp))
