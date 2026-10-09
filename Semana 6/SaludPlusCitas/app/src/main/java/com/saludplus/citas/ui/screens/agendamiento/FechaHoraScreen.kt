@@ -56,7 +56,7 @@ fun FechaHoraScreen(navController: NavController, medicoId: Int) {
     var fechaElegida by remember { mutableStateOf<String?>(null) }
     var horaElegida by remember { mutableStateOf<String?>(null) }
 
-    // Calendario dinámico: 5 días hábiles (sin fines de semana ni días pasados).
+    // Calendario dinámico: 5 días hábiles (sin sábados, domingos ni días pasados).
     // semana = 0 es la semana actual (desde hoy); cada flecha suma o resta 1.
     // Cada día se guarda como "yyyy-MM-dd", igual que en Cita.fecha
     val hoy = remember { LocalDate.now() }
@@ -93,20 +93,9 @@ fun FechaHoraScreen(navController: NavController, medicoId: Int) {
 
             // Mes y año con flechas para cambiar de semana
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                // < retrocede una semana; en la semana actual queda desactivada
-                IconButton(
-                    onClick = {
-                        semana--
-                        fechaElegida = null
-                        horaElegida = null
-                    },
-                    enabled = semana > 0
-                ) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                        contentDescription = "Semana anterior",
-                        tint = if (semana > 0) TextoOscuro else GrisSuave
-                    )
+                // < retrocede una semana; no se puede retroceder antes de la semana actual
+                IconButton(onClick = { semana-- }, enabled = semana > 0) {
+                    Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = null, tint = TextoOscuro)
                 }
                 // El mes y el año salen del primer día mostrado: cambian solos con la semana
                 Text(
@@ -118,18 +107,8 @@ fun FechaHoraScreen(navController: NavController, medicoId: Int) {
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
                 // > avanza una semana
-                IconButton(
-                    onClick = {
-                        semana++
-                        fechaElegida = null
-                        horaElegida = null
-                    }
-                ) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                        contentDescription = "Semana siguiente",
-                        tint = TextoOscuro
-                    )
+                IconButton(onClick = { semana++ }) {
+                    Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = TextoOscuro)
                 }
             }
             Spacer(Modifier.height(14.dp))
