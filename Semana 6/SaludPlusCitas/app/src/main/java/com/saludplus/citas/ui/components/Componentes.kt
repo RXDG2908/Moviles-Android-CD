@@ -34,6 +34,7 @@ import com.saludplus.citas.ui.theme.Amarillo
 import com.saludplus.citas.ui.theme.AmarilloClaro
 import com.saludplus.citas.ui.theme.RojoClaro
 import com.saludplus.citas.ui.theme.VerdeChip
+import java.time.LocalDate
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.ChildCare
 import androidx.compose.material.icons.filled.Description
@@ -185,16 +186,28 @@ fun TarjetaMedico(medico: Medico, onClick: () -> Unit) {
                 Text(" ${medico.calificacion} (${medico.resenas})", color = TextoGris, fontSize = 12.sp)
             }
             Spacer(Modifier.height(6.dp))
-            // Chip de disponibilidad
+            // Chip de disponibilidad real: el primer día con cupos y cuántos quedan,
+            // con el color del semáforo (verde, amarillo o rojo; gris si no hay cupos)
+            val hoy = LocalDate.now()
+            val proximo = Repositorio.proximoDiaConCupos(medico.id)
+            val libres = if (proximo != null) Repositorio.cuposLibres(medico.id, proximo) else 0
+            val cuando = when (proximo) {
+                null -> "Sin cupos por ahora"
+                hoy -> "Disponible hoy"
+                hoy.plusDays(1) -> "Disponible mañana"
+                else -> "Disponible el ${nombreDiaCorto(proximo).lowercase()} ${proximo.dayOfMonth}"
+            }
+            val textoChip = if (proximo == null) cuando else "$cuando · $libres ${if (libres == 1) "cupo" else "cupos"}"
+            val (colorChip, fondoChip) = if (proximo == null) TextoGris to GrisSuave else coloresCupos(libres)
             Text(
-                medico.disponibilidad,
-                color = Verde,
+                textoChip,
+                color = colorChip,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier
                     .align(Alignment.End)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(VerdeChip)
+                    .background(fondoChip)
                     .padding(horizontal = 8.dp, vertical = 3.dp)
             )
         }
