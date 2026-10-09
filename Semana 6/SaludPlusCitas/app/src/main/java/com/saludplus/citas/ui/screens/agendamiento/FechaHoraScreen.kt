@@ -38,20 +38,15 @@ import com.saludplus.citas.navigation.Rutas
 import com.saludplus.citas.ui.components.BarraSuperior
 import com.saludplus.citas.ui.components.BotonPrincipal
 import com.saludplus.citas.ui.components.ResumenMedico
+import com.saludplus.citas.ui.components.diasHabiles
+import com.saludplus.citas.ui.components.mesYAnio
+import com.saludplus.citas.ui.components.nombreDiaCorto
 import com.saludplus.citas.ui.theme.AzulSalud
 import com.saludplus.citas.ui.theme.Blanco
 import com.saludplus.citas.ui.theme.GrisSuave
 import com.saludplus.citas.ui.theme.TextoGris
 import com.saludplus.citas.ui.theme.TextoOscuro
-
-// Días de la semana (lista fija en la Fase 1): texto del día, número y fecha "yyyy-MM-dd".
-private val dias = listOf(
-    Triple("Lun", "15", "2026-09-15"),
-    Triple("Mar", "16", "2026-09-16"),
-    Triple("Mié", "17", "2026-09-17"),
-    Triple("Jue", "18", "2026-09-18"),
-    Triple("Vie", "19", "2026-09-19")
-)
+import java.time.LocalDate
 
 // Pantalla 6 - Fecha y hora: elegir un día y un horario libre del médico.
 @Composable
@@ -59,6 +54,11 @@ fun FechaHoraScreen(navController: NavController, medicoId: Int) {
     val medico = Repositorio.obtenerMedico(medicoId)
     var fechaElegida by remember { mutableStateOf<String?>(null) }
     var horaElegida by remember { mutableStateOf<String?>(null) }
+
+    // Calendario dinámico: los próximos 5 días hábiles desde hoy (sin fines de semana
+    // ni días pasados). Cada día se guarda como "yyyy-MM-dd", igual que en Cita.fecha
+    val hoy = remember { LocalDate.now() }
+    val dias = diasHabiles(hoy)
 
     // Horarios libres del día elegido. Como "citas" es mutableStateListOf,
     // si alguien reserva un horario, esta lista se vuelve a calcular sola.
@@ -91,8 +91,9 @@ fun FechaHoraScreen(navController: NavController, medicoId: Int) {
             // Mes y año
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = null, tint = TextoOscuro)
+                // Mes y año del primer día mostrado
                 Text(
-                    "Setiembre 2026",
+                    mesYAnio(dias[0]),
                     color = TextoOscuro,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
@@ -105,7 +106,8 @@ fun FechaHoraScreen(navController: NavController, medicoId: Int) {
 
             // Días: el elegido se pinta de azul
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                dias.forEach { (nombreDia, numero, fecha) ->
+                dias.forEach { dia ->
+                    val fecha = dia.toString()          // LocalDate -> "2026-10-12"
                     val elegido = fecha == fechaElegida
                     Column(
                         modifier = Modifier
@@ -116,9 +118,9 @@ fun FechaHoraScreen(navController: NavController, medicoId: Int) {
                             .padding(vertical = 10.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(nombreDia, color = if (elegido) Blanco else TextoGris, fontSize = 12.sp)
+                        Text(nombreDiaCorto(dia), color = if (elegido) Blanco else TextoGris, fontSize = 12.sp)
                         Text(
-                            numero,
+                            dia.dayOfMonth.toString(),
                             color = if (elegido) Blanco else TextoOscuro,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold

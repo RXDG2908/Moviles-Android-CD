@@ -29,6 +29,9 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        // java.time (LocalDate) existe desde Android 8 (API 26); con desugaring
+        // también funciona en los celulares con minSdk 24 y 25
+        isCoreLibraryDesugaringEnabled = true
     }
     buildFeatures {
         compose = true
@@ -36,6 +39,8 @@ android {
 }
 
 dependencies {
+    // Permite usar java.time (LocalDate) en Android 7 (minSdk 24)
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
     // Navegación entre pantallas
     implementation("androidx.navigation:navigation-compose:2.7.7")
     // Íconos (flecha de volver, pestañas, menú)
