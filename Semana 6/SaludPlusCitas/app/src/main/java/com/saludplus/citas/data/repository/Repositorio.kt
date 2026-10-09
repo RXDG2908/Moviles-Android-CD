@@ -152,10 +152,13 @@ object Repositorio {
         return citas.find { it.id == id }
     }
 
-    // TODO: citas del usuario actual (filter por teléfono), ordenadas por
-    //  fecha y luego por hora (sortedWith + compareBy / thenBy).
+    // Citas del usuario actual (filter por teléfono), ordenadas por fecha
+    // y luego por hora (sortedWith + compareBy / thenBy).
     fun citasDelUsuario(): List<Cita> {
-        return emptyList()
+        val telefono = usuarioActual?.telefono ?: return emptyList()
+        return citas
+            .filter { it.telefonoUsuario == telefono }
+            .sortedWith(compareBy<Cita> { it.fecha }.thenBy { it.hora })
     }
 
     // TODO (reto extra): quitar la cita con ese id (removeIf) y devolver si se quitó.

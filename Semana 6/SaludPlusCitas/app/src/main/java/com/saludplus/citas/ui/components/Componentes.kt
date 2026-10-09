@@ -23,7 +23,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Star
+import com.saludplus.citas.data.model.Cita
 import com.saludplus.citas.data.model.Especialidad
+import com.saludplus.citas.data.repository.Repositorio
 import com.saludplus.citas.data.model.Medico
 import com.saludplus.citas.ui.theme.Estrella
 import com.saludplus.citas.ui.theme.Verde
@@ -80,7 +82,46 @@ import androidx.compose.ui.graphics.Color
 private val RosaClaro = Color(0xFFFCE8EC)
 
 // Componentes reutilizables por crear en este paquete (sugerencia):
-// TODO: TarjetaCita(cita, onClick)
+
+// Tarjeta de una cita: médico, especialidad, fecha, hora y estado.
+@Composable
+fun TarjetaCita(cita: Cita, onClick: () -> Unit) {
+    val medico = Repositorio.obtenerMedico(cita.medicoId)
+    val especialidad = medico?.let { Repositorio.obtenerEspecialidad(it.especialidadId) }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(14.dp))
+            .border(1.dp, GrisSuave, RoundedCornerShape(14.dp))
+            .clickable(onClick = onClick)
+            .padding(12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        AvatarMedico(48)
+        Spacer(Modifier.width(12.dp))
+        Column(Modifier.weight(1f)) {
+            Text(medico?.nombre ?: "", color = TextoOscuro, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+            Text(especialidad?.nombre ?: "", color = TextoGris, fontSize = 12.sp)
+            Text(
+                "${fechaCorta(cita.fecha)} · ${rangoHora(cita.hora)}",
+                color = AzulSalud,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+        // Estado de la cita
+        Text(
+            cita.estado,
+            color = Verde,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier
+                .clip(RoundedCornerShape(8.dp))
+                .background(VerdeChip)
+                .padding(horizontal = 8.dp, vertical = 3.dp)
+        )
+    }
+}
 
 // Fila de una especialidad: ícono, nombre, descripción y flecha.
 @Composable
