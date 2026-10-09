@@ -265,3 +265,41 @@ Login sigue abriendo con el correo ya escrito.
   ahora atiende en Miraflores, San Isidro, Jesús María y Ate (sigue atendiendo martes y
   jueves).
 
+## Prompt 10
+
+> En el calendario de cada doctor sigue saliendo todo el calendario y no que dias puede y
+> que dias no osea que horas, poner como tipo, dias bloqueados o horarios bloqueados,
+> poner verde amarillo y rojo cuando el dia tiene pocos cupos como un cine, para todo,
+> aplicar esas mejoras, todo haremos en mejora-ia
+
+### Respuesta resumida
+
+El calendario ahora funciona como la sala de un cine: todo se ve, pero lo que no se
+puede elegir queda bloqueado.
+
+- **Días:** se muestran los 5 días hábiles de la semana. Cada día dice cuántos cupos le
+  quedan y se pinta con un **semáforo**: verde (6 o más), amarillo (3 a 5) y rojo (1 o 2).
+  Los días en que el médico no atiende ("No atiende") o sin cupos ("Lleno") salen en
+  gris, tachados y no se pueden tocar. Debajo hay una leyenda con los colores.
+- **Horarios:** se muestran los 9 horarios del día. Los libres salen en verde; los
+  ocupados y los que **ya pasaron hoy** salen en gris, tachados y bloqueados (como
+  butacas vendidas). El elegido sale en azul. También tiene leyenda.
+- **Tarjeta del médico** (Médicos y Mis doctores): el chip fijo ("Disponible hoy") se
+  cambió por la disponibilidad real, por ejemplo "Disponible mañana · 3 cupos", con el
+  color del semáforo, o "Sin cupos por ahora" en gris.
+- **Repositorio:** `horariosDisponibles` también quita las horas que ya pasaron hoy, y se
+  agregaron `horaYaPaso`, `atiende`, `cuposLibres` y `proximoDiaConCupos` (`find`). Se
+  quitó `diasDisponibles`, que ya no se usa.
+- **Citas de ejemplo:** para que se vean los colores, el Repositorio crea al iniciar
+  citas de "otros pacientes" para las próximas 4 semanas (de 0 a 9 horas ocupadas por
+  día). Tienen el teléfono vacío, así que no salen en "Mis citas" de nadie.
+
+### Qué se tuvo que corregir
+
+- En la versión anterior (Prompt 5) los días sin atención o llenos se **ocultaban**. Se
+  cambió a mostrarlos **bloqueados**, como se pidió.
+- Sin citas de otros pacientes todos los días salían verdes, así que se agregaron las
+  citas de ejemplo para la demo.
+- Las horas ocupadas se reparten a lo largo del día (no siempre las primeras) con una
+  fórmula fija, así el calendario sale igual cada vez que se abre la app.
+

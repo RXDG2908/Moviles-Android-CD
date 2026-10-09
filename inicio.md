@@ -243,9 +243,13 @@ También se puede registrar uno nuevo.
    - flechas `<` `>` por semana (no se puede retroceder antes de la semana actual);
    - mes y año que cambian con la semana;
    - la hora se reinicia al cambiar de día.
-5. **Solo días disponibles del médico** (pedido del profesor): debajo del médico dice
-   "Atiende: …". Ejemplo para mostrar: **Medicina General → sede Miraflores →
-   Dra. Lucía Fernández**, que atiende solo **martes y jueves**.
+5. **Calendario tipo cine** (pedido del profesor): debajo del médico dice "Atiende: …".
+   Cada día muestra sus cupos con **semáforo** (verde = muchos, amarillo = pocos,
+   rojo = últimos) y los días que no atiende o llenos salen **bloqueados** en gris. Al
+   elegir un día, las horas ocupadas o que ya pasaron salen tachadas. Ejemplo para
+   mostrar: **Medicina General → sede Miraflores → Dra. Lucía Fernández**, que atiende
+   solo **martes y jueves**. En la lista de médicos, cada tarjeta dice cuándo está
+   disponible y cuántos cupos tiene, con el mismo color.
 6. **Confirmar cita:** fecha en español ("Martes 13 de octubre 2026") y la sede con su
    dirección. **Cita agendada** también muestra la sede.
 7. **Pestaña Citas:** pide la sede si no hay una elegida. Muestra solo las citas de esa
