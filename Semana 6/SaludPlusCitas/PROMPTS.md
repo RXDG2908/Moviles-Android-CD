@@ -172,3 +172,29 @@ aparecía, con la grilla vacía). Se agregó:
 - Con menos de 5 días, cada día se estiraba a todo el ancho. Se agregaron espacios vacíos
   para que mantengan su tamaño.
 
+## Prompt 6
+
+> Revisa los últimos commits de mejora-ia y audita para ver que todo esta correcto
+
+> Sí, corrige ambos en mejora-ia
+
+### Respuesta resumida
+
+La IA auditó los commits de `mejora-ia` y encontró dos problemas, que se corrigieron en
+un commit cada uno:
+
+1. **Día oculto pero seleccionado.** En Fecha y hora, si se elegía un día y luego se
+   cambiaba de semana con las flechas, ese día seguía seleccionado aunque ya no se veía,
+   y "Continuar" seguía activo. Ahora las flechas `<` y `>` también borran el día y la
+   hora elegidos.
+2. **La sede quedaba guardada al cerrar sesión.** `cerrarSesion()` solo borraba
+   `usuarioActual`, así que el siguiente usuario entraba con la sede del anterior. Ahora
+   también borra `sedeActual`.
+
+### Qué se tuvo que corregir
+
+- El punto 1 se había quitado antes para seguir la guía al pie de la letra (la guía solo
+  pide reiniciar la hora al cambiar de día). Con la mejora de "solo días disponibles del
+  médico" el problema se notaba más, por eso se volvió a agregar como parte de las mejoras
+  del profesor.
+

@@ -90,9 +90,11 @@ object Repositorio {
         return usuario != null
     }
 
-    // Cierra la sesión: ya no hay usuario actual.
+    // Cierra la sesión: ya no hay usuario actual ni sede elegida.
     fun cerrarSesion() {
         usuarioActual = null
+        // La sede también se olvida: el próximo usuario elige la suya
+        sedeActual = null
     }
 
     // ---------- Sedes ----------
