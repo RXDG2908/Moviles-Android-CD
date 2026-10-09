@@ -62,20 +62,25 @@ object Repositorio {
 
     // ---------- Usuarios ----------
 
-    // TODO: si ya existe un usuario con el mismo teléfono (any), devolver false.
-    //  Si no, agregarlo a "usuarios" (add) y devolver true.
+    // Si ya existe un usuario con el mismo teléfono (any), no se registra.
+    // Si no, se agrega a la lista (add).
     fun registrarUsuario(usuario: Usuario): Boolean {
-        return false
+        if (usuarios.any { it.telefono == usuario.telefono }) return false
+        usuarios.add(usuario)
+        return true
     }
 
-    // TODO: buscar en "usuarios" el que tenga ese teléfono y contraseña (find).
-    //  Si existe, guardarlo en usuarioActual y devolver true; si no, false.
+    // Busca el usuario con ese teléfono y contraseña (find).
+    // Si existe, queda como usuarioActual (sesión iniciada).
     fun iniciarSesion(telefono: String, contrasena: String): Boolean {
-        return false
+        val usuario = usuarios.find { it.telefono == telefono && it.contrasena == contrasena }
+        usuarioActual = usuario
+        return usuario != null
     }
 
-    // TODO: dejar usuarioActual en null.
+    // Cierra la sesión: ya no hay usuario actual.
     fun cerrarSesion() {
+        usuarioActual = null
     }
 
     // ---------- Especialidades ----------
