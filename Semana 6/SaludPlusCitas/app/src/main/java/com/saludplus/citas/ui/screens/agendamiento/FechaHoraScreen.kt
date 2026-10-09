@@ -105,7 +105,16 @@ fun FechaHoraScreen(navController: NavController, medicoId: Int) {
             // Mes y año con flechas para cambiar de semana
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 // < retrocede una semana; no se puede retroceder antes de la semana actual
-                IconButton(onClick = { semana-- }, enabled = semana > 0) {
+                // Al cambiar de semana se borran el día y la hora elegidos: el día anterior
+                // ya no se ve y no se debe poder continuar con él
+                IconButton(
+                    onClick = {
+                        semana--
+                        fechaElegida = null
+                        horaElegida = null
+                    },
+                    enabled = semana > 0
+                ) {
                     Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = null, tint = TextoOscuro)
                 }
                 // El mes y el año salen del primer día mostrado: cambian solos con la semana
@@ -118,7 +127,13 @@ fun FechaHoraScreen(navController: NavController, medicoId: Int) {
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
                 // > avanza una semana
-                IconButton(onClick = { semana++ }) {
+                IconButton(
+                    onClick = {
+                        semana++
+                        fechaElegida = null
+                        horaElegida = null
+                    }
+                ) {
                     Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = TextoOscuro)
                 }
             }
