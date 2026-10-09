@@ -266,3 +266,10 @@ También se puede registrar uno nuevo.
 cd REPO
 git worktree remove ../Moviles-Android-CD-mejora-ia
 ```
+
+---
+
+## Informe en Word (después de preparar la presentación)
+
+Para tomar las capturas y generar el informe en Word, sigue
+`Semana 6/SaludPlusCitas/informe/capturas.md` (en la carpeta de la rama `mejora-ia`).

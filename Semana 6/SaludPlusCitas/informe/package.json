@@ -1,0 +1,11 @@
+{
+  "name": "informe-saludplus",
+  "private": true,
+  "description": "Genera el informe en Word del Laboratorio 06 - Clinica SaludPlus",
+  "scripts": {
+    "informe": "node generar_informe.js"
+  },
+  "dependencies": {
+    "docx": "^9.0.0"
+  }
+}
