@@ -124,11 +124,14 @@ object Repositorio {
 
     // ---------- Citas ----------
 
-    // TODO: horarios libres de ese médico en esa fecha.
-    //  1) De "citas", quedarse con las del médico y fecha (filter) y sacar sus horas (map).
-    //  2) Devolver los "horariosBase" que NO estén en esas horas ocupadas (filter).
+    // Horarios libres de ese médico en esa fecha:
+    // 1) horas ya ocupadas = citas del médico y fecha (filter) -> sus horas (map)
+    // 2) se devuelven los horariosBase que no estén ocupados (filter)
     fun horariosDisponibles(medicoId: Int, fecha: String): List<String> {
-        return horariosBase
+        val ocupados = citas
+            .filter { it.medicoId == medicoId && it.fecha == fecha }
+            .map { it.hora }
+        return horariosBase.filter { it !in ocupados }
     }
 
     // TODO: si no hay usuario con sesión, devolver null.

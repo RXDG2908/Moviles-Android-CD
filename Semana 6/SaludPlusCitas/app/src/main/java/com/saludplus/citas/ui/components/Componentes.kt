@@ -270,6 +270,27 @@ fun CampoFormulario(
     }
 }
 
+// Resumen del médico elegido (fondo gris): avatar, nombre, cargo y opcionalmente el CMP.
+@Composable
+fun ResumenMedico(medico: Medico, mostrarCmp: Boolean = false) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(14.dp))
+            .background(GrisSuave)
+            .padding(14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        AvatarMedico(52)
+        Spacer(Modifier.width(12.dp))
+        Column {
+            Text(medico.nombre, color = TextoOscuro, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+            Text(medico.cargo, color = TextoGris, fontSize = 12.sp)
+            if (mostrarCmp) Text("CMP: ${medico.cmp}", color = TextoGris, fontSize = 12.sp)
+        }
+    }
+}
+
 // Ícono de cada especialidad, con su color y fondo claro (como en el diseño).
 @Composable
 fun IconoEspecialidad(especialidadId: Int, tamano: Int = 44) {
