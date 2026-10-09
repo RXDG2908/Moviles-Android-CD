@@ -93,12 +93,14 @@ object Repositorio {
         return usuario != null
     }
 
-    // Inicio de sesión con correo y contraseña (el que usa LoginScreen).
-    // Busca el usuario (find); el correo no distingue mayúsculas ni espacios.
-    // Si existe, queda como usuarioActual (sesión iniciada).
-    fun iniciarSesionConCorreo(correo: String, contrasena: String): Boolean {
+    // Inicio de sesión con correo O teléfono y contraseña (el que usa LoginScreen).
+    // Busca el usuario cuyo correo o teléfono coincida (find); el correo no
+    // distingue mayúsculas. Si existe, queda como usuarioActual (sesión iniciada).
+    fun iniciarSesionConCorreoOTelefono(correoOTelefono: String, contrasena: String): Boolean {
+        val dato = correoOTelefono.trim()
         val usuario = usuarios.find {
-            it.correo.equals(correo.trim(), ignoreCase = true) && it.contrasena == contrasena
+            (it.correo.equals(dato, ignoreCase = true) || it.telefono == dato) &&
+                it.contrasena == contrasena
         }
         usuarioActual = usuario
         return usuario != null

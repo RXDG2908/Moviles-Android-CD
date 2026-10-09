@@ -213,8 +213,8 @@ Muéstrale al usuario este resumen, con los datos reales:
 **Usuario de prueba:**
 
 - Rama `main`: teléfono `987654321`, contraseña `123456` (Juan Pérez).
-- Rama `mejora-ia`: correo `juan@correo.com`, contraseña `123456` (Juan Pérez). En esta
-  rama se inicia sesión con **correo**, no con teléfono.
+- Rama `mejora-ia`: correo `juan@correo.com` **o** teléfono `987654321`, contraseña
+  `123456` (Juan Pérez). En esta rama el Login tiene un solo campo, "Correo o teléfono".
 
 También se puede registrar uno nuevo.
 
@@ -231,7 +231,7 @@ También se puede registrar uno nuevo.
 
 ### Rama `mejora-ia` — Fase 2 (con IA) + mejoras del profesor
 
-1. **Inicio de sesión con correo y re-login:** al registrarse (el correo es
+1. **Inicio de sesión con correo o teléfono, y re-login:** al registrarse (el correo es
    obligatorio) **no entra directo**. Va a Login con el correo ya escrito y el aviso
    "Cuenta creada, inicia sesión".
 2. **Inicio:** "Mis citas" ya no está en los mosaicos; en su lugar está **Mis doctores**.

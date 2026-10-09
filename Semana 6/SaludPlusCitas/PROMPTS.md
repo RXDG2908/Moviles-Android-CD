@@ -223,3 +223,20 @@ El inicio de sesión pasó de teléfono a **correo y contraseña**:
 - La primera versión de las mejoras usaba el teléfono para iniciar sesión, igual que el
   código esqueleto. Se cambió al correo según lo indicado.
 
+## Prompt 8
+
+> Osea correo o teléfono, eso!
+
+### Respuesta resumida
+
+El Login quedó con **un solo campo, "Correo o teléfono"**, más la contraseña. La función
+del Prompt 7 se reemplazó por `iniciarSesionConCorreoOTelefono(correoOTelefono,
+contrasena)`, que busca (`find`) el usuario cuyo correo (sin distinguir mayúsculas) **o**
+teléfono coincida con lo escrito y que tenga esa contraseña. Después de registrarse,
+Login sigue abriendo con el correo ya escrito.
+
+### Qué se tuvo que corregir
+
+- En el Prompt 7 se había entendido "solo correo"; se ajustó para aceptar cualquiera de
+  los dos.
+

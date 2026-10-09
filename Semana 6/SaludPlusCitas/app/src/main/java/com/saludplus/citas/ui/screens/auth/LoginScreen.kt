@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -40,11 +40,12 @@ import com.saludplus.citas.ui.theme.Verde
 
 // Pantalla 8 - Iniciar sesión (vista faltante, mismo estilo que Registro):
 // busca al usuario en la lista (find) y guarda la sesión.
-// Se inicia sesión con correo y contraseña.
+// Se inicia sesión con el correo o el teléfono, y la contraseña.
 // "correoInicial" llega desde Registro: si viene lleno, la cuenta se acaba de crear.
 @Composable
 fun LoginScreen(navController: NavController, correoInicial: String = "") {
-    var correo by remember { mutableStateOf(correoInicial) }
+    // Un solo campo: acepta el correo o el teléfono
+    var correoOTelefono by remember { mutableStateOf(correoInicial) }
     var contrasena by remember { mutableStateOf("") }
     var error by remember { mutableStateOf("") }
     val teclado = LocalSoftwareKeyboardController.current
@@ -71,7 +72,7 @@ fun LoginScreen(navController: NavController, correoInicial: String = "") {
                 Text("Cuenta creada, inicia sesión", color = Verde, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
             }
 
-            CampoFormulario("Correo", correo, { correo = it }, Icons.Default.Email, KeyboardType.Email)
+            CampoFormulario("Correo o teléfono", correoOTelefono, { correoOTelefono = it }, Icons.Default.Person, KeyboardType.Email)
             CampoFormulario("Contraseña", contrasena, { contrasena = it }, Icons.Default.Lock, KeyboardType.Password, esContrasena = true)
 
             if (error.isNotEmpty()) {
@@ -80,15 +81,15 @@ fun LoginScreen(navController: NavController, correoInicial: String = "") {
 
             BotonPrincipal("Iniciar sesión") {
                 teclado?.hide()
-                if (correo.isBlank() || contrasena.isBlank()) {
-                    error = "Ingresa tu correo y contraseña"
-                } else if (Repositorio.iniciarSesionConCorreo(correo, contrasena)) {
+                if (correoOTelefono.isBlank() || contrasena.isBlank()) {
+                    error = "Ingresa tu correo o teléfono y tu contraseña"
+                } else if (Repositorio.iniciarSesionConCorreoOTelefono(correoOTelefono, contrasena)) {
                     // Entra al Inicio y borra Splash/Registro/Login del historial
                     navController.navigate(Rutas.HOME) {
                         popUpTo(Rutas.SPLASH) { inclusive = true }
                     }
                 } else {
-                    error = "Correo o contraseña incorrectos"
+                    error = "Correo, teléfono o contraseña incorrectos"
                 }
             }
 
