@@ -53,6 +53,7 @@ fun ConfirmarCitaScreen(navController: NavController, medicoId: Int, fecha: Stri
     if (!SesionIniciada(navController)) return
 
     val medico = Repositorio.obtenerMedico(medicoId)
+    val sede = Repositorio.sedeActual
     var motivo by remember { mutableStateOf("") }
     var error by remember { mutableStateOf("") }
 
@@ -90,7 +91,11 @@ fun ConfirmarCitaScreen(navController: NavController, medicoId: Int, fecha: Stri
             FilaDato(Icons.Default.CalendarMonth, "Fecha", fechaLarga(fecha))
             FilaDato(Icons.Default.Schedule, "Hora", rangoHora(hora))
             FilaDato(Icons.Default.MedicalServices, "Tipo de atención", "Consulta presencial")
-            FilaDato(Icons.Default.LocationOn, "Dirección", "Av. Los Olivos 123, Lima")
+            // Sede elegida al inicio del agendamiento
+            if (sede != null) {
+                FilaDato(Icons.Default.LocationOn, "Sede", sede.nombre)
+                FilaDato(Icons.Default.LocationOn, "Dirección", "${sede.direccion}, ${sede.distrito}")
+            }
 
             // Motivo de consulta (opcional)
             Row {

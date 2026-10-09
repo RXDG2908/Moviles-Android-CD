@@ -64,7 +64,7 @@ fun MisCitasScreen(navController: NavController) {
                         textAlign = TextAlign.Center
                     )
                     Spacer(Modifier.height(20.dp))
-                    BotonPrincipal("Agendar cita") { navController.navigate(Rutas.ESPECIALIDADES) }
+                    BotonPrincipal("Agendar cita") { navController.navigate(Rutas.sedes()) }
                 }
             }
         } else {

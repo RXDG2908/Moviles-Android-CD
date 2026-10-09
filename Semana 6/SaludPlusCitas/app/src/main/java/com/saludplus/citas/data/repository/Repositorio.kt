@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import com.saludplus.citas.data.model.Cita
 import com.saludplus.citas.data.model.Especialidad
 import com.saludplus.citas.data.model.Medico
+import com.saludplus.citas.data.model.Sede
 import com.saludplus.citas.data.model.Usuario
 
 // Repositorio único de la app (object = una sola instancia para todas las pantallas).
@@ -35,19 +36,28 @@ object Repositorio {
     )
 
     val medicos = listOf(
-        Medico(1, "Dr. Carlos Medina", 1, "Médico general", "10234", 4.7, 140, "Disponible hoy"),
-        Medico(2, "Dra. Lucía Fernández", 1, "Médica general", "10876", 4.6, 98, "Disponible mañana"),
-        Medico(3, "Dr. Jorge Salas", 2, "Pediatra", "11452", 4.8, 112, "Disponible hoy"),
-        Medico(4, "Dra. Carmen Ruiz", 2, "Pediatra", "11978", 4.5, 64, "Disponible esta semana"),
-        Medico(5, "Dra. Ana Torres", 3, "Ginecóloga", "12345", 4.9, 120, "Disponible hoy"),
-        Medico(6, "Dra. Claudia Rojas", 3, "Ginecóloga", "12611", 4.8, 95, "Disponible mañana"),
-        Medico(7, "Dr. Luis Ramírez", 3, "Ginecólogo", "12890", 4.7, 88, "Disponible hoy"),
-        Medico(8, "Dra. Mariana Soto", 3, "Ginecóloga", "13104", 4.6, 76, "Disponible esta semana"),
+        Medico(1, "Dr. Carlos Medina", 1, "Médico general", "10234", 4.7, 140, "Disponible hoy", listOf(1)),
+        Medico(2, "Dra. Lucía Fernández", 1, "Médica general", "10876", 4.6, 98, "Disponible mañana", listOf(2)),
+        Medico(3, "Dr. Jorge Salas", 2, "Pediatra", "11452", 4.8, 112, "Disponible hoy", listOf(1)),
+        Medico(4, "Dra. Carmen Ruiz", 2, "Pediatra", "11978", 4.5, 64, "Disponible esta semana", listOf(2)),
+        Medico(5, "Dra. Ana Torres", 3, "Ginecóloga", "12345", 4.9, 120, "Disponible hoy", listOf(1)),
+        Medico(6, "Dra. Claudia Rojas", 3, "Ginecóloga", "12611", 4.8, 95, "Disponible mañana", listOf(2)),
+        Medico(7, "Dr. Luis Ramírez", 3, "Ginecólogo", "12890", 4.7, 88, "Disponible hoy", listOf(1)),
+        Medico(8, "Dra. Mariana Soto", 3, "Ginecóloga", "13104", 4.6, 76, "Disponible esta semana", listOf(2)),
         Medico(9, "Dr. Miguel Paredes", 4, "Cardiólogo", "13567", 4.8, 101, "Disponible hoy"),
         Medico(10, "Dra. Rosa Díaz", 5, "Dermatóloga", "14022", 4.7, 83, "Disponible mañana"),
         Medico(11, "Dr. Andrés Castro", 6, "Traumatólogo", "14455", 4.6, 70, "Disponible hoy"),
         Medico(12, "Dra. Sofía Vargas", 7, "Oftalmóloga", "14901", 4.9, 91, "Disponible esta semana")
     )
+
+    // Sedes (locales) de la clínica
+    val sedes = listOf(
+        Sede(1, "SaludPlus Independencia", "Av. Túpac Amaru 456", "Independencia"),
+        Sede(2, "SaludPlus La Molina", "Av. La Molina 789", "La Molina")
+    )
+
+    // Sede elegida por el paciente (null si todavía no eligió)
+    var sedeActual by mutableStateOf<Sede?>(null)
 
     // Horarios de atención de un día. Los ya reservados no deben mostrarse.
     val horariosBase = listOf(
@@ -84,6 +94,18 @@ object Repositorio {
         usuarioActual = null
     }
 
+    // ---------- Sedes ----------
+
+    // Busca la sede por id (find).
+    fun obtenerSede(id: Int): Sede? {
+        return sedes.find { it.id == id }
+    }
+
+    // Guarda la sede elegida como sedeActual.
+    fun seleccionarSede(id: Int) {
+        sedeActual = obtenerSede(id)
+    }
+
     // ---------- Especialidades ----------
 
     // Especialidades cuyo nombre contiene el texto (filter + contains).
@@ -117,6 +139,11 @@ object Repositorio {
             .sortedByDescending { it.calificacion }
     }
 
+    // Médicos de la especialidad que atienden en esa sede (filter), de mejor a menor calificación.
+    fun medicosPorSede(sedeId: Int, especialidadId: Int): List<Medico> {
+        return medicosPorEspecialidad(especialidadId).filter { sedeId in it.sedes }
+    }
+
     // Igual que medicosPorEspecialidad, pero además por nombre (contains).
     fun buscarMedicos(especialidadId: Int, texto: String): List<Medico> {
         return medicosPorEspecialidad(especialidadId)
@@ -143,7 +170,9 @@ object Repositorio {
         if (ocupado) return null
 
         val nuevoId = (citas.maxOfOrNull { it.id } ?: 0) + 1
-        val cita = Cita(nuevoId, usuario.telefono, medicoId, fecha, hora, motivo.trim())
+        // La cita se guarda con la sede elegida (0 si no hay sede)
+        val sedeId = sedeActual?.id ?: 0
+        val cita = Cita(nuevoId, usuario.telefono, medicoId, fecha, hora, motivo.trim(), sedeId = sedeId)
         citas.add(cita)
         return cita
     }

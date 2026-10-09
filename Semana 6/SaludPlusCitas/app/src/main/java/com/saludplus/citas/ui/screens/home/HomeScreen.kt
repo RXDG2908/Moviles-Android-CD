@@ -94,8 +94,9 @@ fun HomeScreen(navController: NavController) {
 
             // Mosaicos de acceso (2 x 2)
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                // Antes de agendar siempre se elige la sede
                 Mosaico("Agendar cita", Icons.Default.CalendarMonth, AzulSalud, AzulClaro, Modifier.weight(1f)) {
-                    navController.navigate(Rutas.ESPECIALIDADES)
+                    navController.navigate(Rutas.sedes())
                 }
                 Mosaico("Mis citas", Icons.Default.EventAvailable, Verde, VerdeClaro, Modifier.weight(1f)) {
                     navController.navigate(Rutas.MIS_CITAS)
@@ -121,7 +122,7 @@ fun HomeScreen(navController: NavController) {
                     color = AzulSalud,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.clickable { navController.navigate(Rutas.ESPECIALIDADES) }
+                    modifier = Modifier.clickable { navController.navigate(Rutas.sedes()) }
                 )
             }
             Spacer(Modifier.height(12.dp))
@@ -132,8 +133,9 @@ fun HomeScreen(navController: NavController) {
                 contentPadding = PaddingValues(end = 4.dp)
             ) {
                 items(Repositorio.especialidadesDestacadas()) { especialidad ->
+                    // Primero la sede y después los médicos de esa especialidad
                     EspecialidadDestacada(especialidad) {
-                        navController.navigate(Rutas.medicos(especialidad.id))
+                        navController.navigate(Rutas.sedes(Rutas.IR_A_MEDICOS, especialidad.id))
                     }
                 }
             }

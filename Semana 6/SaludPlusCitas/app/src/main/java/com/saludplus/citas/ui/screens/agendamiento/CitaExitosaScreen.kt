@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
@@ -51,6 +52,7 @@ import com.saludplus.citas.ui.theme.VerdeChip
 fun CitaExitosaScreen(navController: NavController, citaId: Int) {
     val cita = Repositorio.obtenerCita(citaId)
     val medico = cita?.let { Repositorio.obtenerMedico(it.medicoId) }
+    val sede = cita?.let { Repositorio.obtenerSede(it.sedeId) }
 
     // Volver al Inicio (ya está en el historial gracias a popUpTo)
     val irAlInicio = { navController.popBackStack(Rutas.HOME, inclusive = false) }
@@ -99,6 +101,9 @@ fun CitaExitosaScreen(navController: NavController, citaId: Int) {
                     ResumenMedico(medico)
                     FilaDato(Icons.Default.CalendarMonth, "Fecha", fechaCorta(cita.fecha))
                     FilaDato(Icons.Default.Schedule, "Hora", rangoHora(cita.hora))
+                    if (sede != null) {
+                        FilaDato(Icons.Default.LocationOn, "Sede", "${sede.nombre} - ${sede.direccion}")
+                    }
                 }
             }
 

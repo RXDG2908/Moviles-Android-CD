@@ -18,6 +18,12 @@ object Rutas {
     const val NOTIFICACIONES = "notificaciones"
 
     // Flujo de agendamiento
+    // Sedes: "destino" dice a qué pantalla ir después de elegir la sede
+    // e "id" lleva el dato que esa pantalla necesita (especialidadId o medicoId)
+    const val SEDES = "sedes?destino={destino}&id={id}"
+    // Posibles destinos después de elegir la sede
+    const val IR_A_ESPECIALIDADES = "especialidades"
+    const val IR_A_MEDICOS = "medicos"
     const val ESPECIALIDADES = "especialidades"
     const val MEDICOS = "medicos/{especialidadId}"
     const val FECHA_HORA = "fecha_hora/{medicoId}"
@@ -28,6 +34,7 @@ object Rutas {
     const val DETALLE_CITA = "detalle_cita/{citaId}"
 
     fun login(telefono: String = "") = "login?telefono=$telefono"
+    fun sedes(destino: String = IR_A_ESPECIALIDADES, id: Int = 0) = "sedes?destino=$destino&id=$id"
     fun medicos(especialidadId: Int) = "medicos/$especialidadId"
     fun fechaHora(medicoId: Int) = "fecha_hora/$medicoId"
     fun confirmarCita(medicoId: Int, fecha: String, hora: String) =

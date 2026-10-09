@@ -46,12 +46,11 @@ fun MedicosScreen(navController: NavController, especialidadId: Int) {
     var mostrarBusqueda by remember { mutableStateOf(false) }
     var busqueda by remember { mutableStateOf("") }
 
-    // filter + sortedByDescending (y por nombre si se escribió algo)
-    val medicos = if (busqueda.isBlank()) {
-        Repositorio.medicosPorEspecialidad(especialidadId)
-    } else {
-        Repositorio.buscarMedicos(especialidadId, busqueda)
-    }
+    // Solo los médicos de la sede elegida (filter + sortedByDescending)
+    // y, si se escribió algo, también por nombre
+    val sedeId = Repositorio.sedeActual?.id ?: 0
+    val medicos = Repositorio.medicosPorSede(sedeId, especialidadId)
+        .filter { it.nombre.contains(busqueda.trim(), ignoreCase = true) }
 
     Scaffold(
         containerColor = Blanco,

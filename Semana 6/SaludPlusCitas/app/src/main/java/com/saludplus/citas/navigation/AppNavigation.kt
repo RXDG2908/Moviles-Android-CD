@@ -21,6 +21,7 @@ import com.saludplus.citas.ui.screens.home.HomeScreen
 import com.saludplus.citas.ui.screens.notificaciones.NotificacionesScreen
 import com.saludplus.citas.ui.screens.perfil.PerfilScreen
 import com.saludplus.citas.ui.screens.resultados.ResultadosScreen
+import com.saludplus.citas.ui.screens.sedes.SedesScreen
 
 // NavHost con las 15 pantallas. No modificar salvo para agregar pantallas nuevas.
 @Composable
@@ -51,7 +52,25 @@ fun AppNavigation() {
         composable(Rutas.PERFIL) { PerfilScreen(navController) }
         composable(Rutas.NOTIFICACIONES) { NotificacionesScreen(navController) }
 
-        // Flujo de agendamiento
+        // Flujo de agendamiento: primero se elige la sede
+        composable(
+            route = Rutas.SEDES,
+            arguments = listOf(
+                navArgument("destino") {
+                    type = NavType.StringType
+                    defaultValue = Rutas.IR_A_ESPECIALIDADES
+                },
+                navArgument("id") {
+                    type = NavType.IntType
+                    defaultValue = 0
+                }
+            )
+        ) { entry ->
+            val destino = entry.arguments?.getString("destino") ?: Rutas.IR_A_ESPECIALIDADES
+            val id = entry.arguments?.getInt("id") ?: 0
+            SedesScreen(navController, destino, id)
+        }
+
         composable(Rutas.ESPECIALIDADES) { EspecialidadesScreen(navController) }
 
         composable(

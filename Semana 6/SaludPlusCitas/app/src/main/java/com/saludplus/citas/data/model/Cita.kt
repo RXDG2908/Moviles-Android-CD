@@ -10,5 +10,6 @@ data class Cita(
     val fecha: String,
     val hora: String,
     val motivo: String = "",
-    val estado: String = "Confirmada"
+    val estado: String = "Confirmada",
+    val sedeId: Int = 0         // sede donde se atenderá la cita
 )
