@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -55,10 +56,12 @@ fun FechaHoraScreen(navController: NavController, medicoId: Int) {
     var fechaElegida by remember { mutableStateOf<String?>(null) }
     var horaElegida by remember { mutableStateOf<String?>(null) }
 
-    // Calendario dinámico: los próximos 5 días hábiles desde hoy (sin fines de semana
-    // ni días pasados). Cada día se guarda como "yyyy-MM-dd", igual que en Cita.fecha
+    // Calendario dinámico: 5 días hábiles (sin fines de semana ni días pasados).
+    // semana = 0 es la semana actual (desde hoy); cada flecha suma o resta 1.
+    // Cada día se guarda como "yyyy-MM-dd", igual que en Cita.fecha
     val hoy = remember { LocalDate.now() }
-    val dias = diasHabiles(hoy)
+    var semana by remember { mutableStateOf(0) }
+    val dias = diasHabiles(hoy.plusWeeks(semana.toLong()))
 
     // Horarios libres del día elegido. Como "citas" es mutableStateListOf,
     // si alguien reserva un horario, esta lista se vuelve a calcular sola.
@@ -88,10 +91,24 @@ fun FechaHoraScreen(navController: NavController, medicoId: Int) {
             if (medico != null) ResumenMedico(medico)
             Spacer(Modifier.height(20.dp))
 
-            // Mes y año
+            // Mes y año con flechas para cambiar de semana
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = null, tint = TextoOscuro)
-                // Mes y año del primer día mostrado
+                // < retrocede una semana; en la semana actual queda desactivada
+                IconButton(
+                    onClick = {
+                        semana--
+                        fechaElegida = null
+                        horaElegida = null
+                    },
+                    enabled = semana > 0
+                ) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                        contentDescription = "Semana anterior",
+                        tint = if (semana > 0) TextoOscuro else GrisSuave
+                    )
+                }
+                // El mes y el año salen del primer día mostrado: cambian solos con la semana
                 Text(
                     mesYAnio(dias[0]),
                     color = TextoOscuro,
@@ -100,7 +117,20 @@ fun FechaHoraScreen(navController: NavController, medicoId: Int) {
                     modifier = Modifier.weight(1f),
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
-                Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = TextoOscuro)
+                // > avanza una semana
+                IconButton(
+                    onClick = {
+                        semana++
+                        fechaElegida = null
+                        horaElegida = null
+                    }
+                ) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                        contentDescription = "Semana siguiente",
+                        tint = TextoOscuro
+                    )
+                }
             }
             Spacer(Modifier.height(14.dp))
 
@@ -114,7 +144,11 @@ fun FechaHoraScreen(navController: NavController, medicoId: Int) {
                             .weight(1f)
                             .clip(RoundedCornerShape(12.dp))
                             .background(if (elegido) AzulSalud else Blanco)
-                            .clickable { fechaElegida = fecha }
+                            .clickable {
+                                // Al cambiar de día la hora se reinicia y los horarios se recalculan
+                                fechaElegida = fecha
+                                horaElegida = null
+                            }
                             .padding(vertical = 10.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
