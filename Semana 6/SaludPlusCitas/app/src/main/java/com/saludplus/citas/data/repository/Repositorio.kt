@@ -134,16 +134,22 @@ object Repositorio {
         return horariosBase.filter { it !in ocupados }
     }
 
-    // TODO: si no hay usuario con sesión, devolver null.
-    //  Si ya existe una cita para ese médico, fecha y hora (any), devolver null.
-    //  Si no, crear la Cita con un id nuevo, agregarla a "citas" (add) y devolverla.
+    // Crea y guarda la cita del usuario actual.
+    // Devuelve null si no hay sesión o si ese horario ya está tomado (any).
     fun agendarCita(medicoId: Int, fecha: String, hora: String, motivo: String): Cita? {
-        return null
+        val usuario = usuarioActual ?: return null
+        val ocupado = citas.any { it.medicoId == medicoId && it.fecha == fecha && it.hora == hora }
+        if (ocupado) return null
+
+        val nuevoId = (citas.maxOfOrNull { it.id } ?: 0) + 1
+        val cita = Cita(nuevoId, usuario.telefono, medicoId, fecha, hora, motivo.trim())
+        citas.add(cita)
+        return cita
     }
 
-    // TODO: buscar la cita por id (find).
+    // Busca la cita por id (find).
     fun obtenerCita(id: Int): Cita? {
-        return null
+        return citas.find { it.id == id }
     }
 
     // TODO: citas del usuario actual (filter por teléfono), ordenadas por

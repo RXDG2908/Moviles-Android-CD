@@ -270,6 +270,40 @@ fun CampoFormulario(
     }
 }
 
+// Fila de un dato de la cita: ícono en cuadro celeste, etiqueta gris y valor.
+@Composable
+fun FilaDato(icono: ImageVector, etiqueta: String, valor: String) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(AzulClaro),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(icono, contentDescription = null, tint = AzulSalud, modifier = Modifier.size(20.dp))
+        }
+        Spacer(Modifier.width(12.dp))
+        Column {
+            Text(etiqueta, color = TextoGris, fontSize = 12.sp)
+            Text(valor, color = TextoOscuro, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+        }
+    }
+}
+
+// "2026-09-16" -> "16/09/2026"
+fun fechaCorta(fecha: String): String {
+    val partes = fecha.split("-")
+    return if (partes.size == 3) "${partes[2]}/${partes[1]}/${partes[0]}" else fecha
+}
+
+// Rango de la consulta de 30 minutos: "09:30" -> "09:30 a 10:00"
+fun rangoHora(hora: String): String {
+    val (h, m) = hora.split(":").map { it.toInt() }
+    val fin = h * 60 + m + 30
+    return "$hora a %02d:%02d".format(fin / 60, fin % 60)
+}
+
 // Resumen del médico elegido (fondo gris): avatar, nombre, cargo y opcionalmente el CMP.
 @Composable
 fun ResumenMedico(medico: Medico, mostrarCmp: Boolean = false) {
