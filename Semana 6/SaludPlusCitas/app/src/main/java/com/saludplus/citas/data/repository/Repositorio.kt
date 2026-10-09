@@ -36,25 +36,74 @@ object Repositorio {
         Especialidad(7, "Oftalmología", "Salud visual")
     )
 
+    // 6 médicos por especialidad. Cada uno atiende en 4 sedes, así cada sede
+    // tiene 2 médicos de cada especialidad.
     val medicos = listOf(
-        Medico(1, "Dr. Carlos Medina", 1, "Médico general", "10234", 4.7, 140, "Disponible hoy", listOf(1), diasAtencion = listOf(1, 2, 3, 4, 5)),
-        Medico(2, "Dra. Lucía Fernández", 1, "Médica general", "10876", 4.6, 98, "Disponible mañana", listOf(2), diasAtencion = listOf(2, 4)),
-        Medico(3, "Dr. Jorge Salas", 2, "Pediatra", "11452", 4.8, 112, "Disponible hoy", listOf(1), diasAtencion = listOf(1, 3, 5)),
-        Medico(4, "Dra. Carmen Ruiz", 2, "Pediatra", "11978", 4.5, 64, "Disponible esta semana", listOf(2), diasAtencion = listOf(2, 4)),
-        Medico(5, "Dra. Ana Torres", 3, "Ginecóloga", "12345", 4.9, 120, "Disponible hoy", listOf(1), diasAtencion = listOf(1, 2, 3)),
-        Medico(6, "Dra. Claudia Rojas", 3, "Ginecóloga", "12611", 4.8, 95, "Disponible mañana", listOf(2), diasAtencion = listOf(4, 5)),
-        Medico(7, "Dr. Luis Ramírez", 3, "Ginecólogo", "12890", 4.7, 88, "Disponible hoy", listOf(1), diasAtencion = listOf(1, 3, 5)),
-        Medico(8, "Dra. Mariana Soto", 3, "Ginecóloga", "13104", 4.6, 76, "Disponible esta semana", listOf(2), diasAtencion = listOf(2, 4)),
-        Medico(9, "Dr. Miguel Paredes", 4, "Cardiólogo", "13567", 4.8, 101, "Disponible hoy", diasAtencion = listOf(1, 3)),
-        Medico(10, "Dra. Rosa Díaz", 5, "Dermatóloga", "14022", 4.7, 83, "Disponible mañana", diasAtencion = listOf(2, 5)),
-        Medico(11, "Dr. Andrés Castro", 6, "Traumatólogo", "14455", 4.6, 70, "Disponible hoy", diasAtencion = listOf(1, 2, 4)),
-        Medico(12, "Dra. Sofía Vargas", 7, "Oftalmóloga", "14901", 4.9, 91, "Disponible esta semana", diasAtencion = listOf(3, 5))
+        // Medicina General
+        Medico(1, "Dr. Carlos Medina", 1, "Médico general", "10234", 4.7, 140, "Disponible hoy", sedes = listOf(1, 2, 7, 8), diasAtencion = listOf(1, 2, 3, 4, 5)),
+        Medico(2, "Dra. Lucía Fernández", 1, "Médica general", "10876", 4.6, 98, "Disponible mañana", sedes = listOf(3, 4, 9, 10), diasAtencion = listOf(2, 4)),
+        Medico(13, "Dr. Raúl Quispe", 1, "Médico general", "15137", 4.8, 85, "Disponible mañana", sedes = listOf(5, 6, 11, 12), diasAtencion = listOf(1, 3, 5)),
+        Medico(14, "Dra. Patricia Huamán", 1, "Médica general", "15274", 4.6, 110, "Disponible esta semana", sedes = listOf(1, 2, 7, 8), diasAtencion = listOf(1, 2, 3)),
+        Medico(15, "Dr. Fernando Chávez", 1, "Médico general", "15411", 4.9, 72, "Disponible hoy", sedes = listOf(3, 4, 9, 10), diasAtencion = listOf(3, 4, 5)),
+        Medico(16, "Dra. Gabriela Flores", 1, "Médica general", "15548", 4.4, 95, "Disponible mañana", sedes = listOf(5, 6, 11, 12), diasAtencion = listOf(2, 4, 5)),
+        // Pediatría
+        Medico(3, "Dr. Jorge Salas", 2, "Pediatra", "11452", 4.8, 112, "Disponible hoy", sedes = listOf(1, 2, 7, 8), diasAtencion = listOf(1, 2, 3, 4, 5)),
+        Medico(4, "Dra. Carmen Ruiz", 2, "Pediatra", "11978", 4.5, 64, "Disponible esta semana", sedes = listOf(3, 4, 9, 10), diasAtencion = listOf(2, 4)),
+        Medico(17, "Dra. Valeria Mendoza", 2, "Pediatra", "15685", 4.7, 130, "Disponible esta semana", sedes = listOf(5, 6, 11, 12), diasAtencion = listOf(1, 3, 5)),
+        Medico(18, "Dr. Ricardo Paz", 2, "Pediatra", "15822", 4.5, 60, "Disponible hoy", sedes = listOf(1, 2, 7, 8), diasAtencion = listOf(1, 2, 3)),
+        Medico(19, "Dra. Elena Gutiérrez", 2, "Pediatra", "15959", 4.8, 85, "Disponible mañana", sedes = listOf(3, 4, 9, 10), diasAtencion = listOf(3, 4, 5)),
+        Medico(20, "Dr. Hugo Vásquez", 2, "Pediatra", "16096", 4.6, 110, "Disponible esta semana", sedes = listOf(5, 6, 11, 12), diasAtencion = listOf(2, 4, 5)),
+        // Ginecología
+        Medico(5, "Dra. Ana Torres", 3, "Ginecóloga", "12345", 4.9, 120, "Disponible hoy", sedes = listOf(1, 2, 7, 8), diasAtencion = listOf(1, 2, 3, 4, 5)),
+        Medico(6, "Dra. Claudia Rojas", 3, "Ginecóloga", "12611", 4.8, 95, "Disponible mañana", sedes = listOf(3, 4, 9, 10), diasAtencion = listOf(2, 4)),
+        Medico(7, "Dr. Luis Ramírez", 3, "Ginecólogo", "12890", 4.7, 88, "Disponible hoy", sedes = listOf(5, 6, 11, 12), diasAtencion = listOf(1, 3, 5)),
+        Medico(8, "Dra. Mariana Soto", 3, "Ginecóloga", "13104", 4.6, 76, "Disponible esta semana", sedes = listOf(1, 2, 7, 8), diasAtencion = listOf(1, 2, 3)),
+        Medico(21, "Dra. Natalia Cáceres", 3, "Ginecóloga", "16233", 4.9, 72, "Disponible hoy", sedes = listOf(3, 4, 9, 10), diasAtencion = listOf(3, 4, 5)),
+        Medico(22, "Dr. Óscar Villanueva", 3, "Ginecólogo", "16370", 4.4, 95, "Disponible mañana", sedes = listOf(5, 6, 11, 12), diasAtencion = listOf(2, 4, 5)),
+        // Cardiología
+        Medico(9, "Dr. Miguel Paredes", 4, "Cardiólogo", "13567", 4.8, 101, "Disponible hoy", sedes = listOf(1, 2, 7, 8), diasAtencion = listOf(1, 2, 3, 4, 5)),
+        Medico(23, "Dra. Silvia Romero", 4, "Cardióloga", "16507", 4.7, 130, "Disponible esta semana", sedes = listOf(3, 4, 9, 10), diasAtencion = listOf(2, 4)),
+        Medico(24, "Dr. Javier Morales", 4, "Cardiólogo", "16644", 4.5, 60, "Disponible hoy", sedes = listOf(5, 6, 11, 12), diasAtencion = listOf(1, 3, 5)),
+        Medico(25, "Dra. Teresa Aguilar", 4, "Cardióloga", "16781", 4.8, 85, "Disponible mañana", sedes = listOf(1, 2, 7, 8), diasAtencion = listOf(1, 2, 3)),
+        Medico(26, "Dr. Manuel Espinoza", 4, "Cardiólogo", "16918", 4.6, 110, "Disponible esta semana", sedes = listOf(3, 4, 9, 10), diasAtencion = listOf(3, 4, 5)),
+        Medico(27, "Dra. Rocío Castillo", 4, "Cardióloga", "17055", 4.9, 72, "Disponible hoy", sedes = listOf(5, 6, 11, 12), diasAtencion = listOf(2, 4, 5)),
+        // Dermatología
+        Medico(10, "Dra. Rosa Díaz", 5, "Dermatóloga", "14022", 4.7, 83, "Disponible mañana", sedes = listOf(1, 2, 7, 8), diasAtencion = listOf(1, 2, 3, 4, 5)),
+        Medico(28, "Dr. Diego Herrera", 5, "Dermatólogo", "17192", 4.4, 95, "Disponible mañana", sedes = listOf(3, 4, 9, 10), diasAtencion = listOf(2, 4)),
+        Medico(29, "Dra. Andrea Salazar", 5, "Dermatóloga", "17329", 4.7, 130, "Disponible esta semana", sedes = listOf(5, 6, 11, 12), diasAtencion = listOf(1, 3, 5)),
+        Medico(30, "Dr. Pablo Ríos", 5, "Dermatólogo", "17466", 4.5, 60, "Disponible hoy", sedes = listOf(1, 2, 7, 8), diasAtencion = listOf(1, 2, 3)),
+        Medico(31, "Dra. Lorena Campos", 5, "Dermatóloga", "17603", 4.8, 85, "Disponible mañana", sedes = listOf(3, 4, 9, 10), diasAtencion = listOf(3, 4, 5)),
+        Medico(32, "Dr. Martín Vega", 5, "Dermatólogo", "17740", 4.6, 110, "Disponible esta semana", sedes = listOf(5, 6, 11, 12), diasAtencion = listOf(2, 4, 5)),
+        // Traumatología
+        Medico(11, "Dr. Andrés Castro", 6, "Traumatólogo", "14455", 4.6, 70, "Disponible hoy", sedes = listOf(1, 2, 7, 8), diasAtencion = listOf(1, 2, 3, 4, 5)),
+        Medico(33, "Dra. Paola Navarro", 6, "Traumatóloga", "17877", 4.9, 72, "Disponible hoy", sedes = listOf(3, 4, 9, 10), diasAtencion = listOf(2, 4)),
+        Medico(34, "Dr. Eduardo Ramos", 6, "Traumatólogo", "18014", 4.4, 95, "Disponible mañana", sedes = listOf(5, 6, 11, 12), diasAtencion = listOf(1, 3, 5)),
+        Medico(35, "Dr. Gustavo Ortiz", 6, "Traumatólogo", "18151", 4.7, 130, "Disponible esta semana", sedes = listOf(1, 2, 7, 8), diasAtencion = listOf(1, 2, 3)),
+        Medico(36, "Dra. Mónica Delgado", 6, "Traumatóloga", "18288", 4.5, 60, "Disponible hoy", sedes = listOf(3, 4, 9, 10), diasAtencion = listOf(3, 4, 5)),
+        Medico(37, "Dr. Alberto Cruz", 6, "Traumatólogo", "18425", 4.8, 85, "Disponible mañana", sedes = listOf(5, 6, 11, 12), diasAtencion = listOf(2, 4, 5)),
+        // Oftalmología
+        Medico(12, "Dra. Sofía Vargas", 7, "Oftalmóloga", "14901", 4.9, 91, "Disponible esta semana", sedes = listOf(1, 2, 7, 8), diasAtencion = listOf(1, 2, 3, 4, 5)),
+        Medico(38, "Dr. Sergio Palacios", 7, "Oftalmólogo", "18562", 4.6, 110, "Disponible esta semana", sedes = listOf(3, 4, 9, 10), diasAtencion = listOf(2, 4)),
+        Medico(39, "Dra. Verónica Peña", 7, "Oftalmóloga", "18699", 4.9, 72, "Disponible hoy", sedes = listOf(5, 6, 11, 12), diasAtencion = listOf(1, 3, 5)),
+        Medico(40, "Dr. Felipe Montes", 7, "Oftalmólogo", "18836", 4.4, 95, "Disponible mañana", sedes = listOf(1, 2, 7, 8), diasAtencion = listOf(1, 2, 3)),
+        Medico(41, "Dra. Diana Zevallos", 7, "Oftalmóloga", "18973", 4.7, 130, "Disponible esta semana", sedes = listOf(3, 4, 9, 10), diasAtencion = listOf(3, 4, 5)),
+        Medico(42, "Dr. César Rivas", 7, "Oftalmólogo", "19110", 4.5, 60, "Disponible hoy", sedes = listOf(5, 6, 11, 12), diasAtencion = listOf(2, 4, 5))
     )
 
-    // Sedes (locales) de la clínica
+    // Sedes (locales) de la clínica en Lima y Callao
     val sedes = listOf(
         Sede(1, "SaludPlus Independencia", "Av. Túpac Amaru 456", "Independencia"),
-        Sede(2, "SaludPlus La Molina", "Av. La Molina 789", "La Molina")
+        Sede(2, "SaludPlus La Molina", "Av. La Molina 789", "La Molina"),
+        Sede(3, "SaludPlus Miraflores", "Av. José Larco 1020", "Miraflores"),
+        Sede(4, "SaludPlus San Isidro", "Av. Javier Prado Este 1450", "San Isidro"),
+        Sede(5, "SaludPlus Surco", "Av. Primavera 1350", "Santiago de Surco"),
+        Sede(6, "SaludPlus Los Olivos", "Av. Carlos Izaguirre 865", "Los Olivos"),
+        Sede(7, "SaludPlus San Juan de Lurigancho", "Av. Próceres de la Independencia 2150", "San Juan de Lurigancho"),
+        Sede(8, "SaludPlus San Miguel", "Av. La Marina 2355", "San Miguel"),
+        Sede(9, "SaludPlus Jesús María", "Av. Brasil 1230", "Jesús María"),
+        Sede(10, "SaludPlus Ate", "Av. Nicolás Ayllón 4570", "Ate"),
+        Sede(11, "SaludPlus Chorrillos", "Av. Defensores del Morro 1680", "Chorrillos"),
+        Sede(12, "SaludPlus Callao", "Av. Sáenz Peña 345", "Callao")
     )
 
     // Sede elegida por el paciente (null si todavía no eligió)

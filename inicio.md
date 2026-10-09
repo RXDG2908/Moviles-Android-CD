@@ -235,15 +235,16 @@ También se puede registrar uno nuevo.
    obligatorio) **no entra directo**. Va a Login con el correo ya escrito y el aviso
    "Cuenta creada, inicia sesión".
 2. **Inicio:** "Mis citas" ya no está en los mosaicos; en su lugar está **Mis doctores**.
-3. **Agendar cita → Elige tu sede** (Independencia o La Molina) → Especialidades →
+3. **Agendar cita → Elige tu sede** (12 sedes en Lima y Callao) → Especialidades →
    Médicos **solo de esa sede**.
+   Cada sede tiene las 7 especialidades, con 2 médicos de cada una.
 4. **Calendario dinámico (Fase 2 de la guía):**
    - días hábiles reales desde hoy, con `LocalDate`;
    - flechas `<` `>` por semana (no se puede retroceder antes de la semana actual);
    - mes y año que cambian con la semana;
    - la hora se reinicia al cambiar de día.
 5. **Solo días disponibles del médico** (pedido del profesor): debajo del médico dice
-   "Atiende: …". Ejemplo para mostrar: **Medicina General → sede La Molina →
+   "Atiende: …". Ejemplo para mostrar: **Medicina General → sede Miraflores →
    Dra. Lucía Fernández**, que atiende solo **martes y jueves**.
 6. **Confirmar cita:** fecha en español ("Martes 13 de octubre 2026") y la sede con su
    dirección. **Cita agendada** también muestra la sede.

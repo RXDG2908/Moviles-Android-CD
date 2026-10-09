@@ -240,3 +240,28 @@ Login sigue abriendo con el correo ya escrito.
 - En el Prompt 7 se había entendido "solo correo"; se ajustó para aceptar cualquiera de
   los dos.
 
+## Prompt 9
+
+> Agregar muchas sedes, 10 almenos y doctores para cada sede y especialidades en cada sede!
+
+### Respuesta resumida
+
+- **12 sedes** en Lima y Callao: Independencia, La Molina, Miraflores, San Isidro, Surco,
+  Los Olivos, San Juan de Lurigancho, San Miguel, Jesús María, Ate, Chorrillos y Callao.
+- **42 médicos**: 6 por cada una de las 7 especialidades. Se mantienen los 12 médicos
+  que ya existían (mismo id, nombre y CMP) y se agregaron 30 nuevos.
+- Cada médico atiende en 4 sedes (`sedes = listOf(...)`), repartidos para que **cada sede
+  tenga las 7 especialidades con 2 médicos de cada una**. Cada médico tiene sus propios
+  días de atención.
+- No hizo falta cambiar ninguna pantalla: Sedes, Médicos por sede, Mis doctores y el
+  calendario ya trabajan con las listas del Repositorio.
+
+### Qué se tuvo que corregir
+
+- Antes de guardar la lista se comprobó con un script que cada una de las 12 sedes tenga
+  exactamente 2 médicos de cada especialidad, que los 42 ids sean únicos y que ningún CMP
+  se repita.
+- El ejemplo del guion de la demo (`inicio.md`) cambió de sede: la Dra. Lucía Fernández
+  ahora atiende en Miraflores, San Isidro, Jesús María y Ate (sigue atendiendo martes y
+  jueves).
+
