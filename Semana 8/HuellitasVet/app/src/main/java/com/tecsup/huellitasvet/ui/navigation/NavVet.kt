@@ -9,6 +9,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -16,12 +18,15 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.tecsup.huellitasvet.model.Rol
 import com.tecsup.huellitasvet.ui.components.AppTopBar
+import com.tecsup.huellitasvet.ui.dueno.FichaMascotaScreen
+import com.tecsup.huellitasvet.ui.dueno.FormularioMascotaScreen
 import com.tecsup.huellitasvet.ui.dueno.InicioScreen
 import com.tecsup.huellitasvet.ui.dueno.LoginScreen
 import com.tecsup.huellitasvet.ui.dueno.MascotasScreen
 import com.tecsup.huellitasvet.ui.dueno.SplashScreen
 import com.tecsup.huellitasvet.ui.veterinario.ServiciosScreen
 import com.tecsup.huellitasvet.viewmodel.InicioViewModel
+import com.tecsup.huellitasvet.viewmodel.MascotaViewModel
 import com.tecsup.huellitasvet.viewmodel.ServiciosViewModel
 import com.tecsup.huellitasvet.viewmodel.SesionViewModel
 import com.tecsup.huellitasvet.viewmodel.VetViewModelFactory
@@ -82,8 +87,8 @@ fun NavVet(factory: VetViewModelFactory, sesion: SesionViewModel) {
                         vm = vm,
                         duenoId = duenoId,
                         nombre = usuario?.nombre ?: "",
-                        onMascota = { /* Paso 8: ficha */ },
-                        onAgregar = { /* Paso 8: formulario */ },
+                        onMascota = { nav.navigate(Rutas.fichaMascota(it)) },
+                        onAgregar = { nav.navigate(Rutas.formularioMascota()) },
                         onPedirCita = { /* Paso 9: pedir cita */ }
                     )
                 }
@@ -93,8 +98,41 @@ fun NavVet(factory: VetViewModelFactory, sesion: SesionViewModel) {
                     MascotasScreen(
                         vm = vm,
                         duenoId = duenoId,
-                        onMascota = { /* Paso 8: ficha */ },
-                        onAgregar = { /* Paso 8: formulario */ }
+                        onMascota = { nav.navigate(Rutas.fichaMascota(it)) },
+                        onAgregar = { nav.navigate(Rutas.formularioMascota()) }
+                    )
+                }
+
+                composable(
+                    Rutas.FORMULARIO_MASCOTA,
+                    arguments = listOf(navArgument("id") { type = NavType.IntType; defaultValue = -1 })
+                ) { entrada ->
+                    val id = entrada.arguments?.getInt("id")?.takeIf { it > 0 }
+                    val vm: MascotaViewModel = viewModel(factory = factory)
+                    FormularioMascotaScreen(
+                        vm = vm,
+                        duenoId = duenoId,
+                        mascotaId = id,
+                        onListo = { nav.popBackStack() },
+                        // Al eliminar, vuelve a la lista (la ficha ya no existe)
+                        onEliminada = { nav.popBackStack(Rutas.FICHA_MASCOTA, inclusive = true) },
+                        onAtras = { nav.popBackStack() }
+                    )
+                }
+
+                composable(
+                    Rutas.FICHA_MASCOTA,
+                    arguments = listOf(navArgument("id") { type = NavType.IntType })
+                ) { entrada ->
+                    val id = entrada.arguments?.getInt("id") ?: 0
+                    val vm: MascotaViewModel = viewModel(factory = factory)
+                    FichaMascotaScreen(
+                        vm = vm,
+                        mascotaId = id,
+                        esDueno = true,
+                        onPedirCita = { /* Paso 9: pedir cita con la mascota elegida */ },
+                        onEditar = { nav.navigate(Rutas.formularioMascota(it)) },
+                        onAtras = { nav.popBackStack() }
                     )
                 }
 
