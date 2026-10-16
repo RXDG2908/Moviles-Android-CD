@@ -1,7 +1,16 @@
 package com.tecsup.huellitasvet.data.local.relation
 
-// [A] TÚ LO HACES — Paso 2
-// Contrato:
-// - @Embedded val cita: Cita
-// - @Relation(entity = Mascota::class, parentColumn = "mascotaId", entityColumn = "id") val mascota: MascotaConDueno
-// - @Relation(parentColumn = "servicioId", entityColumn = "id") val servicio: Servicio
+import androidx.room.Embedded
+import androidx.room.Relation
+import com.tecsup.huellitasvet.data.local.entity.Cita
+import com.tecsup.huellitasvet.data.local.entity.Mascota
+import com.tecsup.huellitasvet.data.local.entity.Servicio
+
+// Cita + (mascota + dueño) + servicio. Relación anidada de dos niveles.
+data class CitaConDetalle(
+    @Embedded val cita: Cita,
+    @Relation(entity = Mascota::class, parentColumn = "mascotaId", entityColumn = "id")
+    val mascota: MascotaConDueno,
+    @Relation(parentColumn = "servicioId", entityColumn = "id")
+    val servicio: Servicio
+)

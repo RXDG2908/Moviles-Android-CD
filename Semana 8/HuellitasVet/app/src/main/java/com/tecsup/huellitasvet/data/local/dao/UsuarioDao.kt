@@ -1,7 +1,26 @@
 package com.tecsup.huellitasvet.data.local.dao
 
-// [A] TÚ LO HACES — Paso 2
-// Contrato:
-// - suspend login(correo, clave): Usuario?
-// - suspend insertarTodos(lista)
-// - suspend contar(): Int
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import com.tecsup.huellitasvet.data.local.entity.Usuario
+
+@Dao
+interface UsuarioDao {
+    @Query("SELECT * FROM usuarios WHERE correo = :correo AND clave = :clave LIMIT 1")
+    suspend fun login(correo: String, clave: String): Usuario?
+
+    @Insert
+    suspend fun insertarTodos(lista: List<Usuario>)
+
+    @Query("SELECT COUNT(*) FROM usuarios")
+    suspend fun contar(): Int
+
+    // Extra: recuperar al usuario guardado en DataStore al abrir la app
+    @Query("SELECT * FROM usuarios WHERE id = :id")
+    suspend fun obtener(id: Int): Usuario?
+
+    // Extra: "Cambiar de perfil" busca un usuario del otro rol
+    @Query("SELECT * FROM usuarios WHERE rol = :rol ORDER BY id LIMIT 1")
+    suspend fun obtenerPorRol(rol: String): Usuario?
+}
