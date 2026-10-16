@@ -2,7 +2,6 @@ package com.tecsup.huellitasvet.ui.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,10 +26,14 @@ import com.tecsup.huellitasvet.ui.dueno.MisCitasScreen
 import com.tecsup.huellitasvet.ui.dueno.PerfilScreen
 import com.tecsup.huellitasvet.ui.dueno.PedirCitaScreen
 import com.tecsup.huellitasvet.ui.dueno.SplashScreen
+import com.tecsup.huellitasvet.ui.veterinario.AgendaScreen
+import com.tecsup.huellitasvet.ui.veterinario.PanelScreen
 import com.tecsup.huellitasvet.ui.veterinario.ServiciosScreen
+import com.tecsup.huellitasvet.viewmodel.AgendaViewModel
 import com.tecsup.huellitasvet.viewmodel.InicioViewModel
 import com.tecsup.huellitasvet.viewmodel.MascotaViewModel
 import com.tecsup.huellitasvet.viewmodel.MisCitasViewModel
+import com.tecsup.huellitasvet.viewmodel.PanelViewModel
 import com.tecsup.huellitasvet.viewmodel.PedirCitaViewModel
 import com.tecsup.huellitasvet.viewmodel.ServiciosViewModel
 import com.tecsup.huellitasvet.viewmodel.SesionViewModel
@@ -185,8 +188,21 @@ fun NavVet(factory: VetViewModelFactory, sesion: SesionViewModel) {
             // ==================== Grafo del veterinario ====================
             navigation(startDestination = Rutas.PANEL, route = GRAFO_VET) {
 
-                // Temporal: se reemplaza en el Paso 11
-                composable(Rutas.PANEL) { Text("Panel de ${usuario?.nombre}") }
+                composable(Rutas.PANEL) {
+                    val vm: PanelViewModel = viewModel(factory = factory)
+                    PanelScreen(
+                        vm = vm,
+                        nombre = usuario?.nombre ?: "",
+                        onVerPendientes = {
+                            nav.navigate(Rutas.AGENDA) { popUpTo(Rutas.PANEL); launchSingleTop = true }
+                        }
+                    )
+                }
+
+                composable(Rutas.AGENDA) {
+                    val vm: AgendaViewModel = viewModel(factory = factory)
+                    AgendaScreen(vm = vm, onAtender = { /* Paso 12: atender cita */ })
+                }
 
                 composable(Rutas.SERVICIOS) {
                     val vm: ServiciosViewModel = viewModel(factory = factory)
