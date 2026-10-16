@@ -34,7 +34,11 @@ fun VetTheme(
             surfaceContainerHigh = SuperficieOscura,
             surfaceContainerHighest = SuperficieOscura,
             onBackground = Color(0xFFE2E8F0),
-            onSurface = Color(0xFFE2E8F0)
+            onSurface = Color(0xFFE2E8F0),
+            onSurfaceVariant = Color(0xFF94A3B8),
+            surfaceVariant = Color(0xFF273449),
+            outline = Color(0xFF475569),
+            outlineVariant = Color(0xFF334155)
         )
     } else {
         lightColorScheme(
@@ -51,7 +55,11 @@ fun VetTheme(
             surfaceContainerHigh = Color.White,
             surfaceContainerHighest = Color.White,
             onBackground = Color(0xFF0F172A),
-            onSurface = Color(0xFF0F172A)
+            onSurface = Color(0xFF0F172A),
+            onSurfaceVariant = Color(0xFF6B7280), // texto gris secundario
+            surfaceVariant = Color(0xFFF1F5F9),   // fondo de selectores y horarios ocupados
+            outline = Color(0xFFD1D5DB),
+            outlineVariant = Color(0xFFE5E7EB)    // borde fino de tarjetas
         )
     }
 

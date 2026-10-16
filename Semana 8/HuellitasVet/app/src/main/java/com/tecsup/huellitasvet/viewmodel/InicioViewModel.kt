@@ -3,6 +3,7 @@ package com.tecsup.huellitasvet.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tecsup.huellitasvet.data.local.entity.Mascota
+import com.tecsup.huellitasvet.data.local.entity.Servicio
 import com.tecsup.huellitasvet.data.local.relation.CitaConDetalle
 import com.tecsup.huellitasvet.data.repository.VetRepository
 import com.tecsup.huellitasvet.model.EstadoCita
@@ -30,15 +31,24 @@ class InicioViewModel(private val repo: VetRepository) : ViewModel() {
         .flatMapLatest { repo.observarMascotasDeDueno(it) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    // Primera cita PENDIENTE o CONFIRMADA desde ahora (ordenada por fecha y hora)
-    val proximaCita: StateFlow<CitaConDetalle?> = duenoId
+    // Citas PENDIENTE o CONFIRMADA desde ahora, ordenadas por fecha y hora
+    val proximasCitas: StateFlow<List<CitaConDetalle>> = duenoId
         .flatMapLatest { repo.observarCitasDeDueno(it) }
         .map { citas ->
             val ahora = LocalDateTime.now()
             citas
                 .filter { it.cita.estado == EstadoCita.PENDIENTE.name || it.cita.estado == EstadoCita.CONFIRMADA.name }
                 .filter { !Fechas.fechaHora(it.cita.fecha, it.cita.hora).isBefore(ahora) }
-                .minByOrNull { Fechas.fechaHora(it.cita.fecha, it.cita.hora) }
+                .sortedBy { Fechas.fechaHora(it.cita.fecha, it.cita.hora) }
         }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    // La próxima cita es la primera de la lista
+    val proximaCita: StateFlow<CitaConDetalle?> = proximasCitas
+        .map { it.firstOrNull() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
+    // Accesos rápidos de "Servicios" (solo activos)
+    val servicios: StateFlow<List<Servicio>> = repo.observarServiciosActivos()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 }

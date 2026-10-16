@@ -6,13 +6,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,11 +20,19 @@ import androidx.compose.ui.unit.dp
 import com.tecsup.huellitasvet.model.EstadoCita
 import com.tecsup.huellitasvet.model.Rol
 import com.tecsup.huellitasvet.ui.components.AppTopBar
+import com.tecsup.huellitasvet.ui.components.FilaSwitch
+import com.tecsup.huellitasvet.ui.components.InfoCaja
+import com.tecsup.huellitasvet.ui.components.Tarjeta
+import com.tecsup.huellitasvet.ui.components.TextoGris
+import com.tecsup.huellitasvet.ui.components.TituloSeccion
 import com.tecsup.huellitasvet.ui.components.VetButton
+import com.tecsup.huellitasvet.ui.veterinario.TarjetaCambiarPerfil
+import com.tecsup.huellitasvet.ui.veterinario.TarjetaUsuario
 import com.tecsup.huellitasvet.viewmodel.InicioViewModel
 import com.tecsup.huellitasvet.viewmodel.MisCitasViewModel
 import com.tecsup.huellitasvet.viewmodel.SesionViewModel
 
+// Mismo estilo que Ajustes del veterinario (mockup 8)
 @Composable
 fun PerfilScreen(
     sesion: SesionViewModel,
@@ -53,8 +57,7 @@ fun PerfilScreen(
     Column(Modifier.verticalScroll(rememberScrollState())) {
         AppTopBar("Perfil")
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            Text(usuario?.nombre ?: "", style = MaterialTheme.typography.headlineSmall)
-            Text(usuario?.correo ?: "", style = MaterialTheme.typography.bodyMedium)
+            TarjetaUsuario(usuario?.nombre ?: "", usuario?.correo ?: "")
 
             // Contadores
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -63,37 +66,29 @@ fun PerfilScreen(
                 Contador("Atenciones", atenciones, Modifier.weight(1f))
             }
 
-            HorizontalDivider()
-            FilaSwitch("Modo oscuro", oscuro, sesion::cambiarModoOscuro)
-            FilaSwitch("Recordatorios", recordatorios, sesion::cambiarNotificaciones)
-            HorizontalDivider()
+            TarjetaCambiarPerfil("Modo práctica: ir a vista Veterinario") { sesion.cambiarPerfil(onCambiarPerfil) }
 
-            VetButton("Cambiar de perfil", onClick = { sesion.cambiarPerfil(onCambiarPerfil) })
-            VetButton("Cerrar sesión", onClick = { sesion.cerrarSesion(onCerrarSesion) }, secundario = true,
-                modifier = Modifier.fillMaxWidth())
+            TituloSeccion("Preferencias")
+            Tarjeta {
+                Column(Modifier.padding(horizontal = 16.dp, vertical = 4.dp)) {
+                    FilaSwitch("Modo oscuro", oscuro, sesion::cambiarModoOscuro, "Cambia el tema de la app")
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                    FilaSwitch("Recordatorios", recordatorios, sesion::cambiarNotificaciones, "Avisos de tus próximas citas")
+                }
+            }
+            InfoCaja(texto = "Tus preferencias se guardan en el dispositivo con DataStore")
+
+            VetButton("Cerrar sesión", onClick = { sesion.cerrarSesion(onCerrarSesion) }, peligro = true)
         }
     }
 }
 
 @Composable
 fun Contador(titulo: String, valor: Int, modifier: Modifier = Modifier) {
-    Card(
-        modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
-    ) {
+    Tarjeta(modifier, fondo = MaterialTheme.colorScheme.primaryContainer) {
         Column(Modifier.fillMaxWidth().padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             Text(valor.toString(), style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.primary)
-            Text(titulo, style = MaterialTheme.typography.labelMedium)
+            TextoGris(titulo)
         }
-    }
-}
-
-// Fila con texto y switch (también la usa AjustesScreen)
-@Composable
-fun FilaSwitch(texto: String, activado: Boolean, onCambio: (Boolean) -> Unit) {
-    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        Text(texto, modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyLarge)
-        Switch(checked = activado, onCheckedChange = onCambio)
     }
 }

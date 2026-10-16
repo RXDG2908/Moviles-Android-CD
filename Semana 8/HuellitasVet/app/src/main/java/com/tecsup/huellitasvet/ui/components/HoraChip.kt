@@ -8,7 +8,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -28,12 +27,12 @@ fun HoraChip(
         enabled = !ocupado,
         shape = RoundedCornerShape(12.dp),
         color = when {
-            ocupado -> Color(0xFFE5E7EB)
+            ocupado -> esquema.surfaceVariant
             seleccionada -> esquema.primary
             else -> esquema.surface
         },
         contentColor = when {
-            ocupado -> Color(0xFF9CA3AF)
+            ocupado -> esquema.onSurfaceVariant.copy(alpha = 0.5f)
             seleccionada -> esquema.onPrimary
             else -> esquema.onSurface
         },
@@ -42,6 +41,7 @@ fun HoraChip(
     ) {
         Text(
             hora,
+            style = MaterialTheme.typography.labelLarge,
             textAlign = TextAlign.Center,
             textDecoration = if (ocupado) TextDecoration.LineThrough else null,
             modifier = Modifier.padding(vertical = 10.dp)

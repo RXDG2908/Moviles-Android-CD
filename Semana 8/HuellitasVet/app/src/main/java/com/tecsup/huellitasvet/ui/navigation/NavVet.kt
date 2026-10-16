@@ -1,11 +1,7 @@
 package com.tecsup.huellitasvet.ui.navigation
 
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,7 +17,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.tecsup.huellitasvet.model.Rol
-import com.tecsup.huellitasvet.ui.components.AppTopBar
 import com.tecsup.huellitasvet.ui.dueno.FichaMascotaScreen
 import com.tecsup.huellitasvet.ui.dueno.FormularioMascotaScreen
 import com.tecsup.huellitasvet.ui.dueno.InicioScreen
@@ -72,11 +67,17 @@ fun NavVet(factory: VetViewModelFactory, sesion: SesionViewModel) {
     val entrada by nav.currentBackStackEntryAsState()
     val rutaActual = entrada?.destination?.route
 
+    // La ficha también muestra la barra (con Mascotas o Pacientes marcado), como en el mockup
+    val tabDueno = if (rutaActual == Rutas.FICHA_MASCOTA) Rutas.MASCOTAS else rutaActual
+    val tabVet = if (rutaActual == Rutas.FICHA_PACIENTE) Rutas.PACIENTES else rutaActual
+    val recordatorios by sesion.notificaciones.collectAsState()
+
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
             when {
-                itemsDueno.any { it.ruta == rutaActual } -> BarraNavegacion(itemsDueno, rutaActual, nav)
-                itemsVet.any { it.ruta == rutaActual } -> BarraNavegacion(itemsVet, rutaActual, nav)
+                itemsDueno.any { it.ruta == tabDueno } -> BarraNavegacion(itemsDueno, tabDueno, nav)
+                itemsVet.any { it.ruta == tabVet } -> BarraNavegacion(itemsVet, tabVet, nav)
             }
         }
     ) { padding ->
@@ -107,7 +108,9 @@ fun NavVet(factory: VetViewModelFactory, sesion: SesionViewModel) {
                         vm = vm,
                         duenoId = duenoId,
                         nombre = usuario?.nombre ?: "",
+                        recordatorios = recordatorios,
                         onMascota = { nav.navigate(Rutas.fichaMascota(it)) },
+                        onVerTodas = { nav.navigate(Rutas.MASCOTAS) { popUpTo(Rutas.INICIO); launchSingleTop = true } },
                         onAgregar = { nav.navigate(Rutas.formularioMascota()) },
                         onPedirCita = { nav.navigate(Rutas.pedirCita()) }
                     )
@@ -204,7 +207,6 @@ fun NavVet(factory: VetViewModelFactory, sesion: SesionViewModel) {
                     val vm: PanelViewModel = viewModel(factory = factory)
                     PanelScreen(
                         vm = vm,
-                        nombre = usuario?.nombre ?: "",
                         onVerPendientes = {
                             nav.navigate(Rutas.AGENDA) { popUpTo(Rutas.PANEL); launchSingleTop = true }
                         }
@@ -252,21 +254,11 @@ fun NavVet(factory: VetViewModelFactory, sesion: SesionViewModel) {
 
                 composable(Rutas.SERVICIOS) {
                     val vm: ServiciosViewModel = viewModel(factory = factory)
-                    Scaffold(
-                        topBar = { AppTopBar("Servicios") },
-                        floatingActionButton = {
-                            FloatingActionButton(onClick = { nav.navigate(Rutas.formularioServicio()) }) {
-                                Icon(Icons.Filled.Add, contentDescription = "Nuevo servicio")
-                            }
-                        },
-                        contentWindowInsets = WindowInsets(0)
-                    ) { p ->
-                        ServiciosScreen(
-                            vm = vm,
-                            onEditar = { nav.navigate(Rutas.formularioServicio(it)) },
-                            modifier = Modifier.padding(p)
-                        )
-                    }
+                    ServiciosScreen(
+                        vm = vm,
+                        onEditar = { nav.navigate(Rutas.formularioServicio(it)) },
+                        onNuevo = { nav.navigate(Rutas.formularioServicio()) }
+                    )
                 }
 
                 composable(

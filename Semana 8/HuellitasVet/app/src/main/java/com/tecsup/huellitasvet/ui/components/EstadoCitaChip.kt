@@ -22,16 +22,18 @@ fun colorDeEstado(estado: EstadoCita): Color = when (estado) {
     EstadoCita.CANCELADA -> EstadoCancelada
 }
 
+// Píldora con el estado. 'solido' = fondo blanco (para usar sobre la tarjeta del color del rol)
 @Composable
-fun EstadoCitaChip(estado: EstadoCita, modifier: Modifier = Modifier) {
+fun EstadoCitaChip(estado: EstadoCita, modifier: Modifier = Modifier, solido: Boolean = false) {
     val color = colorDeEstado(estado)
+    val forma = RoundedCornerShape(50)
     Text(
         text = estado.etiqueta,
         color = color,
         style = MaterialTheme.typography.labelMedium,
         modifier = modifier
-            .background(Color.White, RoundedCornerShape(50)) // fondo blanco: se lee sobre cualquier tarjeta
-            .background(color.copy(alpha = 0.12f), RoundedCornerShape(50))
+            .background(MaterialTheme.colorScheme.surface, forma)
+            .background(if (solido) Color.Transparent else color.copy(alpha = 0.14f), forma)
             .padding(horizontal = 10.dp, vertical = 4.dp)
     )
 }

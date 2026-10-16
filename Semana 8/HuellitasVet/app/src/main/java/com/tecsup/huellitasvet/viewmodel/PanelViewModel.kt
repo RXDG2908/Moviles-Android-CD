@@ -36,6 +36,10 @@ class PanelViewModel(private val repo: VetRepository) : ViewModel() {
     val ingresosMes: StateFlow<Double> = repo.observarIngresosDesde(inicioMes)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
 
+    // Número de atenciones del mes (debajo de los ingresos)
+    val atencionesMes: StateFlow<Int> = repo.observarAtencionesDesde(inicioMes)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
+
     // ---------- Datos de Room -> formato de los gráficos ----------
     val porEstado: StateFlow<List<DatoGrafico>> = combine(
         repo.observarCantidadPorEstado(EstadoCita.PENDIENTE),
@@ -51,11 +55,10 @@ class PanelViewModel(private val repo: VetRepository) : ViewModel() {
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    private val paleta = listOf(Color(0xFF1D4ED8), Color(0xFF0EA5E9), Color(0xFF8B5CF6), Color(0xFF14B8A6))
-
+    // El color de cada barra lo pone la pantalla con MaterialTheme.colorScheme.primary
     val porServicio: StateFlow<List<DatoGrafico>> = repo.observarCitasPorServicio()
         .map { lista ->
-            lista.mapIndexed { i, c -> DatoGrafico(c.nombre, c.cantidad.toFloat(), paleta[i % paleta.size]) }
+            lista.map { c -> DatoGrafico(c.nombre.substringBefore(" "), c.cantidad.toFloat(), Color.Unspecified) }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 }

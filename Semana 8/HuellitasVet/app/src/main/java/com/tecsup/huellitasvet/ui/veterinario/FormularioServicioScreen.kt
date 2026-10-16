@@ -1,18 +1,19 @@
 package com.tecsup.huellitasvet.ui.veterinario
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -27,6 +28,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.tecsup.huellitasvet.data.local.entity.Servicio
 import com.tecsup.huellitasvet.ui.components.AppTopBar
+import com.tecsup.huellitasvet.ui.components.FilaSwitch
+import com.tecsup.huellitasvet.ui.components.OpcionChip
+import com.tecsup.huellitasvet.ui.components.Tarjeta
+import com.tecsup.huellitasvet.ui.components.TituloSeccion
 import com.tecsup.huellitasvet.ui.components.VetButton
 import com.tecsup.huellitasvet.ui.components.VetTextField
 import com.tecsup.huellitasvet.viewmodel.ServiciosViewModel
@@ -50,7 +55,7 @@ fun FormularioServicioScreen(vm: ServiciosViewModel, servicioId: Int?, onListo: 
     LaunchedEffect(existente) {
         val s = existente
         if (s != null && !cargado) {
-            nombre = s.nombre; duracion = s.duracionMin; precio = s.precio.toString()
+            nombre = s.nombre; duracion = s.duracionMin; precio = "%.2f".format(s.precio)
             descripcion = s.descripcion; icono = s.icono; activo = s.activo
             cargado = true
         }
@@ -58,18 +63,19 @@ fun FormularioServicioScreen(vm: ServiciosViewModel, servicioId: Int?, onListo: 
 
     Scaffold(
         topBar = { AppTopBar(if (servicioId == null) "Nuevo servicio" else "Editar servicio", onAtras = onAtras) },
+        containerColor = MaterialTheme.colorScheme.background,
         contentWindowInsets = WindowInsets(0)
     ) { padding ->
         Column(
             Modifier.padding(padding).verticalScroll(rememberScrollState()).padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            VetTextField(nombre, { nombre = it }, "Nombre", error = errores.nombre)
+            VetTextField(nombre, { nombre = it }, "Nombre del servicio", error = errores.nombre)
 
-            Text("Duración", style = MaterialTheme.typography.titleMedium)
+            TituloSeccion("Duración")
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 listOf(15, 30, 45, 60).forEach { d ->
-                    FilterChip(selected = duracion == d, onClick = { duracion = d }, label = { Text("$d min") })
+                    OpcionChip("$d min", duracion == d, { duracion = d }, Modifier.weight(1f))
                 }
             }
             errores.duracion?.let { Text(it, color = MaterialTheme.colorScheme.error) }
@@ -77,25 +83,29 @@ fun FormularioServicioScreen(vm: ServiciosViewModel, servicioId: Int?, onListo: 
             VetTextField(precio, { precio = it }, "Precio (S/)", error = errores.precio, teclado = KeyboardType.Decimal)
             VetTextField(descripcion, { descripcion = it }, "Descripción", lineas = 2)
 
-            Text("Ícono", style = MaterialTheme.typography.titleMedium)
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            TituloSeccion("Ícono")
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 listOf("heart", "syringe", "scissors").forEach { i ->
-                    FilterChip(
-                        selected = icono == i,
-                        onClick = { icono = i },
-                        label = { Icon(iconoServicio(i), contentDescription = i) }
-                    )
+                    Tarjeta(Modifier.weight(1f), onClick = { icono = i }, seleccionada = icono == i) {
+                        Box(Modifier.fillMaxWidth().padding(vertical = 16.dp), contentAlignment = Alignment.Center) {
+                            Icon(
+                                iconoServicio(i), contentDescription = i,
+                                tint = if (icono == i) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
                 }
             }
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("Servicio activo", modifier = Modifier.weight(1f), style = MaterialTheme.typography.titleMedium)
-                Switch(checked = activo, onCheckedChange = { activo = it })
+            Tarjeta {
+                Column(Modifier.padding(horizontal = 16.dp, vertical = 4.dp)) {
+                    FilaSwitch("Servicio activo", activo, { activo = it }, "Los dueños podrán pedirlo")
+                }
             }
 
             mensaje?.let { Text(it, color = MaterialTheme.colorScheme.error) }
 
-            VetButton("Guardar", onClick = {
+            VetButton("Guardar servicio", onClick = {
                 vm.guardar(
                     Servicio(
                         id = servicioId ?: 0,
@@ -109,10 +119,13 @@ fun FormularioServicioScreen(vm: ServiciosViewModel, servicioId: Int?, onListo: 
                     alGuardar = onListo
                 )
             })
+            VetButton("Cancelar", onClick = onAtras, secundario = true)
 
             val s = existente
             if (servicioId != null && s != null) {
-                VetButton("Eliminar servicio", onClick = { vm.eliminar(s, onListo) }, secundario = true)
+                TextButton(onClick = { vm.eliminar(s, onListo) }, modifier = Modifier.fillMaxWidth()) {
+                    Text("Eliminar servicio", color = MaterialTheme.colorScheme.error)
+                }
             }
         }
     }

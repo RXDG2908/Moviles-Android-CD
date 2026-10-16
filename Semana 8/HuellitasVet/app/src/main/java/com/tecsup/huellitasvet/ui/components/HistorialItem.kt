@@ -1,6 +1,8 @@
 package com.tecsup.huellitasvet.ui.components
 
-import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -8,15 +10,22 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
+import com.tecsup.huellitasvet.ui.theme.EstadoCancelada
 
-// Un punto de la línea de tiempo del historial clínico
+// Un punto de la línea de tiempo del historial clínico: check + tarjeta con la atención
 @Composable
 fun HistorialItem(
     fecha: String,
@@ -27,20 +36,34 @@ fun HistorialItem(
     esUltimo: Boolean = false
 ) {
     val primario = MaterialTheme.colorScheme.primary
-    val linea = MaterialTheme.colorScheme.outlineVariant
     Row(Modifier.height(IntrinsicSize.Min)) {
-        Canvas(Modifier.width(24.dp).fillMaxHeight()) {
-            val x = size.width / 2
-            if (!esUltimo) drawLine(linea, Offset(x, 14.dp.toPx()), Offset(x, size.height), strokeWidth = 2.dp.toPx())
-            drawCircle(primario, 6.dp.toPx(), Offset(x, 10.dp.toPx()))
+        // Línea de tiempo
+        Column(Modifier.width(28.dp).fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally) {
+            Box(Modifier.size(22.dp).background(primario, CircleShape), contentAlignment = Alignment.Center) {
+                Icon(Icons.Filled.Check, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(14.dp))
+            }
+            if (!esUltimo) {
+                Box(Modifier.width(2.dp).weight(1f).background(MaterialTheme.colorScheme.primaryContainer))
+            }
         }
-        Column(Modifier.padding(start = 8.dp, bottom = 16.dp)) {
-            Text(fecha, style = MaterialTheme.typography.labelMedium, color = primario)
-            Text(servicio, style = MaterialTheme.typography.titleMedium)
-            diagnostico?.let { Text("Diagnóstico: $it", style = MaterialTheme.typography.bodyMedium) }
-            tratamiento?.takeIf { it.isNotBlank() }?.let { Text("Tratamiento: $it", style = MaterialTheme.typography.bodyMedium) }
-            peso?.let { Text("Peso: $it kg", style = MaterialTheme.typography.bodyMedium) }
-            Spacer(Modifier.height(4.dp))
+        Spacer(Modifier.width(10.dp))
+        // Tarjeta de la atención
+        Tarjeta(Modifier.weight(1f).padding(bottom = 12.dp)) {
+            Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Row {
+                    Text(servicio, style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
+                    Text(fecha, style = MaterialTheme.typography.labelMedium, color = primario)
+                }
+                diagnostico?.let { TextoGris(it) }
+                tratamiento?.takeIf { it.isNotBlank() }?.let { TextoGris("Tratamiento: $it") }
+                peso?.let {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Filled.Favorite, contentDescription = null, tint = EstadoCancelada, modifier = Modifier.size(14.dp))
+                        Spacer(Modifier.width(6.dp))
+                        Text("Peso: $it kg", style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+            }
         }
     }
 }

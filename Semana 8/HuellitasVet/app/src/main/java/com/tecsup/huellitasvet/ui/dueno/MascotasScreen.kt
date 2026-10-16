@@ -6,16 +6,14 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,8 +28,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.tecsup.huellitasvet.model.Especie
 import com.tecsup.huellitasvet.model.Fechas
+import com.tecsup.huellitasvet.model.Sexo
 import com.tecsup.huellitasvet.ui.components.AppTopBar
 import com.tecsup.huellitasvet.ui.components.MascotaAvatar
+import com.tecsup.huellitasvet.ui.components.Tarjeta
+import com.tecsup.huellitasvet.ui.components.TextoGris
 import com.tecsup.huellitasvet.viewmodel.InicioViewModel
 
 @Composable
@@ -47,34 +48,37 @@ fun MascotasScreen(
     Scaffold(
         topBar = { AppTopBar("Mis mascotas") },
         floatingActionButton = {
-            FloatingActionButton(onClick = onAgregar) { Icon(Icons.Filled.Add, contentDescription = "Agregar mascota") }
+            FloatingActionButton(
+                onClick = onAgregar,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                shape = RoundedCornerShape(20.dp)
+            ) { Icon(Icons.Filled.Add, contentDescription = "Agregar mascota") }
         },
+        containerColor = MaterialTheme.colorScheme.background,
         contentWindowInsets = WindowInsets(0)
     ) { padding ->
-        if (mascotas.isEmpty()) {
-            Text("Aún no registras mascotas", modifier = Modifier.padding(padding).padding(16.dp))
-        }
         LazyColumn(
             modifier = Modifier.padding(padding),
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
+            if (mascotas.isEmpty()) item { TextoGris("Aún no registras mascotas") }
             items(mascotas, key = { it.id }) { m ->
                 val especie = Especie.valueOf(m.especie)
-                Card(
-                    onClick = { onMascota(m.id) },
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
+                Tarjeta(onClick = { onMascota(m.id) }) {
                     Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
-                        MascotaAvatar(especie, tamano = 52.dp)
-                        Spacer(Modifier.width(12.dp))
-                        Column {
-                            Text(m.nombre, style = MaterialTheme.typography.titleMedium)
-                            Text("${especie.etiqueta} · ${m.raza}", style = MaterialTheme.typography.bodyMedium)
-                            Text(Fechas.textoEdad(m.anioNacimiento), style = MaterialTheme.typography.labelMedium)
+                        MascotaAvatar(especie, tamano = 56.dp)
+                        Spacer(Modifier.width(14.dp))
+                        Column(Modifier.weight(1f)) {
+                            Text(m.nombre, style = MaterialTheme.typography.titleSmall)
+                            TextoGris("${especie.etiqueta} · ${m.raza} · ${Fechas.textoEdad(m.anioNacimiento)}")
+                            TextoGris("${Sexo.valueOf(m.sexo).etiqueta} · ${m.peso} kg")
                         }
+                        Icon(
+                            Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
             }

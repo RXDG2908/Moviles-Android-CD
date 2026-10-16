@@ -5,15 +5,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.FilterChip
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +26,9 @@ import com.tecsup.huellitasvet.model.Especie
 import com.tecsup.huellitasvet.model.Fechas
 import com.tecsup.huellitasvet.ui.components.AppTopBar
 import com.tecsup.huellitasvet.ui.components.MascotaAvatar
+import com.tecsup.huellitasvet.ui.components.OpcionChip
+import com.tecsup.huellitasvet.ui.components.Tarjeta
+import com.tecsup.huellitasvet.ui.components.TextoGris
 import com.tecsup.huellitasvet.ui.components.VetTextField
 import com.tecsup.huellitasvet.viewmodel.PacientesViewModel
 
@@ -43,11 +46,11 @@ fun PacientesScreen(vm: PacientesViewModel, onPaciente: (Int) -> Unit) {
 
     Column {
         AppTopBar("Pacientes")
-        Column(Modifier.padding(horizontal = 16.dp)) {
-            VetTextField(texto, vm::buscar, "Buscar por mascota o dueño")
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                filtros.forEach { (etiqueta, e) ->
-                    FilterChip(selected = especie == e, onClick = { vm.filtrar(e) }, label = { Text(etiqueta) })
+        Column(Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            VetTextField(texto, vm::buscar, "Buscar mascota o dueño...", icono = Icons.Filled.Search)
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                items(filtros) { (etiqueta, e) ->
+                    OpcionChip(etiqueta, seleccionado = especie == e, onClick = { vm.filtrar(e) })
                 }
             }
         }
@@ -56,27 +59,23 @@ fun PacientesScreen(vm: PacientesViewModel, onPaciente: (Int) -> Unit) {
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            if (pacientes.isEmpty()) item { Text("No se encontraron pacientes") }
+            if (pacientes.isEmpty()) item { TextoGris("No se encontraron pacientes") }
             items(pacientes, key = { it.mascota.id }) { p ->
                 val m = p.mascota
-                Card(
-                    onClick = { onPaciente(m.id) },
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
+                Tarjeta(onClick = { onPaciente(m.id) }) {
                     Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
-                        MascotaAvatar(Especie.valueOf(m.especie), tamano = 52.dp)
-                        Spacer(Modifier.width(12.dp))
-                        Column {
-                            Text(m.nombre, style = MaterialTheme.typography.titleMedium)
-                            Text("${m.raza} · ${Fechas.textoEdad(m.anioNacimiento)}", style = MaterialTheme.typography.bodyMedium)
-                            Text("Dueño: ${p.dueno.nombre}", style = MaterialTheme.typography.bodyMedium)
-                            Text(
-                                "Última visita: ${visitas[m.id] ?: "sin visitas"}",
-                                style = MaterialTheme.typography.labelMedium
-                            )
+                        MascotaAvatar(Especie.valueOf(m.especie), tamano = 56.dp)
+                        Spacer(Modifier.width(14.dp))
+                        Column(Modifier.weight(1f)) {
+                            Text(m.nombre, style = MaterialTheme.typography.titleSmall)
+                            TextoGris("${m.raza} · ${Fechas.textoEdad(m.anioNacimiento)}")
+                            TextoGris("Dueño: ${p.dueno.nombre}")
+                            TextoGris(visitas[m.id]?.let { "Última visita: ${Fechas.diaMes(it)}" } ?: "Sin visitas")
                         }
+                        Icon(
+                            Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
             }

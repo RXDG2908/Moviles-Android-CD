@@ -93,4 +93,5 @@ class VetRepositoryRoom(private val db: VetDatabase) : VetRepository {
     override fun observarCantidadPorEstado(estado: EstadoCita): Flow<Int> = citaDao.contarPorEstado(estado.name)
     override fun observarCitasPorServicio(): Flow<List<ConteoServicio>> = citaDao.contarPorServicio()
     override fun observarIngresosDesde(fechaInicio: String): Flow<Double> = citaDao.ingresosDesde(fechaInicio)
+    override fun observarAtencionesDesde(fechaInicio: String): Flow<Int> = citaDao.contarAtendidasDesde(fechaInicio)
 }

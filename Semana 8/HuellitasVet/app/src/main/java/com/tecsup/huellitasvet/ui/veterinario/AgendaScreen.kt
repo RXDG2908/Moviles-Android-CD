@@ -1,9 +1,15 @@
 package com.tecsup.huellitasvet.ui.veterinario
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,10 +26,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.tecsup.huellitasvet.model.Especie
 import com.tecsup.huellitasvet.model.EstadoCita
+import com.tecsup.huellitasvet.model.Fechas
 import com.tecsup.huellitasvet.ui.components.AppTopBar
 import com.tecsup.huellitasvet.ui.components.CitaCard
-import com.tecsup.huellitasvet.ui.components.FechaChip
+import com.tecsup.huellitasvet.ui.components.MascotaAvatar
+import com.tecsup.huellitasvet.ui.components.OpcionChip
+import com.tecsup.huellitasvet.ui.components.TextoGris
 import com.tecsup.huellitasvet.viewmodel.AgendaViewModel
+import java.time.LocalDate
 
 @Composable
 fun AgendaScreen(vm: AgendaViewModel, onAtender: (Int) -> Unit) {
@@ -33,55 +43,63 @@ fun AgendaScreen(vm: AgendaViewModel, onAtender: (Int) -> Unit) {
     Column {
         AppTopBar("Agenda")
 
-        // Chips de los próximos días
+        // Chips de los próximos días: "Hoy 21", "Jue 22", ...
         LazyRow(
             contentPadding = PaddingValues(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(vm.fechas) { f -> FechaChip(f, seleccionada = f == fecha, onClick = { vm.elegirFecha(f) }) }
+            items(vm.fechas) { f ->
+                val texto = if (f == LocalDate.now()) "Hoy ${f.dayOfMonth}" else Fechas.corta(f.toString())
+                OpcionChip(texto, seleccionado = f == fecha, onClick = { vm.elegirFecha(f) })
+            }
         }
 
-        LazyColumn(
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            if (citas.isEmpty()) item { Text("No hay citas este día") }
+        LazyColumn(contentPadding = PaddingValues(16.dp)) {
+            if (citas.isEmpty()) item { TextoGris("No hay citas este día") }
 
-            // Línea de tiempo: la hora a la izquierda y la tarjeta a la derecha
+            // Línea de tiempo: hora a la izquierda, línea vertical y tarjeta a la derecha
             items(citas, key = { it.cita.id }) { c ->
                 val estado = EstadoCita.valueOf(c.cita.estado)
-                Row {
+                Row(Modifier.height(IntrinsicSize.Min)) {
                     Text(
                         c.cita.hora,
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.width(56.dp).padding(top = 14.dp)
+                        modifier = Modifier.width(52.dp).padding(top = 14.dp)
                     )
+                    Box(Modifier.width(2.dp).fillMaxHeight().background(MaterialTheme.colorScheme.primaryContainer))
+                    Spacer(Modifier.width(10.dp))
                     CitaCard(
-                        mascota = c.mascota.mascota.nombre,
-                        especie = Especie.valueOf(c.mascota.mascota.especie),
-                        servicio = c.servicio.nombre,
-                        fecha = c.cita.fecha,
-                        hora = c.cita.hora,
+                        titulo = "${c.mascota.mascota.nombre} · ${c.servicio.nombre}",
+                        detalle = "Dueño: ${c.mascota.dueno.nombre}",
                         estado = estado,
-                        precio = c.cita.precio,
-                        subtitulo = "Dueño: ${c.mascota.dueno.nombre}"
+                        modifier = Modifier.weight(1f).padding(bottom = 12.dp),
+                        accionesEnLinea = false,
+                        inicio = { MascotaAvatar(Especie.valueOf(c.mascota.mascota.especie), tamano = 46.dp) }
                     ) {
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 8.dp)) {
-                            when (estado) {
-                                EstadoCita.PENDIENTE -> Button(onClick = { vm.confirmar(c) }) { Text("Confirmar") }
-                                EstadoCita.CONFIRMADA -> Button(onClick = { onAtender(c.cita.id) }) { Text("Atender") }
-                                else -> {}
+                        if (estado == EstadoCita.PENDIENTE || estado == EstadoCita.CONFIRMADA) {
+                            TextButton(onClick = { vm.cancelar(c) }) {
+                                Text("Cancelar", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelMedium)
                             }
-                            if (estado == EstadoCita.PENDIENTE || estado == EstadoCita.CONFIRMADA) {
-                                TextButton(onClick = { vm.cancelar(c) }) {
-                                    Text("Cancelar", color = MaterialTheme.colorScheme.error)
-                                }
-                            }
+                        }
+                        when (estado) {
+                            EstadoCita.PENDIENTE -> BotonChico("Confirmar") { vm.confirmar(c) }
+                            EstadoCita.CONFIRMADA -> BotonChico("Atender") { onAtender(c.cita.id) }
+                            else -> {}
                         }
                     }
                 }
             }
         }
     }
+}
+
+// Botón compacto del color del rol (Confirmar / Atender)
+@Composable
+private fun BotonChico(texto: String, onClick: () -> Unit) {
+    Button(
+        onClick = onClick,
+        contentPadding = PaddingValues(horizontal = 18.dp, vertical = 6.dp),
+        modifier = Modifier.height(38.dp)
+    ) { Text(texto, style = MaterialTheme.typography.labelLarge) }
 }

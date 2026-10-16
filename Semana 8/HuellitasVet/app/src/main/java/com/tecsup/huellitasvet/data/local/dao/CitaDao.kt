@@ -76,6 +76,9 @@ interface CitaDao {
     @Query("SELECT COALESCE(SUM(precio), 0.0) FROM citas WHERE estado = 'ATENDIDA' AND fecha >= :fechaInicio")
     fun ingresosDesde(fechaInicio: String): Flow<Double>
 
+    @Query("SELECT COUNT(*) FROM citas WHERE estado = 'ATENDIDA' AND fecha >= :fechaInicio")
+    fun contarAtendidasDesde(fechaInicio: String): Flow<Int>
+
     // ---------- Extras ----------
     @Query("SELECT COUNT(*) FROM citas WHERE servicioId = :servicioId")
     suspend fun contarDeServicio(servicioId: Int): Int

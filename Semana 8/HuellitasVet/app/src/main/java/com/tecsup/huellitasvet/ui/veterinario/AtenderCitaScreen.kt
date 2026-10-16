@@ -5,14 +5,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,11 +30,18 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.tecsup.huellitasvet.model.Especie
 import com.tecsup.huellitasvet.model.EstadoCita
+import com.tecsup.huellitasvet.model.Fechas
+import com.tecsup.huellitasvet.model.Sexo
 import com.tecsup.huellitasvet.ui.components.AppTopBar
 import com.tecsup.huellitasvet.ui.components.EstadoCitaChip
+import com.tecsup.huellitasvet.ui.components.InfoCaja
 import com.tecsup.huellitasvet.ui.components.MascotaAvatar
+import com.tecsup.huellitasvet.ui.components.Tarjeta
+import com.tecsup.huellitasvet.ui.components.TextoGris
+import com.tecsup.huellitasvet.ui.components.TituloSeccion
 import com.tecsup.huellitasvet.ui.components.VetButton
 import com.tecsup.huellitasvet.ui.components.VetTextField
+import com.tecsup.huellitasvet.ui.theme.EstadoCancelada
 import com.tecsup.huellitasvet.viewmodel.AtenderCitaViewModel
 
 @Composable
@@ -55,6 +63,7 @@ fun AtenderCitaScreen(vm: AtenderCitaViewModel, citaId: Int, onTerminar: () -> U
 
     Scaffold(
         topBar = { AppTopBar("Atender cita", onAtras = onAtras) },
+        containerColor = MaterialTheme.colorScheme.background,
         contentWindowInsets = WindowInsets(0)
     ) { padding ->
         val c = cita ?: return@Scaffold
@@ -65,37 +74,55 @@ fun AtenderCitaScreen(vm: AtenderCitaViewModel, citaId: Int, onTerminar: () -> U
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             // ---------- Cabecera ----------
-            Card(
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Tarjeta {
+                Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
                     MascotaAvatar(Especie.valueOf(mascota.especie), tamano = 64.dp)
                     Spacer(Modifier.width(12.dp))
-                    Column(Modifier.weight(1f)) {
-                        Text(mascota.nombre, style = MaterialTheme.typography.titleLarge)
-                        Text("Dueño: ${c.mascota.dueno.nombre}")
-                        Text("${c.servicio.nombre} · ${c.cita.hora}")
+                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Text("${mascota.nombre} · ${mascota.raza}", style = MaterialTheme.typography.titleSmall)
+                        TextoGris("${Fechas.textoEdad(mascota.anioNacimiento)} · ${Sexo.valueOf(mascota.sexo).etiqueta} · Dueño: ${c.mascota.dueno.nombre}")
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(iconoServicio(c.servicio.icono), contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
+                            Spacer(Modifier.width(6.dp))
+                            Text(
+                                "${c.servicio.nombre} · ${Fechas.corta(c.cita.fecha)} · ${c.cita.hora}",
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
-                    EstadoCitaChip(EstadoCita.valueOf(c.cita.estado))
                 }
             }
 
             if (!vm.sePuedeAtender(c)) {
-                Text("Esta cita ya está ${EstadoCita.valueOf(c.cita.estado).etiqueta.lowercase()}.")
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    TextoGris("Esta cita ya está ")
+                    EstadoCitaChip(EstadoCita.valueOf(c.cita.estado))
+                }
                 return@Column
             }
 
-            VetTextField(peso, { peso = it }, "Peso (kg) · anterior: ${mascota.peso} kg",
-                error = errorPeso, teclado = KeyboardType.Decimal)
+            TituloSeccion("Registro clínico")
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.Top) {
+                VetTextField(peso, { peso = it }, "Peso (kg)", Modifier.weight(1f), errorPeso, KeyboardType.Decimal)
+                // Caja con el peso anterior
+                Tarjeta(Modifier.weight(1f).padding(top = 8.dp), fondo = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.6f)) {
+                    Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Filled.Favorite, contentDescription = null, tint = EstadoCancelada, modifier = Modifier.size(18.dp))
+                        Spacer(Modifier.width(8.dp))
+                        Column {
+                            TextoGris("Peso anterior")
+                            Text("${mascota.peso} kg", style = MaterialTheme.typography.titleSmall)
+                        }
+                    }
+                }
+            }
             VetTextField(diagnostico, { diagnostico = it }, "Diagnóstico", error = errorDiagnostico, lineas = 3)
             VetTextField(tratamiento, { tratamiento = it }, "Tratamiento", lineas = 3)
 
-            Text(
-                "Se actualizará el peso de ${mascota.nombre} en su ficha",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.primary
+            InfoCaja(
+                icono = Icons.Filled.Check,
+                texto = "Se actualizará el peso de ${mascota.nombre} a ${peso.ifBlank { "-" }} kg"
             )
 
             mensaje?.let { Text(it, color = MaterialTheme.colorScheme.error) }
@@ -103,7 +130,7 @@ fun AtenderCitaScreen(vm: AtenderCitaViewModel, citaId: Int, onTerminar: () -> U
             VetButton("Registrar atención", onClick = {
                 vm.registrar(diagnostico, tratamiento, peso.replace(",", ".").toDoubleOrNull() ?: 0.0, onTerminar)
             })
-            VetButton("Cancelar cita", onClick = { vm.cancelar(onTerminar) }, secundario = true)
+            VetButton("Cancelar cita", onClick = { vm.cancelar(onTerminar) }, peligro = true)
         }
     }
 }
