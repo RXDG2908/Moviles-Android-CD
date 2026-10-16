@@ -1,6 +1,14 @@
 package com.tecsup.huellitasvet.data.local.entity
 
-// [A] TÚ LO HACES — Paso 1
-// Contrato:
-// - @Entity(tableName = "usuarios"), PK autogenerada
-// - id, nombre, correo, clave, rol (String guardando Rol.name)
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+// Tabla usuarios: dueños (CLIENTE) y veterinarios (ADMIN)
+@Entity(tableName = "usuarios")
+data class Usuario(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val nombre: String,
+    val correo: String,
+    val clave: String,
+    val rol: String // Rol.name -> "CLIENTE" o "ADMIN"
+)
