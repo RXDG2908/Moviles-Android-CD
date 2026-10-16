@@ -1,6 +1,11 @@
 package com.tecsup.huellitasvet.ui.navigation
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -27,6 +32,8 @@ import com.tecsup.huellitasvet.ui.dueno.PerfilScreen
 import com.tecsup.huellitasvet.ui.dueno.PedirCitaScreen
 import com.tecsup.huellitasvet.ui.dueno.SplashScreen
 import com.tecsup.huellitasvet.ui.veterinario.AgendaScreen
+import com.tecsup.huellitasvet.ui.veterinario.AjustesScreen
+import com.tecsup.huellitasvet.ui.veterinario.FormularioServicioScreen
 import com.tecsup.huellitasvet.ui.veterinario.AtenderCitaScreen
 import com.tecsup.huellitasvet.ui.veterinario.PacientesScreen
 import com.tecsup.huellitasvet.ui.veterinario.PanelScreen
@@ -184,6 +191,7 @@ fun NavVet(factory: VetViewModelFactory, sesion: SesionViewModel) {
                         inicioVm = inicioVm,
                         citasVm = citasVm,
                         duenoId = duenoId,
+                        onCambiarPerfil = { rol -> nav.irAlInicio(rol) },
                         onCerrarSesion = { nav.navigate(Rutas.LOGIN) { popUpTo(0) { inclusive = true } } }
                     )
                 }
@@ -244,9 +252,42 @@ fun NavVet(factory: VetViewModelFactory, sesion: SesionViewModel) {
 
                 composable(Rutas.SERVICIOS) {
                     val vm: ServiciosViewModel = viewModel(factory = factory)
-                    Scaffold(topBar = { AppTopBar("Servicios") }) { p ->
-                        ServiciosScreen(vm = vm, onEditar = { }, modifier = Modifier.padding(p))
+                    Scaffold(
+                        topBar = { AppTopBar("Servicios") },
+                        floatingActionButton = {
+                            FloatingActionButton(onClick = { nav.navigate(Rutas.formularioServicio()) }) {
+                                Icon(Icons.Filled.Add, contentDescription = "Nuevo servicio")
+                            }
+                        },
+                        contentWindowInsets = WindowInsets(0)
+                    ) { p ->
+                        ServiciosScreen(
+                            vm = vm,
+                            onEditar = { nav.navigate(Rutas.formularioServicio(it)) },
+                            modifier = Modifier.padding(p)
+                        )
                     }
+                }
+
+                composable(
+                    Rutas.FORMULARIO_SERVICIO,
+                    arguments = listOf(navArgument("id") { type = NavType.IntType; defaultValue = -1 })
+                ) { entrada ->
+                    val vm: ServiciosViewModel = viewModel(factory = factory)
+                    FormularioServicioScreen(
+                        vm = vm,
+                        servicioId = entrada.arguments?.getInt("id")?.takeIf { it > 0 },
+                        onListo = { nav.popBackStack() },
+                        onAtras = { nav.popBackStack() }
+                    )
+                }
+
+                composable(Rutas.AJUSTES) {
+                    AjustesScreen(
+                        sesion = sesion,
+                        onCambiarPerfil = { rol -> nav.irAlInicio(rol) },
+                        onCerrarSesion = { nav.navigate(Rutas.LOGIN) { popUpTo(0) { inclusive = true } } }
+                    )
                 }
             }
         }

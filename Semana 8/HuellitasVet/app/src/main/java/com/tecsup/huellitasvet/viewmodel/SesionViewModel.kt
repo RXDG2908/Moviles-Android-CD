@@ -31,6 +31,9 @@ class SesionViewModel(
     val aceptarCitas: StateFlow<Boolean> = prefs.aceptarCitas
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
+    val notificaciones: StateFlow<Boolean> = prefs.notificaciones
+        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+
     // ---------- Splash: si ya hay perfil guardado, salta el login ----------
     fun restaurarSesion(alTerminar: (Rol?) -> Unit) {
         viewModelScope.launch {
@@ -62,6 +65,31 @@ class SesionViewModel(
                 }
             }
         }
+    }
+
+    // ---------- Cambiar de perfil: guarda el otro rol y su usuario ----------
+    fun cambiarPerfil(alCambiar: (Rol) -> Unit) {
+        val actual = _usuarioActual.value ?: return
+        val otro = if (actual.rol == Rol.ADMIN.name) Rol.CLIENTE else Rol.ADMIN
+        viewModelScope.launch {
+            val usuario = repo.obtenerUsuarioPorRol(otro) ?: return@launch
+            prefs.guardarSesion(otro, usuario.id)
+            _usuarioActual.value = usuario
+            alCambiar(otro)
+        }
+    }
+
+    // ---------- Preferencias (se guardan en DataStore) ----------
+    fun cambiarModoOscuro(b: Boolean) {
+        viewModelScope.launch { prefs.guardarModoOscuro(b) }
+    }
+
+    fun cambiarNotificaciones(b: Boolean) {
+        viewModelScope.launch { prefs.guardarNotificaciones(b) }
+    }
+
+    fun cambiarAceptarCitas(b: Boolean) {
+        viewModelScope.launch { prefs.guardarAceptarCitas(b) }
     }
 
     fun cerrarSesion(alCerrar: () -> Unit) {

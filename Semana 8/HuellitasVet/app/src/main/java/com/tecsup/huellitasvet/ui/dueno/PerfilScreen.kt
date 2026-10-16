@@ -10,7 +10,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.tecsup.huellitasvet.model.EstadoCita
+import com.tecsup.huellitasvet.model.Rol
 import com.tecsup.huellitasvet.ui.components.AppTopBar
 import com.tecsup.huellitasvet.ui.components.VetButton
 import com.tecsup.huellitasvet.viewmodel.InicioViewModel
@@ -32,6 +35,7 @@ fun PerfilScreen(
     inicioVm: InicioViewModel,
     citasVm: MisCitasViewModel,
     duenoId: Int,
+    onCambiarPerfil: (Rol) -> Unit,
     onCerrarSesion: () -> Unit
 ) {
     LaunchedEffect(duenoId) {
@@ -39,6 +43,8 @@ fun PerfilScreen(
         citasVm.iniciar(duenoId)
     }
     val usuario by sesion.usuarioActual.collectAsState()
+    val oscuro by sesion.modoOscuro.collectAsState()
+    val recordatorios by sesion.notificaciones.collectAsState()
     val mascotas by inicioVm.mascotas.collectAsState()
     val proximas by citasVm.proximas.collectAsState()
     val historial by citasVm.historial.collectAsState()
@@ -57,6 +63,12 @@ fun PerfilScreen(
                 Contador("Atenciones", atenciones, Modifier.weight(1f))
             }
 
+            HorizontalDivider()
+            FilaSwitch("Modo oscuro", oscuro, sesion::cambiarModoOscuro)
+            FilaSwitch("Recordatorios", recordatorios, sesion::cambiarNotificaciones)
+            HorizontalDivider()
+
+            VetButton("Cambiar de perfil", onClick = { sesion.cambiarPerfil(onCambiarPerfil) })
             VetButton("Cerrar sesión", onClick = { sesion.cerrarSesion(onCerrarSesion) }, secundario = true,
                 modifier = Modifier.fillMaxWidth())
         }
@@ -74,5 +86,14 @@ fun Contador(titulo: String, valor: Int, modifier: Modifier = Modifier) {
             Text(valor.toString(), style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.primary)
             Text(titulo, style = MaterialTheme.typography.labelMedium)
         }
+    }
+}
+
+// Fila con texto y switch (también la usa AjustesScreen)
+@Composable
+fun FilaSwitch(texto: String, activado: Boolean, onCambio: (Boolean) -> Unit) {
+    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Text(texto, modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyLarge)
+        Switch(checked = activado, onCheckedChange = onCambio)
     }
 }
