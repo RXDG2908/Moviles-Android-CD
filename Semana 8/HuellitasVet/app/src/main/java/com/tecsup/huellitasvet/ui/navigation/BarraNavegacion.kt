@@ -45,10 +45,9 @@ fun BarraNavegacion(items: List<ItemBarra>, rutaActual: String?, nav: NavHostCon
                 selected = rutaActual == item.ruta,
                 onClick = {
                     nav.navigate(item.ruta) {
-                        // Vuelve a la primera pestaña sin apilar pantallas repetidas
-                        popUpTo(items.first().ruta) { saveState = true }
+                        // Deja solo la primera pestaña debajo: no se apilan pantallas repetidas
+                        popUpTo(items.first().ruta)
                         launchSingleTop = true
-                        restoreState = true
                     }
                 },
                 icon = { Icon(item.icono, contentDescription = item.texto) },

@@ -28,6 +28,9 @@ class SesionViewModel(
     val modoOscuro: StateFlow<Boolean> = prefs.modoOscuro
         .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
+    val aceptarCitas: StateFlow<Boolean> = prefs.aceptarCitas
+        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+
     // ---------- Splash: si ya hay perfil guardado, salta el login ----------
     fun restaurarSesion(alTerminar: (Rol?) -> Unit) {
         viewModelScope.launch {
