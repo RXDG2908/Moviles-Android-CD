@@ -31,6 +31,8 @@ fun VetTheme(
             background = FondoOscuro,
             surface = SuperficieOscura,
             surfaceContainer = SuperficieOscura,
+            surfaceContainerHigh = SuperficieOscura,
+            surfaceContainerHighest = SuperficieOscura,
             onBackground = Color(0xFFE2E8F0),
             onSurface = Color(0xFFE2E8F0)
         )
@@ -46,6 +48,8 @@ fun VetTheme(
             background = fondo,
             surface = Color.White,
             surfaceContainer = Color.White,
+            surfaceContainerHigh = Color.White,
+            surfaceContainerHighest = Color.White,
             onBackground = Color(0xFF0F172A),
             onSurface = Color(0xFF0F172A)
         )

@@ -64,6 +64,14 @@ class SesionViewModel(
         }
     }
 
+    fun cerrarSesion(alCerrar: () -> Unit) {
+        viewModelScope.launch {
+            prefs.cerrarSesion()
+            _usuarioActual.value = null
+            alCerrar()
+        }
+    }
+
     fun limpiarError() {
         _error.value = null
     }

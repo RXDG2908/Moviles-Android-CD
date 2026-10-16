@@ -23,11 +23,14 @@ import com.tecsup.huellitasvet.ui.dueno.FormularioMascotaScreen
 import com.tecsup.huellitasvet.ui.dueno.InicioScreen
 import com.tecsup.huellitasvet.ui.dueno.LoginScreen
 import com.tecsup.huellitasvet.ui.dueno.MascotasScreen
+import com.tecsup.huellitasvet.ui.dueno.MisCitasScreen
+import com.tecsup.huellitasvet.ui.dueno.PerfilScreen
 import com.tecsup.huellitasvet.ui.dueno.PedirCitaScreen
 import com.tecsup.huellitasvet.ui.dueno.SplashScreen
 import com.tecsup.huellitasvet.ui.veterinario.ServiciosScreen
 import com.tecsup.huellitasvet.viewmodel.InicioViewModel
 import com.tecsup.huellitasvet.viewmodel.MascotaViewModel
+import com.tecsup.huellitasvet.viewmodel.MisCitasViewModel
 import com.tecsup.huellitasvet.viewmodel.PedirCitaViewModel
 import com.tecsup.huellitasvet.viewmodel.ServiciosViewModel
 import com.tecsup.huellitasvet.viewmodel.SesionViewModel
@@ -161,9 +164,22 @@ fun NavVet(factory: VetViewModelFactory, sesion: SesionViewModel) {
                     )
                 }
 
-                // Temporales: se completan en los Pasos 10 y 13
-                composable(Rutas.MIS_CITAS) { Text("Mis citas") }
-                composable(Rutas.PERFIL) { Text("Perfil") }
+                composable(Rutas.MIS_CITAS) {
+                    val vm: MisCitasViewModel = viewModel(factory = factory)
+                    MisCitasScreen(vm = vm, duenoId = duenoId, onPedirCita = { nav.navigate(Rutas.pedirCita()) })
+                }
+
+                composable(Rutas.PERFIL) {
+                    val inicioVm: InicioViewModel = viewModel(factory = factory)
+                    val citasVm: MisCitasViewModel = viewModel(factory = factory)
+                    PerfilScreen(
+                        sesion = sesion,
+                        inicioVm = inicioVm,
+                        citasVm = citasVm,
+                        duenoId = duenoId,
+                        onCerrarSesion = { nav.navigate(Rutas.LOGIN) { popUpTo(0) { inclusive = true } } }
+                    )
+                }
             }
 
             // ==================== Grafo del veterinario ====================
