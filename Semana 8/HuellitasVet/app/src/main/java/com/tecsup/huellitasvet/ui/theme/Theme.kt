@@ -30,6 +30,7 @@ fun VetTheme(
             onSecondaryContainer = Color.White,
             background = FondoOscuro,
             surface = SuperficieOscura,
+            surfaceContainer = SuperficieOscura,
             onBackground = Color(0xFFE2E8F0),
             onSurface = Color(0xFFE2E8F0)
         )
@@ -44,6 +45,7 @@ fun VetTheme(
             onSecondaryContainer = primario,
             background = fondo,
             surface = Color.White,
+            surfaceContainer = Color.White,
             onBackground = Color(0xFF0F172A),
             onSurface = Color(0xFF0F172A)
         )
