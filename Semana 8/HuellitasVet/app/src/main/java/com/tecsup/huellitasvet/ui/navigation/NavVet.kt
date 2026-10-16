@@ -27,9 +27,13 @@ import com.tecsup.huellitasvet.ui.dueno.PerfilScreen
 import com.tecsup.huellitasvet.ui.dueno.PedirCitaScreen
 import com.tecsup.huellitasvet.ui.dueno.SplashScreen
 import com.tecsup.huellitasvet.ui.veterinario.AgendaScreen
+import com.tecsup.huellitasvet.ui.veterinario.AtenderCitaScreen
+import com.tecsup.huellitasvet.ui.veterinario.PacientesScreen
 import com.tecsup.huellitasvet.ui.veterinario.PanelScreen
 import com.tecsup.huellitasvet.ui.veterinario.ServiciosScreen
 import com.tecsup.huellitasvet.viewmodel.AgendaViewModel
+import com.tecsup.huellitasvet.viewmodel.AtenderCitaViewModel
+import com.tecsup.huellitasvet.viewmodel.PacientesViewModel
 import com.tecsup.huellitasvet.viewmodel.InicioViewModel
 import com.tecsup.huellitasvet.viewmodel.MascotaViewModel
 import com.tecsup.huellitasvet.viewmodel.MisCitasViewModel
@@ -201,7 +205,41 @@ fun NavVet(factory: VetViewModelFactory, sesion: SesionViewModel) {
 
                 composable(Rutas.AGENDA) {
                     val vm: AgendaViewModel = viewModel(factory = factory)
-                    AgendaScreen(vm = vm, onAtender = { /* Paso 12: atender cita */ })
+                    AgendaScreen(vm = vm, onAtender = { nav.navigate(Rutas.atenderCita(it)) })
+                }
+
+                composable(
+                    Rutas.ATENDER_CITA,
+                    arguments = listOf(navArgument("id") { type = NavType.IntType })
+                ) { entrada ->
+                    val vm: AtenderCitaViewModel = viewModel(factory = factory)
+                    AtenderCitaScreen(
+                        vm = vm,
+                        citaId = entrada.arguments?.getInt("id") ?: 0,
+                        onTerminar = { nav.popBackStack() },
+                        onAtras = { nav.popBackStack() }
+                    )
+                }
+
+                composable(Rutas.PACIENTES) {
+                    val vm: PacientesViewModel = viewModel(factory = factory)
+                    PacientesScreen(vm = vm, onPaciente = { nav.navigate(Rutas.fichaPaciente(it)) })
+                }
+
+                // Misma ficha del dueño, sin los botones Pedir cita / Editar
+                composable(
+                    Rutas.FICHA_PACIENTE,
+                    arguments = listOf(navArgument("id") { type = NavType.IntType })
+                ) { entrada ->
+                    val vm: MascotaViewModel = viewModel(factory = factory)
+                    FichaMascotaScreen(
+                        vm = vm,
+                        mascotaId = entrada.arguments?.getInt("id") ?: 0,
+                        esDueno = false,
+                        onPedirCita = { },
+                        onEditar = { },
+                        onAtras = { nav.popBackStack() }
+                    )
                 }
 
                 composable(Rutas.SERVICIOS) {
