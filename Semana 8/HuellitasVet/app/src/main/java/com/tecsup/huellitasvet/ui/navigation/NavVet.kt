@@ -2,46 +2,67 @@ package com.tecsup.huellitasvet.ui.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.tecsup.huellitasvet.model.Rol
 import com.tecsup.huellitasvet.ui.components.AppTopBar
+import com.tecsup.huellitasvet.ui.dueno.LoginScreen
 import com.tecsup.huellitasvet.ui.dueno.SplashScreen
 import com.tecsup.huellitasvet.ui.veterinario.ServiciosScreen
 import com.tecsup.huellitasvet.viewmodel.ServiciosViewModel
+import com.tecsup.huellitasvet.viewmodel.SesionViewModel
 import com.tecsup.huellitasvet.viewmodel.VetViewModelFactory
 
-// [G] GUIADO — se completa en los Pasos 6 a 13
+// Navega a la pantalla principal del rol y limpia la pila (no se puede volver al login)
+fun NavHostController.irAlInicio(rol: Rol) {
+    val destino = if (rol == Rol.ADMIN) Rutas.PANEL else Rutas.INICIO
+    navigate(destino) { popUpTo(0) { inclusive = true } }
+}
+
 @Composable
-fun NavVet(factory: VetViewModelFactory) {
+fun NavVet(factory: VetViewModelFactory, sesion: SesionViewModel) {
     val nav = rememberNavController()
+    val oscuro by sesion.modoOscuro.collectAsState()
+    val usuario by sesion.usuarioActual.collectAsState()
 
-    NavHost(navController = nav, startDestination = Rutas.SPLASH) {
+    Scaffold { padding ->
+        NavHost(navController = nav, startDestination = Rutas.SPLASH, modifier = Modifier.padding(padding)) {
 
-        composable(Rutas.SPLASH) {
-            SplashScreen(onTerminar = {
-                // TODO (Paso 6): si hay perfil guardado ir a INICIO o PANEL; si no, a LOGIN
-                nav.navigate(Rutas.SERVICIOS) { popUpTo(Rutas.SPLASH) { inclusive = true } }
-            })
-        }
+            composable(Rutas.SPLASH) {
+                SplashScreen(onTerminar = {
+                    sesion.restaurarSesion { rol ->
+                        if (rol == null) {
+                            nav.navigate(Rutas.LOGIN) { popUpTo(0) { inclusive = true } }
+                        } else {
+                            nav.irAlInicio(rol)
+                        }
+                    }
+                })
+            }
 
-        // EJEMPLO RESUELTO
-        composable(Rutas.SERVICIOS) {
-            val vm: ServiciosViewModel = viewModel(factory = factory)
-            Scaffold(topBar = { AppTopBar("Servicios") }) { padding ->
-                ServiciosScreen(
-                    vm = vm,
-                    onEditar = { /* TODO (Paso 13): nav.navigate(Rutas.formularioServicio(it)) */ },
-                    modifier = Modifier.padding(padding)
-                )
+            composable(Rutas.LOGIN) {
+                LoginScreen(vm = sesion, oscuro = oscuro, onEntrar = { rol -> nav.irAlInicio(rol) })
+            }
+
+            // Temporal: se reemplaza en el Paso 7
+            composable(Rutas.INICIO) { Text("Hola, ${usuario?.nombre}") }
+            // Temporal: se reemplaza en el Paso 11
+            composable(Rutas.PANEL) { Text("Panel de ${usuario?.nombre}") }
+
+            composable(Rutas.SERVICIOS) {
+                val vm: ServiciosViewModel = viewModel(factory = factory)
+                Scaffold(topBar = { AppTopBar("Servicios") }) { p ->
+                    ServiciosScreen(vm = vm, onEditar = { }, modifier = Modifier.padding(p))
+                }
             }
         }
-
-        // TODO (Paso 6): LOGIN
-        // TODO (Pasos 7-10): grafo del dueño con NavigationBar (Inicio, Mascotas, Citas, Perfil)
-        // TODO (Pasos 11-13): grafo del veterinario con NavigationBar (Panel, Agenda, Pacientes, Servicios, Ajustes)
     }
 }

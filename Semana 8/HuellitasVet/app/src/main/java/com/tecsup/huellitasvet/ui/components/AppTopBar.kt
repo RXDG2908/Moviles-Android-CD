@@ -1,6 +1,7 @@
 package com.tecsup.huellitasvet.ui.components
 
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,6 +30,7 @@ fun AppTopBar(
             }
         },
         actions = acciones,
+        windowInsets = WindowInsets(0), // los insets los maneja el Scaffold de NavVet
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.background
         )
