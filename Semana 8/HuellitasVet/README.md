@@ -139,11 +139,18 @@ Mejoras hechas con IA respetando MVVM + Repository. Los prompts y las correccion
 | Gráfico de peso de la mascota | ✅ Hecho | `CitaDao.observarPesos` + `VetRepository` + `MascotaViewModel.pesos` + `GraficoLineas` en la ficha |
 | Reprogramar cita | ✅ Hecho | `CitaDao.reprogramar` + `VetRepository.reprogramarCita` + `ReprogramarCitaViewModel` + `ReprogramarCitaScreen` |
 | Búsqueda de pacientes | ✅ Hecho | `MascotaDao.buscar` + `VetRepository.buscarPacientes` + `PacientesViewModel` + `PacientesScreen` |
+| Avatares de mascotas (extra) | ✅ Hecho | Solo la View: `MascotaAvatar` con trazos SVG |
 | PROMPTS.md | ✅ Hecho | Prompts, lo que generó la IA, lo que se corrigió y la reflexión |
 
 | Gráfico de peso | Mis citas | Reprogramar | Búsqueda |
 | --- | --- | --- | --- |
 | ![Gráfico de peso](capturas/fase2/01_grafico_peso.png) | ![Mis citas](capturas/fase2/02_mis_citas_reprogramar.png) | ![Reprogramar](capturas/fase2/03_reprogramar_cita.png) | ![Búsqueda](capturas/fase2/04_busqueda_pacientes.png) |
+
+| Avatares en Inicio | Avatares en Pacientes | Conejo (Otro) |
+| --- | --- | --- |
+| ![Inicio](capturas/fase2/05_avatares_inicio.png) | ![Pacientes](capturas/fase2/06_avatares_pacientes.png) | ![Conejo](capturas/fase2/07_avatar_conejo.png) |
+
+**Avatares de mascotas (extra):** las caritas de perro, gato y conejo se rediseñaron en estilo plano (formas redondeadas, sin contornos, hocico más claro, brillo en los ojos y mejillas). Cada parte es un trazo SVG en un lienzo de 100 x 100 que `MascotaAvatar` convierte a `Path` con `PathParser` y dibuja con `Canvas`, escalado al tamaño pedido y recortado al círculo. El fondo sigue siendo el color del rol (verde para el dueño y azul para el veterinario). La hoja con los tres avatares en 4 tamaños y en modo claro y oscuro está en [`capturas/fase2/08_hoja_de_avatares.png`](capturas/fase2/08_hoja_de_avatares.png).
 
 **Gráfico de peso:** en la pestaña *Datos* de la ficha aparece la tarjeta *Evolución del peso*, con una línea que une el peso registrado en cada cita ATENDIDA (de la más antigua a la más reciente), el mínimo, el máximo y la primera y la última fecha. El gráfico está dibujado con `Canvas`, sin librerías externas. Lo ven el dueño y el veterinario, y cuando el veterinario atiende una cita el punto nuevo aparece solo, porque la consulta devuelve `Flow`.
 

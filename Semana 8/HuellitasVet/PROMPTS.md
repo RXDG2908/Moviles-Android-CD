@@ -89,6 +89,28 @@ Capturas de la Fase 2 en [`capturas/fase2`](capturas/fase2).
 
 ---
 
+## Prompt 4 · Avatares de mascotas (extra)
+
+**Texto enviado a la IA:**
+
+> mejorar los iconos de mascotas, svg, buscar en internet y mejorar, usar skills!
+
+**Qué generó la IA:**
+
+- **Skill:** eligió la skill `illustration-style` de la biblioteca local de skills. Con ella definió un estilo plano, de formas orgánicas redondeadas, sin contornos, con pocos detalles en la cara, el hocico en un tono más claro, brillo en los ojos y mejillas rosadas.
+- **Referencias:** buscó en internet avatares de mascotas en estilo plano. Los que encontró eran de bancos de imágenes o emojis (Twemoji, OpenMoji) con licencias que piden atribución, así que no copió ninguno y dibujó tres SVG propios: perro de orejas caídas, gato con rayas y bigotes, y conejo de orejas largas.
+- **Prueba:** revisó los SVG en una hoja HTML, en 4 tamaños, sobre el verde del dueño, el azul del veterinario y el modo oscuro.
+- **Código:** reescribió `MascotaAvatar`. Cada parte del dibujo es un trazo SVG en un lienzo de 100 x 100; `PathParser` lo convierte a `Path` una sola vez y `Canvas` lo dibuja escalado al tamaño del avatar.
+
+**Qué tuve que corregir yo:**
+
+- En la hoja de prueba, a 34 dp la cara se veía muy chica dentro del círculo. Se agrandó un 12 % (`ZOOM`).
+- En el emulador, a 100 dp las puntas de las orejas del conejo tocaban el borde del círculo. Se bajaron las orejas y el dibujo se recortó al círculo con `clipPath`.
+
+**¿Respeta MVVM?:** Sí. Es un cambio solo de la View: `MascotaAvatar` sigue recibiendo la `Especie` y no conoce ni el ViewModel ni el Repository. No cambia ninguna pantalla que lo usa.
+
+---
+
 ## Reflexión (5 líneas)
 
 - La IA mejoró la velocidad: armó las cuatro capas de cada mejora siguiendo el mismo patrón del ejemplo resuelto (Servicio).
