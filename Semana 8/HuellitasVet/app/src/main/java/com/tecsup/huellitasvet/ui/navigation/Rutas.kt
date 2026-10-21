@@ -12,6 +12,7 @@ object Rutas {
     const val FICHA_MASCOTA = "ficha_mascota/{id}"
     const val PEDIR_CITA = "pedir_cita?mascotaId={mascotaId}"
     const val MIS_CITAS = "mis_citas"
+    const val REPROGRAMAR_CITA = "reprogramar_cita/{id}"
     const val PERFIL = "perfil"
 
     // Veterinario
@@ -27,6 +28,7 @@ object Rutas {
     fun formularioMascota(id: Int? = null) = if (id == null) "formulario_mascota" else "formulario_mascota?id=$id"
     fun fichaMascota(id: Int) = "ficha_mascota/$id"
     fun pedirCita(mascotaId: Int? = null) = if (mascotaId == null) "pedir_cita" else "pedir_cita?mascotaId=$mascotaId"
+    fun reprogramarCita(id: Int) = "reprogramar_cita/$id"
     fun atenderCita(id: Int) = "atender_cita/$id"
     fun fichaPaciente(id: Int) = "ficha_paciente/$id"
     fun formularioServicio(id: Int? = null) = if (id == null) "formulario_servicio" else "formulario_servicio?id=$id"

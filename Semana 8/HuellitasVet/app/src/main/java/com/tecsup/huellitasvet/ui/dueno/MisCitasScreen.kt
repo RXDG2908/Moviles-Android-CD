@@ -41,7 +41,7 @@ import com.tecsup.huellitasvet.ui.veterinario.iconoServicio
 import com.tecsup.huellitasvet.viewmodel.MisCitasViewModel
 
 @Composable
-fun MisCitasScreen(vm: MisCitasViewModel, duenoId: Int, onPedirCita: () -> Unit) {
+fun MisCitasScreen(vm: MisCitasViewModel, duenoId: Int, onPedirCita: () -> Unit, onReprogramar: (Int) -> Unit) {
     LaunchedEffect(duenoId) { vm.iniciar(duenoId) }
     val proximas by vm.proximas.collectAsState()
     val historial by vm.historial.collectAsState()
@@ -82,20 +82,24 @@ fun MisCitasScreen(vm: MisCitasViewModel, duenoId: Int, onPedirCita: () -> Unit)
                         titulo = c.servicio.nombre,
                         detalle = "${c.mascota.mascota.nombre} · ${Fechas.corta(c.cita.fecha)} · ${c.cita.hora} · S/ %.2f".format(c.cita.precio),
                         estado = EstadoCita.valueOf(c.cita.estado),
-                        inicio = { IconoCaja(iconoServicio(c.servicio.icono)) }
+                        inicio = { IconoCaja(iconoServicio(c.servicio.icono)) },
+                        accionesEnLinea = !vm.puedeCancelar(c) // con 2 botones, van en su propia fila
                     ) {
-                        // El botón solo aparece si la regla de 2 horas lo permite
+                        // Los botones solo aparecen si la regla de 2 horas lo permite
                         if (vm.puedeCancelar(c)) {
+                            TextButton(onClick = { onReprogramar(c.cita.id) }) {
+                                Text("Reprogramar", style = MaterialTheme.typography.labelLarge)
+                            }
                             TextButton(onClick = { porCancelar = c }) {
                                 Text("Cancelar", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelLarge)
                             }
                         } else if (pestana == 0) {
-                            TextoGris("Ya no puedes cancelar")
+                            TextoGris("Ya no puedes cambiarla")
                         }
                     }
                 }
                 if (pestana == 0) {
-                    item { AvisoCard(icono = Icons.Outlined.Schedule, texto = "Puedes cancelar hasta 2 horas antes") }
+                    item { AvisoCard(icono = Icons.Outlined.Schedule, texto = "Puedes reprogramar o cancelar hasta 2 horas antes") }
                 }
             }
         }

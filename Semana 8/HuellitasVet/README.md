@@ -137,11 +137,19 @@ Mejoras hechas con IA respetando MVVM + Repository. Los prompts y las correccion
 | Mejora | Estado | Capas que cambian |
 | --- | --- | --- |
 | Gráfico de peso de la mascota | ✅ Hecho | `CitaDao.observarPesos` + `VetRepository` + `MascotaViewModel.pesos` + `GraficoLineas` en la ficha |
-| Reprogramar cita | ⏳ Pendiente | DAO + Repository + ViewModel + View |
+| Reprogramar cita | ✅ Hecho | `CitaDao.reprogramar` + `VetRepository.reprogramarCita` + `ReprogramarCitaViewModel` + `ReprogramarCitaScreen` |
 | Búsqueda de pacientes | ⏳ Pendiente | DAO + Repository + ViewModel + View |
 | PROMPTS.md | ⏳ Pendiente | Documento con los prompts |
 
 **Gráfico de peso:** en la pestaña *Datos* de la ficha aparece la tarjeta *Evolución del peso*, con una línea que une el peso registrado en cada cita ATENDIDA (de la más antigua a la más reciente), el mínimo, el máximo y la primera y la última fecha. El gráfico está dibujado con `Canvas`, sin librerías externas. Lo ven el dueño y el veterinario, y cuando el veterinario atiende una cita el punto nuevo aparece solo, porque la consulta devuelve `Flow`.
+
+**Reprogramar cita:** en *Mis citas*, cada cita PENDIENTE o CONFIRMADA a la que le faltan más de 2 horas muestra el botón *Reprogramar*, junto a *Cancelar*. La pantalla muestra el horario actual y deja elegir otra fecha (de hoy a 7 días) y otra hora. Las reglas están en `ReprogramarCitaViewModel`:
+
+- No se puede elegir un horario ocupado. El horario actual de la misma cita no cuenta como ocupado.
+- No se puede elegir un horario que ya pasó o al que le faltan 2 horas o menos.
+- El nuevo horario debe ser distinto al actual.
+- Antes de guardar se vuelve a consultar si el horario sigue libre.
+- La cita vuelve a quedar PENDIENTE para que la clínica confirme el nuevo horario.
 
 ## Cómo ejecutar
 

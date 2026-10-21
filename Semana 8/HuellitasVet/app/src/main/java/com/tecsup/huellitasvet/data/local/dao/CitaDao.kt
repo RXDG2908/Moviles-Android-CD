@@ -24,6 +24,10 @@ interface CitaDao {
     @Query("UPDATE citas SET estado = :estado WHERE id = :id")
     suspend fun actualizarEstado(id: Int, estado: String)
 
+    // Cambia fecha y hora; vuelve a PENDIENTE para que la clínica confirme el nuevo horario
+    @Query("UPDATE citas SET fecha = :fecha, hora = :hora, estado = 'PENDIENTE' WHERE id = :id")
+    suspend fun reprogramar(id: Int, fecha: String, hora: String)
+
     // Pone la cita en ATENDIDA y guarda diagnóstico, tratamiento y peso
     @Query(
         "UPDATE citas SET estado = 'ATENDIDA', diagnostico = :diagnostico, " +

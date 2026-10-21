@@ -25,6 +25,7 @@ import com.tecsup.huellitasvet.ui.dueno.MascotasScreen
 import com.tecsup.huellitasvet.ui.dueno.MisCitasScreen
 import com.tecsup.huellitasvet.ui.dueno.PerfilScreen
 import com.tecsup.huellitasvet.ui.dueno.PedirCitaScreen
+import com.tecsup.huellitasvet.ui.dueno.ReprogramarCitaScreen
 import com.tecsup.huellitasvet.ui.dueno.SplashScreen
 import com.tecsup.huellitasvet.ui.veterinario.AgendaScreen
 import com.tecsup.huellitasvet.ui.veterinario.AjustesScreen
@@ -41,6 +42,7 @@ import com.tecsup.huellitasvet.viewmodel.MascotaViewModel
 import com.tecsup.huellitasvet.viewmodel.MisCitasViewModel
 import com.tecsup.huellitasvet.viewmodel.PanelViewModel
 import com.tecsup.huellitasvet.viewmodel.PedirCitaViewModel
+import com.tecsup.huellitasvet.viewmodel.ReprogramarCitaViewModel
 import com.tecsup.huellitasvet.viewmodel.ServiciosViewModel
 import com.tecsup.huellitasvet.viewmodel.SesionViewModel
 import com.tecsup.huellitasvet.viewmodel.VetViewModelFactory
@@ -183,7 +185,25 @@ fun NavVet(factory: VetViewModelFactory, sesion: SesionViewModel) {
 
                 composable(Rutas.MIS_CITAS) {
                     val vm: MisCitasViewModel = viewModel(factory = factory)
-                    MisCitasScreen(vm = vm, duenoId = duenoId, onPedirCita = { nav.navigate(Rutas.pedirCita()) })
+                    MisCitasScreen(
+                        vm = vm,
+                        duenoId = duenoId,
+                        onPedirCita = { nav.navigate(Rutas.pedirCita()) },
+                        onReprogramar = { nav.navigate(Rutas.reprogramarCita(it)) }
+                    )
+                }
+
+                composable(
+                    Rutas.REPROGRAMAR_CITA,
+                    arguments = listOf(navArgument("id") { type = NavType.IntType })
+                ) { entrada ->
+                    val vm: ReprogramarCitaViewModel = viewModel(factory = factory)
+                    ReprogramarCitaScreen(
+                        vm = vm,
+                        citaId = entrada.arguments?.getInt("id") ?: 0,
+                        onReprogramada = { nav.popBackStack() },
+                        onAtras = { nav.popBackStack() }
+                    )
                 }
 
                 composable(Rutas.PERFIL) {
