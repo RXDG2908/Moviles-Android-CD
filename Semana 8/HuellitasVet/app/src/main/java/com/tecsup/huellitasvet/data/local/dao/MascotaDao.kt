@@ -37,6 +37,17 @@ interface MascotaDao {
     @Query("SELECT * FROM mascotas ORDER BY nombre")
     fun observarTodas(): Flow<List<MascotaConDueno>>
 
+    // Búsqueda de pacientes: texto en nombre de la mascota, raza o nombre del dueño
+    // y, al mismo tiempo, filtro por especie (especie = null -> todas)
+    @Transaction
+    @Query(
+        "SELECT m.* FROM mascotas m INNER JOIN usuarios u ON m.duenoId = u.id " +
+            "WHERE (:especie IS NULL OR m.especie = :especie) " +
+            "AND (m.nombre LIKE '%' || :texto || '%' OR m.raza LIKE '%' || :texto || '%' " +
+            "OR u.nombre LIKE '%' || :texto || '%') ORDER BY m.nombre"
+    )
+    fun buscar(texto: String, especie: String?): Flow<List<MascotaConDueno>>
+
     @Query("SELECT COUNT(*) FROM citas WHERE mascotaId = :mascotaId")
     suspend fun contarCitas(mascotaId: Int): Int
 }

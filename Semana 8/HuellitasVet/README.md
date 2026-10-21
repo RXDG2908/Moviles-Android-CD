@@ -138,7 +138,7 @@ Mejoras hechas con IA respetando MVVM + Repository. Los prompts y las correccion
 | --- | --- | --- |
 | Gráfico de peso de la mascota | ✅ Hecho | `CitaDao.observarPesos` + `VetRepository` + `MascotaViewModel.pesos` + `GraficoLineas` en la ficha |
 | Reprogramar cita | ✅ Hecho | `CitaDao.reprogramar` + `VetRepository.reprogramarCita` + `ReprogramarCitaViewModel` + `ReprogramarCitaScreen` |
-| Búsqueda de pacientes | ⏳ Pendiente | DAO + Repository + ViewModel + View |
+| Búsqueda de pacientes | ✅ Hecho | `MascotaDao.buscar` + `VetRepository.buscarPacientes` + `PacientesViewModel` + `PacientesScreen` |
 | PROMPTS.md | ⏳ Pendiente | Documento con los prompts |
 
 **Gráfico de peso:** en la pestaña *Datos* de la ficha aparece la tarjeta *Evolución del peso*, con una línea que une el peso registrado en cada cita ATENDIDA (de la más antigua a la más reciente), el mínimo, el máximo y la primera y la última fecha. El gráfico está dibujado con `Canvas`, sin librerías externas. Lo ven el dueño y el veterinario, y cuando el veterinario atiende una cita el punto nuevo aparece solo, porque la consulta devuelve `Flow`.
@@ -150,6 +150,13 @@ Mejoras hechas con IA respetando MVVM + Repository. Los prompts y las correccion
 - El nuevo horario debe ser distinto al actual.
 - Antes de guardar se vuelve a consultar si el horario sigue libre.
 - La cita vuelve a quedar PENDIENTE para que la clínica confirme el nuevo horario.
+
+**Búsqueda de pacientes:** en *Pacientes*, el veterinario escribe parte del nombre de la mascota, de la raza o del dueño y, al mismo tiempo, elige la especie (Todos, Perros, Gatos u Otros).
+
+- En la Fase 1 el filtro se hacía en memoria, sobre la lista completa. Ahora la búsqueda la hace Room con una consulta SQL (`LIKE` con `JOIN` a usuarios y especie opcional).
+- El ViewModel combina el texto y la especie con `combine` y, con `flatMapLatest`, observa la consulta nueva cada vez que cambian.
+- Se muestra cuántos pacientes coinciden.
+- Hay una **X** para borrar el texto y el botón *Limpiar filtros*, que quita el texto y la especie.
 
 ## Cómo ejecutar
 

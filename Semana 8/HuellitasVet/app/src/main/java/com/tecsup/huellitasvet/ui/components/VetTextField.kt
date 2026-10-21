@@ -27,7 +27,8 @@ fun VetTextField(
     teclado: KeyboardType = KeyboardType.Text,
     esClave: Boolean = false,
     lineas: Int = 1,
-    icono: ImageVector? = null
+    icono: ImageVector? = null,
+    accion: (@Composable () -> Unit)? = null // botón al final del campo (por ejemplo, limpiar)
 ) {
     val esquema = MaterialTheme.colorScheme
     OutlinedTextField(
@@ -38,6 +39,7 @@ fun VetTextField(
         isError = error != null,
         supportingText = error?.let { { Text(it) } },
         leadingIcon = icono?.let { { Icon(it, contentDescription = null, tint = esquema.primary) } },
+        trailingIcon = accion,
         keyboardOptions = KeyboardOptions(keyboardType = teclado),
         visualTransformation = if (esClave) PasswordVisualTransformation() else VisualTransformation.None,
         singleLine = lineas == 1,

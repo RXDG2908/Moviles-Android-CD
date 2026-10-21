@@ -5,13 +5,16 @@ import androidx.lifecycle.viewModelScope
 import com.tecsup.huellitasvet.data.local.relation.MascotaConDueno
 import com.tecsup.huellitasvet.data.repository.VetRepository
 import com.tecsup.huellitasvet.model.Especie
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class PacientesViewModel(private val repo: VetRepository) : ViewModel() {
 
     private val _texto = MutableStateFlow("")
@@ -20,18 +23,15 @@ class PacientesViewModel(private val repo: VetRepository) : ViewModel() {
     private val _especie = MutableStateFlow<Especie?>(null) // null = Todos
     val especie: StateFlow<Especie?> = _especie
 
-    // combine: se recalcula cuando cambia la lista, el texto o la especie
-    val pacientes: StateFlow<List<MascotaConDueno>> = combine(
-        repo.observarTodasLasMascotas(), _texto, _especie
-    ) { lista, t, e ->
-        lista.filter { p ->
-            val coincideEspecie = e == null || p.mascota.especie == e.name
-            val coincideTexto = t.isBlank() ||
-                p.mascota.nombre.contains(t.trim(), ignoreCase = true) ||
-                p.dueno.nombre.contains(t.trim(), ignoreCase = true)
-            coincideEspecie && coincideTexto
-        }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    // La búsqueda la hace Room (SQL con LIKE). Cuando cambia el texto o la especie,
+    // flatMapLatest cancela la consulta anterior y observa la nueva
+    val pacientes: StateFlow<List<MascotaConDueno>> = combine(_texto, _especie) { t, e -> t to e }
+        .flatMapLatest { (t, e) -> repo.buscarPacientes(t, e) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    // Hay filtros puestos: se muestra el botón para limpiarlos
+    val hayFiltros: StateFlow<Boolean> = combine(_texto, _especie) { t, e -> t.isNotBlank() || e != null }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     // mascotaId -> fecha de su última atención
     val ultimasVisitas: StateFlow<Map<Int, String>> = repo.observarUltimasVisitas()
@@ -40,4 +40,9 @@ class PacientesViewModel(private val repo: VetRepository) : ViewModel() {
 
     fun buscar(t: String) { _texto.value = t }
     fun filtrar(e: Especie?) { _especie.value = e }
+
+    fun limpiar() {
+        _texto.value = ""
+        _especie.value = null
+    }
 }

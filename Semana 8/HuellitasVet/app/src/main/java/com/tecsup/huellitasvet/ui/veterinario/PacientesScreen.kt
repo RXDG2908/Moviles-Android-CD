@@ -12,10 +12,13 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,6 +41,7 @@ fun PacientesScreen(vm: PacientesViewModel, onPaciente: (Int) -> Unit) {
     val especie by vm.especie.collectAsState()
     val pacientes by vm.pacientes.collectAsState()
     val visitas by vm.ultimasVisitas.collectAsState()
+    val hayFiltros by vm.hayFiltros.collectAsState()
 
     // Chips: Todos / Perros / Gatos / Otros
     val filtros = listOf<Pair<String, Especie?>>(
@@ -47,10 +51,25 @@ fun PacientesScreen(vm: PacientesViewModel, onPaciente: (Int) -> Unit) {
     Column {
         AppTopBar("Pacientes")
         Column(Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            VetTextField(texto, vm::buscar, "Buscar mascota o dueño...", icono = Icons.Filled.Search)
+            VetTextField(
+                texto, vm::buscar, "Buscar mascota, raza o dueño...", icono = Icons.Filled.Search,
+                accion = if (texto.isNotEmpty()) {
+                    { IconButton(onClick = { vm.buscar("") }) { Icon(Icons.Filled.Close, contentDescription = "Borrar texto") } }
+                } else null
+            )
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(filtros) { (etiqueta, e) ->
                     OpcionChip(etiqueta, seleccionado = especie == e, onClick = { vm.filtrar(e) })
+                }
+            }
+            // Cuántos pacientes coinciden con el texto y la especie a la vez
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                TextoGris(
+                    if (pacientes.size == 1) "1 paciente encontrado" else "${pacientes.size} pacientes encontrados",
+                    Modifier.weight(1f)
+                )
+                if (hayFiltros) {
+                    TextButton(onClick = vm::limpiar) { Text("Limpiar filtros", style = MaterialTheme.typography.labelLarge) }
                 }
             }
         }
@@ -59,7 +78,7 @@ fun PacientesScreen(vm: PacientesViewModel, onPaciente: (Int) -> Unit) {
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            if (pacientes.isEmpty()) item { TextoGris("No se encontraron pacientes") }
+            if (pacientes.isEmpty()) item { TextoGris("No se encontraron pacientes con esos filtros") }
             items(pacientes, key = { it.mascota.id }) { p ->
                 val m = p.mascota
                 Tarjeta(onClick = { onPaciente(m.id) }) {

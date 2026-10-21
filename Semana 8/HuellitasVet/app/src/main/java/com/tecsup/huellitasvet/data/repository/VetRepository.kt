@@ -6,6 +6,7 @@ import com.tecsup.huellitasvet.data.local.entity.Usuario
 import com.tecsup.huellitasvet.data.local.relation.CitaConDetalle
 import com.tecsup.huellitasvet.data.local.relation.MascotaConDueno
 import com.tecsup.huellitasvet.model.ConteoServicio
+import com.tecsup.huellitasvet.model.Especie
 import com.tecsup.huellitasvet.model.EstadoCita
 import com.tecsup.huellitasvet.model.PuntoPeso
 import com.tecsup.huellitasvet.model.Rol
@@ -32,6 +33,7 @@ interface VetRepository {
     fun observarMascotasDeDueno(duenoId: Int): Flow<List<Mascota>>
     fun observarMascota(id: Int): Flow<Mascota?>
     fun observarTodasLasMascotas(): Flow<List<MascotaConDueno>>
+    fun buscarPacientes(texto: String, especie: Especie?): Flow<List<MascotaConDueno>> // mejora: búsqueda
     suspend fun guardarMascota(m: Mascota)
     suspend fun eliminarMascota(m: Mascota)
     suspend fun mascotaTieneCitas(id: Int): Boolean

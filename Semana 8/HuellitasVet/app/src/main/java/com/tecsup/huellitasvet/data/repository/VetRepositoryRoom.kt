@@ -9,6 +9,7 @@ import com.tecsup.huellitasvet.data.local.entity.Usuario
 import com.tecsup.huellitasvet.data.local.relation.CitaConDetalle
 import com.tecsup.huellitasvet.data.local.relation.MascotaConDueno
 import com.tecsup.huellitasvet.model.ConteoServicio
+import com.tecsup.huellitasvet.model.Especie
 import com.tecsup.huellitasvet.model.EstadoCita
 import com.tecsup.huellitasvet.model.PuntoPeso
 import com.tecsup.huellitasvet.model.Rol
@@ -40,6 +41,8 @@ class VetRepositoryRoom(private val db: VetDatabase) : VetRepository {
     override fun observarMascotasDeDueno(duenoId: Int): Flow<List<Mascota>> = mascotaDao.observarPorDueno(duenoId)
     override fun observarMascota(id: Int): Flow<Mascota?> = mascotaDao.observarUna(id)
     override fun observarTodasLasMascotas(): Flow<List<MascotaConDueno>> = mascotaDao.observarTodas()
+    override fun buscarPacientes(texto: String, especie: Especie?): Flow<List<MascotaConDueno>> =
+        mascotaDao.buscar(texto.trim(), especie?.name)
 
     override suspend fun guardarMascota(m: Mascota) {
         // id = 0 -> nueva; id > 0 -> editar
