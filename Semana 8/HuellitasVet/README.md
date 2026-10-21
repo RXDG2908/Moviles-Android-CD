@@ -139,7 +139,11 @@ Mejoras hechas con IA respetando MVVM + Repository. Los prompts y las correccion
 | Gráfico de peso de la mascota | ✅ Hecho | `CitaDao.observarPesos` + `VetRepository` + `MascotaViewModel.pesos` + `GraficoLineas` en la ficha |
 | Reprogramar cita | ✅ Hecho | `CitaDao.reprogramar` + `VetRepository.reprogramarCita` + `ReprogramarCitaViewModel` + `ReprogramarCitaScreen` |
 | Búsqueda de pacientes | ✅ Hecho | `MascotaDao.buscar` + `VetRepository.buscarPacientes` + `PacientesViewModel` + `PacientesScreen` |
-| PROMPTS.md | ⏳ Pendiente | Documento con los prompts |
+| PROMPTS.md | ✅ Hecho | Prompts, lo que generó la IA, lo que se corrigió y la reflexión |
+
+| Gráfico de peso | Mis citas | Reprogramar | Búsqueda |
+| --- | --- | --- | --- |
+| ![Gráfico de peso](capturas/fase2/01_grafico_peso.png) | ![Mis citas](capturas/fase2/02_mis_citas_reprogramar.png) | ![Reprogramar](capturas/fase2/03_reprogramar_cita.png) | ![Búsqueda](capturas/fase2/04_busqueda_pacientes.png) |
 
 **Gráfico de peso:** en la pestaña *Datos* de la ficha aparece la tarjeta *Evolución del peso*, con una línea que une el peso registrado en cada cita ATENDIDA (de la más antigua a la más reciente), el mínimo, el máximo y la primera y la última fecha. El gráfico está dibujado con `Canvas`, sin librerías externas. Lo ven el dueño y el veterinario, y cuando el veterinario atiende una cita el punto nuevo aparece solo, porque la consulta devuelve `Flow`.
 
