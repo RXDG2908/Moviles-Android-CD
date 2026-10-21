@@ -7,6 +7,7 @@ import androidx.room.Transaction
 import com.tecsup.huellitasvet.data.local.entity.Cita
 import com.tecsup.huellitasvet.data.local.relation.CitaConDetalle
 import com.tecsup.huellitasvet.model.ConteoServicio
+import com.tecsup.huellitasvet.model.PuntoPeso
 import com.tecsup.huellitasvet.model.UltimaVisita
 import kotlinx.coroutines.flow.Flow
 
@@ -59,6 +60,13 @@ interface CitaDao {
     @Transaction
     @Query("SELECT * FROM citas WHERE mascotaId = :mascotaId AND estado = 'ATENDIDA' ORDER BY fecha DESC, hora DESC")
     fun observarHistorial(mascotaId: Int): Flow<List<CitaConDetalle>>
+
+    // Peso registrado en cada cita ATENDIDA, de la más antigua a la más reciente
+    @Query(
+        "SELECT fecha, pesoRegistrado AS peso FROM citas WHERE mascotaId = :mascotaId " +
+            "AND estado = 'ATENDIDA' AND pesoRegistrado IS NOT NULL ORDER BY fecha, hora"
+    )
+    fun observarPesos(mascotaId: Int): Flow<List<PuntoPeso>>
 
     // ---------- Panel ----------
     @Query("SELECT COUNT(*) FROM citas WHERE fecha = :fecha AND estado != 'CANCELADA'")

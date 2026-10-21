@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.tecsup.huellitasvet.data.local.entity.Mascota
 import com.tecsup.huellitasvet.model.Especie
 import com.tecsup.huellitasvet.model.Fechas
+import com.tecsup.huellitasvet.model.PuntoPeso
 import com.tecsup.huellitasvet.model.Sexo
 import com.tecsup.huellitasvet.ui.components.AppTopBar
 import com.tecsup.huellitasvet.ui.components.HistorialItem
@@ -40,6 +41,7 @@ import com.tecsup.huellitasvet.ui.components.SelectorPestanas
 import com.tecsup.huellitasvet.ui.components.Tarjeta
 import com.tecsup.huellitasvet.ui.components.TextoGris
 import com.tecsup.huellitasvet.ui.components.VetButton
+import com.tecsup.huellitasvet.ui.components.graficos.GraficoLineas
 import com.tecsup.huellitasvet.ui.theme.EstadoConfirmada
 import com.tecsup.huellitasvet.viewmodel.MascotaViewModel
 
@@ -55,6 +57,7 @@ fun FichaMascotaScreen(
 ) {
     val mascota by remember(mascotaId) { vm.mascota(mascotaId) }.collectAsState()
     val historial by remember(mascotaId) { vm.historial(mascotaId) }.collectAsState()
+    val pesos by remember(mascotaId) { vm.pesos(mascotaId) }.collectAsState()
     var pestana by remember { mutableIntStateOf(0) }
 
     Scaffold(
@@ -104,6 +107,7 @@ fun FichaMascotaScreen(
 
             if (pestana == 0) {
                 DatosMascota(m)
+                GraficoPeso(pesos)
             } else if (historial.isEmpty()) {
                 TextoGris("Aún no tiene atenciones")
             } else {
@@ -119,6 +123,26 @@ fun FichaMascotaScreen(
                         )
                     }
                 }
+            }
+        }
+    }
+}
+
+// Tarjeta con la evolución del peso en cada atención
+@Composable
+private fun GraficoPeso(pesos: List<PuntoPeso>) {
+    Tarjeta {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text("Evolución del peso", style = MaterialTheme.typography.titleSmall)
+            if (pesos.isEmpty()) {
+                TextoGris("Aún no hay pesos registrados en atenciones")
+            } else {
+                TextoGris("Mín ${pesos.minOf { it.peso }} kg · Máx ${pesos.maxOf { it.peso }} kg · ${pesos.size} registros")
+                GraficoLineas(
+                    valores = pesos.map { it.peso.toFloat() },
+                    etiquetas = pesos.map { Fechas.diaMes(it.fecha) },
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
         }
     }

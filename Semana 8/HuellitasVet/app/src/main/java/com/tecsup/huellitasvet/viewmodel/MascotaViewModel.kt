@@ -6,6 +6,7 @@ import com.tecsup.huellitasvet.data.local.entity.Mascota
 import com.tecsup.huellitasvet.data.local.relation.CitaConDetalle
 import com.tecsup.huellitasvet.data.repository.VetRepository
 import com.tecsup.huellitasvet.model.Especie
+import com.tecsup.huellitasvet.model.PuntoPeso
 import com.tecsup.huellitasvet.model.Sexo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -39,6 +40,10 @@ class MascotaViewModel(private val repo: VetRepository) : ViewModel() {
 
     // Historial clínico: citas ATENDIDAS, la más reciente primero (el orden lo da el DAO)
     fun historial(mascotaId: Int): StateFlow<List<CitaConDetalle>> = repo.observarHistorial(mascotaId)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    // Puntos del gráfico de peso: uno por cada atención con peso registrado
+    fun pesos(mascotaId: Int): StateFlow<List<PuntoPeso>> = repo.observarPesos(mascotaId)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     fun guardar(mascota: Mascota, alGuardar: () -> Unit) {

@@ -130,6 +130,19 @@ DataStore guarda preferencias pequeñas de tipo clave-valor (perfil activo, modo
 
 > Nota: estas respuestas cubren los temas del laboratorio. Si la guía del profesor trae preguntas de "Para pensar" con otro texto, ajusta las respuestas a esas preguntas.
 
+## Fase 2 · Mejoras con IA (rama `mejora-ia`)
+
+Mejoras hechas con IA respetando MVVM + Repository. Los prompts y las correcciones están en [PROMPTS.md](PROMPTS.md).
+
+| Mejora | Estado | Capas que cambian |
+| --- | --- | --- |
+| Gráfico de peso de la mascota | ✅ Hecho | `CitaDao.observarPesos` + `VetRepository` + `MascotaViewModel.pesos` + `GraficoLineas` en la ficha |
+| Reprogramar cita | ⏳ Pendiente | DAO + Repository + ViewModel + View |
+| Búsqueda de pacientes | ⏳ Pendiente | DAO + Repository + ViewModel + View |
+| PROMPTS.md | ⏳ Pendiente | Documento con los prompts |
+
+**Gráfico de peso:** en la pestaña *Datos* de la ficha aparece la tarjeta *Evolución del peso*, con una línea que une el peso registrado en cada cita ATENDIDA (de la más antigua a la más reciente), el mínimo, el máximo y la primera y la última fecha. El gráfico está dibujado con `Canvas`, sin librerías externas. Lo ven el dueño y el veterinario, y cuando el veterinario atiende una cita el punto nuevo aparece solo, porque la consulta devuelve `Flow`.
+
 ## Cómo ejecutar
 
 1. Abrir la carpeta `HuellitasVet` en Android Studio y sincronizar Gradle.
