@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tecsup.huellitasvet.data.repository.VetRepository
 import com.tecsup.huellitasvet.model.EstadoCita
+import com.tecsup.huellitasvet.model.TipoServicio
 import com.tecsup.huellitasvet.ui.components.graficos.DatoGrafico
 import com.tecsup.huellitasvet.ui.theme.EstadoAtendida
 import com.tecsup.huellitasvet.ui.theme.EstadoCancelada
@@ -55,10 +56,12 @@ class PanelViewModel(private val repo: VetRepository) : ViewModel() {
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    // El color de cada barra lo pone la pantalla con MaterialTheme.colorScheme.primary
-    val porServicio: StateFlow<List<DatoGrafico>> = repo.observarCitasPorServicio()
+    // Mejora: cada barra lleva su tipo; la pantalla le pone el color del tipo (colorDeTipo)
+    val porServicio: StateFlow<List<Pair<DatoGrafico, TipoServicio>>> = repo.observarCitasPorServicio()
         .map { lista ->
-            lista.map { c -> DatoGrafico(c.nombre.substringBefore(" "), c.cantidad.toFloat(), Color.Unspecified) }
+            lista.map { c ->
+                DatoGrafico(c.nombre.substringBefore(" "), c.cantidad.toFloat(), Color.Unspecified) to TipoServicio.de(c.tipo)
+            }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 }

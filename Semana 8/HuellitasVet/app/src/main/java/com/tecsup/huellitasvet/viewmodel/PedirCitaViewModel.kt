@@ -6,10 +6,12 @@ import com.tecsup.huellitasvet.data.local.entity.Mascota
 import com.tecsup.huellitasvet.data.local.entity.Servicio
 import com.tecsup.huellitasvet.data.repository.VetRepository
 import com.tecsup.huellitasvet.model.Fechas
+import com.tecsup.huellitasvet.model.TipoServicio
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -24,6 +26,10 @@ class PedirCitaViewModel(private val repo: VetRepository) : ViewModel() {
     // ---------- Lo que el dueño elige ----------
     private val _mascotaId = MutableStateFlow<Int?>(null)
     val mascotaId: StateFlow<Int?> = _mascotaId
+
+    // Mejora: primero el tipo de servicio, luego el servicio en el combobox
+    private val _tipo = MutableStateFlow<TipoServicio?>(null)
+    val tipo: StateFlow<TipoServicio?> = _tipo
 
     private val _servicioId = MutableStateFlow<Int?>(null)
     val servicioId: StateFlow<Int?> = _servicioId
@@ -46,6 +52,11 @@ class PedirCitaViewModel(private val repo: VetRepository) : ViewModel() {
     val servicios: StateFlow<List<Servicio>> = repo.observarServiciosActivos()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    // Mejora: opciones del combobox = servicios activos del tipo elegido
+    val serviciosDelTipo: StateFlow<List<Servicio>> = combine(servicios, _tipo) { lista, t ->
+        if (t == null) emptyList() else lista.filter { it.tipo == t.name }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
     // Cambia sola cuando cambia la fecha
     val horasOcupadas: StateFlow<List<String>> = _fecha
         .flatMapLatest { repo.observarHorasOcupadas(it.toString()) }
@@ -54,14 +65,22 @@ class PedirCitaViewModel(private val repo: VetRepository) : ViewModel() {
     // Chips de fecha: de hoy a 7 días
     val fechas: List<LocalDate> = (0..7L).map { LocalDate.now().plusDays(it) }
 
-    fun iniciar(duenoId: Int, mascotaInicial: Int?) {
+    fun iniciar(duenoId: Int, mascotaInicial: Int?, tipoInicial: TipoServicio? = null) {
         this.duenoId.value = duenoId
         if (mascotaInicial != null && _mascotaId.value == null) _mascotaId.value = mascotaInicial
+        if (tipoInicial != null && _tipo.value == null) _tipo.value = tipoInicial
     }
 
     fun elegirMascota(id: Int) { _mascotaId.value = id }
     fun elegirServicio(id: Int) { _servicioId.value = id }
     fun elegirHora(h: String) { _hora.value = h }
+
+    // Al cambiar de tipo se borra el servicio elegido (ya no está en el combobox)
+    fun elegirTipo(t: TipoServicio) {
+        if (_tipo.value == t) return
+        _tipo.value = t
+        _servicioId.value = null
+    }
 
     fun elegirFecha(f: LocalDate) {
         _fecha.value = f

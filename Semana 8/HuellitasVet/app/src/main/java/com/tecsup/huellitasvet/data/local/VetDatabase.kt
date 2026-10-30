@@ -15,7 +15,9 @@ import com.tecsup.huellitasvet.data.local.entity.Usuario
 
 @Database(
     entities = [Servicio::class, Usuario::class, Mascota::class, Cita::class],
-    version = 2, // subió de 1 a 2 porque se agregaron 3 tablas al proyecto base
+    // 1 -> 2: se agregaron 3 tablas al proyecto base
+    // 2 -> 3: servicios.tipo, usuarios.telefono y usuarios.distrito (tipo de servicio, registro y administrador)
+    version = 3,
     exportSchema = false
 )
 abstract class VetDatabase : RoomDatabase() {

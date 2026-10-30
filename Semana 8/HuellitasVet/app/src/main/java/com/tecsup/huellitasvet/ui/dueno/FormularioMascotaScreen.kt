@@ -40,6 +40,9 @@ import com.tecsup.huellitasvet.ui.components.TituloSeccion
 import com.tecsup.huellitasvet.ui.components.VetButton
 import com.tecsup.huellitasvet.ui.components.VetTextField
 import com.tecsup.huellitasvet.viewmodel.MascotaViewModel
+import androidx.compose.material.icons.outlined.Person
+import com.tecsup.huellitasvet.data.local.entity.Usuario
+import com.tecsup.huellitasvet.ui.components.VetCombo
 
 // Sirve para crear (mascotaId = null) y para editar (mascotaId = id)
 @Composable
@@ -49,8 +52,11 @@ fun FormularioMascotaScreen(
     mascotaId: Int?,
     onListo: () -> Unit,
     onEliminada: () -> Unit,
-    onAtras: () -> Unit
+    onAtras: () -> Unit,
+    duenos: List<Usuario>? = null // mejora: el administrador elige el dueño en un combobox
 ) {
+    var duenoElegido by remember { mutableStateOf(duenoId) }
+    var errorDueno by remember { mutableStateOf<String?>(null) }
     var nombre by remember { mutableStateOf("") }
     var raza by remember { mutableStateOf("") }
     var anio by remember { mutableStateOf("") }
@@ -69,6 +75,7 @@ fun FormularioMascotaScreen(
         if (m != null && !cargado) {
             nombre = m.nombre; raza = m.raza; anio = m.anioNacimiento.toString()
             peso = m.peso.toString(); especie = m.especie; sexo = m.sexo
+            duenoElegido = m.duenoId
             cargado = true
         }
     }
@@ -91,6 +98,19 @@ fun FormularioMascotaScreen(
                 ) {
                     Icon(Icons.Filled.Add, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(18.dp))
                 }
+            }
+
+            if (duenos != null) {
+                VetCombo(
+                    etiqueta = "Dueño",
+                    opciones = duenos,
+                    seleccion = duenos.firstOrNull { it.id == duenoElegido },
+                    onSeleccion = { duenoElegido = it.id; errorDueno = null },
+                    texto = { it.nombre },
+                    detalle = { listOf(it.correo, it.distrito).filter { d -> d.isNotBlank() }.joinToString(" · ") },
+                    error = errorDueno,
+                    icono = Icons.Outlined.Person
+                )
             }
 
             VetTextField(nombre, { nombre = it }, "Nombre", error = errores.nombre)
@@ -121,10 +141,14 @@ fun FormularioMascotaScreen(
             mensaje?.let { Text(it, color = MaterialTheme.colorScheme.error) }
 
             VetButton("Guardar mascota", onClick = {
+                if (duenos != null && duenos.none { it.id == duenoElegido }) {
+                    errorDueno = "Elige el dueño"
+                    return@VetButton
+                }
                 vm.guardar(
                     Mascota(
                         id = mascotaId ?: 0,
-                        duenoId = duenoId,
+                        duenoId = duenoElegido,
                         nombre = nombre,
                         especie = especie,
                         raza = raza,

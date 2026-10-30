@@ -23,6 +23,16 @@ interface VetRepository {
     suspend fun correoRegistrado(correo: String): Boolean      // mejora: registro
     suspend fun registrarUsuario(u: Usuario): Long             // mejora: registro
 
+    // Mejora: administrador (control total)
+    fun observarUsuariosPorRol(rol: Rol): Flow<List<Usuario>>
+    fun contarUsuariosPorRol(rol: Rol): Flow<Int>
+    fun contarMascotas(): Flow<Int>
+    fun contarCitas(): Flow<Int>
+    suspend fun correoDeOtroUsuario(correo: String, id: Int): Boolean
+    suspend fun guardarUsuario(u: Usuario)                     // id = 0 -> nuevo; id > 0 -> editar
+    suspend fun eliminarUsuarioConTodo(u: Usuario)             // borra sus citas y mascotas primero
+    suspend fun eliminarMascotaConCitas(m: Mascota)
+
     // Servicios (ejemplo resuelto)
     fun observarServicios(): Flow<List<Servicio>>
     fun observarServiciosActivos(): Flow<List<Servicio>>

@@ -6,6 +6,7 @@ import com.tecsup.huellitasvet.data.local.entity.Usuario
 import com.tecsup.huellitasvet.data.prefs.PreferenciasStore
 import com.tecsup.huellitasvet.data.repository.VetRepository
 import com.tecsup.huellitasvet.model.Rol
+import com.tecsup.huellitasvet.model.Validaciones
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -92,11 +93,17 @@ class SesionViewModel(
     // ---------- Mejora: registro de dueños ----------
     // Solo se registran dueños (CLIENTE); los veterinarios los crea la clínica.
     // Al terminar vuelve al login con el correo escrito, para que el dueño ingrese.
-    fun registrar(nombre: String, correo: String, clave: String, confirmar: String, alRegistrar: () -> Unit) {
+    // Mejora: también pide celular y distrito
+    fun registrar(
+        nombre: String, correo: String, telefono: String, distrito: String,
+        clave: String, confirmar: String, alRegistrar: () -> Unit
+    ) {
         val errores = ErroresFormulario(
-            nombre = if (nombre.trim().length < 3) "Escribe tu nombre completo" else null,
-            correo = validarCorreo(correo),
-            clave = if (clave.length < 4) "Mínimo 4 caracteres" else null,
+            nombre = Validaciones.nombre(nombre),
+            correo = Validaciones.correo(correo),
+            telefono = Validaciones.telefono(telefono),
+            distrito = Validaciones.distrito(distrito),
+            clave = Validaciones.clave(clave),
             confirmar = if (confirmar != clave) "Las contraseñas no coinciden" else null
         )
         _errores.value = errores
@@ -109,7 +116,12 @@ class SesionViewModel(
             if (repo.correoRegistrado(limpio)) {
                 _errores.value = errores.copy(correo = "Este correo ya tiene una cuenta")
             } else {
-                repo.registrarUsuario(Usuario(nombre = nombre.trim(), correo = limpio, clave = clave, rol = Rol.CLIENTE.name))
+                repo.registrarUsuario(
+                    Usuario(
+                        nombre = nombre.trim(), correo = limpio, clave = clave, rol = Rol.CLIENTE.name,
+                        telefono = telefono.filter { it.isDigit() }, distrito = distrito
+                    )
+                )
                 _correoSugerido.value = limpio
                 _mensaje.value = "Cuenta creada. Ingresa con tu correo y contraseña."
                 alRegistrar()
@@ -118,13 +130,10 @@ class SesionViewModel(
         }
     }
 
-    private fun validarCorreo(correo: String): String? = when {
-        correo.isBlank() -> "Ingresa tu correo"
-        !FORMATO_CORREO.matches(correo.trim()) -> "Correo no válido (ejemplo: ana@correo.com)"
-        else -> null
-    }
+    private fun validarCorreo(correo: String): String? = Validaciones.correo(correo)
 
     // ---------- Cambiar de perfil: guarda el otro rol y su usuario ----------
+    // Modo práctica entre Dueño y Veterinario (el administrador no lo usa)
     fun cambiarPerfil(alCambiar: (Rol) -> Unit) {
         val actual = _usuarioActual.value ?: return
         val otro = if (actual.rol == Rol.ADMIN.name) Rol.CLIENTE else Rol.ADMIN
@@ -169,22 +178,22 @@ class SesionViewModel(
             Campo.CORREO -> _errores.value.copy(correo = null)
             Campo.CLAVE -> _errores.value.copy(clave = null)
             Campo.CONFIRMAR -> _errores.value.copy(confirmar = null)
+            Campo.TELEFONO -> _errores.value.copy(telefono = null)
+            Campo.DISTRITO -> _errores.value.copy(distrito = null)
         }
         _error.value = null
     }
-
-    private companion object {
-        val FORMATO_CORREO = Regex("^[\\w.+-]+@[\\w-]+(\\.[\\w-]+)+$")
-    }
 }
 
-enum class Campo { NOMBRE, CORREO, CLAVE, CONFIRMAR }
+enum class Campo { NOMBRE, CORREO, CLAVE, CONFIRMAR, TELEFONO, DISTRITO }
 
 data class ErroresFormulario(
     val nombre: String? = null,
     val correo: String? = null,
     val clave: String? = null,
-    val confirmar: String? = null
+    val confirmar: String? = null,
+    val telefono: String? = null,
+    val distrito: String? = null
 ) {
-    val hayErrores get() = listOf(nombre, correo, clave, confirmar).any { it != null }
+    val hayErrores get() = listOf(nombre, correo, clave, confirmar, telefono, distrito).any { it != null }
 }

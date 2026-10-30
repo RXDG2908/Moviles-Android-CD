@@ -1,11 +1,14 @@
 package com.tecsup.huellitasvet.ui.theme
 
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import com.tecsup.huellitasvet.model.Rol
+import com.tecsup.huellitasvet.model.TipoServicio
 
 // VetTheme(rol) entrega un ColorScheme según el perfil.
 // En las pantallas usa MaterialTheme.colorScheme.primary, nunca un color fijo.
@@ -15,6 +18,12 @@ fun VetTheme(
     oscuro: Boolean = false,
     content: @Composable () -> Unit
 ) {
+    // Mejora: el administrador tiene su propio esquema cálido (sin grises)
+    if (rol == Rol.ADMINISTRADOR) {
+        MaterialTheme(colorScheme = if (oscuro) esquemaAdminOscuro() else esquemaAdminClaro(), typography = VetTypography, content = content)
+        return
+    }
+
     val primario = if (rol == Rol.ADMIN) VetPrimario else DuenoPrimario
     val contenedor = if (rol == Rol.ADMIN) VetContenedor else DuenoContenedor
     val fondo = if (rol == Rol.ADMIN) VetFondo else DuenoFondo
@@ -64,4 +73,77 @@ fun VetTheme(
     }
 
     MaterialTheme(colorScheme = esquema, typography = VetTypography, content = content)
+}
+
+// ---------- Mejora: esquema del administrador ----------
+private fun esquemaAdminClaro(): ColorScheme = lightColorScheme(
+    primary = AdminPrimario,
+    onPrimary = Color.White,
+    primaryContainer = AdminContenedor,
+    onPrimaryContainer = AdminPrimario,
+    secondary = AdminPrimario,
+    secondaryContainer = AdminContenedor,
+    onSecondaryContainer = AdminPrimario,
+    background = AdminFondo,
+    surface = Color.White,
+    surfaceContainer = Color.White,
+    surfaceContainerHigh = Color.White,
+    surfaceContainerHighest = Color.White,
+    surfaceContainerLow = Color.White,
+    onBackground = AdminTexto,
+    onSurface = AdminTexto,
+    onSurfaceVariant = AdminTextoSuave,     // texto secundario marrón cálido (no plomo)
+    surfaceVariant = AdminSuperficieSuave,
+    outline = AdminBorde,
+    outlineVariant = AdminBordeFino,
+    inverseSurface = AdminTexto,        // Snackbar marrón oscuro en vez del gris por defecto
+    inverseOnSurface = AdminFondo,
+    inversePrimary = AdminPrimarioOscuro
+)
+
+private fun esquemaAdminOscuro(): ColorScheme = darkColorScheme(
+    primary = AdminPrimarioOscuro,
+    onPrimary = AdminSobrePrimarioOscuro,
+    primaryContainer = AdminSuperficieSuaveOscura,
+    onPrimaryContainer = AdminPrimarioOscuro,
+    secondary = AdminPrimarioOscuro,
+    secondaryContainer = AdminSuperficieSuaveOscura,
+    onSecondaryContainer = AdminPrimarioOscuro,
+    background = AdminFondoOscuro,
+    surface = AdminSuperficieOscura,
+    surfaceContainer = AdminSuperficieOscura,
+    surfaceContainerHigh = AdminSuperficieOscura,
+    surfaceContainerHighest = AdminSuperficieOscura,
+    surfaceContainerLow = AdminSuperficieOscura,
+    onBackground = AdminTextoOscuro,
+    onSurface = AdminTextoOscuro,
+    onSurfaceVariant = AdminTextoSuaveOscuro,
+    surfaceVariant = AdminSuperficieSuaveOscura,
+    outline = AdminBordeOscuro,
+    outlineVariant = AdminBordeOscuro,
+    inverseSurface = AdminTextoOscuro,
+    inverseOnSurface = AdminFondoOscuro,
+    inversePrimary = AdminPrimario
+)
+
+// Color principal de cada rol (el administrador lo usa para distinguir a sus usuarios)
+fun primarioDe(rol: Rol, oscuro: Boolean): Color = when (rol) {
+    Rol.CLIENTE -> DuenoPrimario
+    Rol.ADMIN -> VetPrimario
+    Rol.ADMINISTRADOR -> if (oscuro) AdminPrimarioOscuro else AdminPrimario
+}
+
+// El tema activo es oscuro si el fondo es oscuro
+@Composable
+fun esTemaOscuro(): Boolean = MaterialTheme.colorScheme.background.luminance() < 0.3f
+
+// Mejora: color de identidad de cada tipo de servicio (íconos, bordes y barras; el texto va en onSurface)
+@Composable
+fun colorDeTipo(tipo: TipoServicio): Color {
+    val oscuro = esTemaOscuro()
+    return when (tipo) {
+        TipoServicio.SALUD -> if (oscuro) TipoSaludOscuro else TipoSalud
+        TipoServicio.ESTETICA -> if (oscuro) TipoEsteticaOscuro else TipoEstetica
+        TipoServicio.PREVENCION -> if (oscuro) TipoPrevencionOscuro else TipoPrevencion
+    }
 }

@@ -4,5 +4,6 @@ package com.tecsup.huellitasvet.model
 // Los nombres de las propiedades deben coincidir con los alias del SELECT.
 data class ConteoServicio(
     val nombre: String,
+    val tipo: String, // mejora: la barra toma el color del tipo de servicio
     val cantidad: Int
 )

@@ -28,6 +28,7 @@ import com.tecsup.huellitasvet.ui.components.TituloSeccion
 import com.tecsup.huellitasvet.ui.components.VetButton
 import com.tecsup.huellitasvet.ui.veterinario.TarjetaCambiarPerfil
 import com.tecsup.huellitasvet.ui.veterinario.TarjetaUsuario
+import com.tecsup.huellitasvet.ui.veterinario.detalleDe
 import com.tecsup.huellitasvet.viewmodel.InicioViewModel
 import com.tecsup.huellitasvet.viewmodel.MisCitasViewModel
 import com.tecsup.huellitasvet.viewmodel.SesionViewModel
@@ -57,7 +58,7 @@ fun PerfilScreen(
     Column(Modifier.verticalScroll(rememberScrollState())) {
         AppTopBar("Perfil")
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            TarjetaUsuario(usuario?.nombre ?: "", usuario?.correo ?: "")
+            TarjetaUsuario(usuario?.nombre ?: "", usuario?.correo ?: "", detalleDe(usuario))
 
             // Contadores
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {

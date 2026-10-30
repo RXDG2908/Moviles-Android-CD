@@ -50,4 +50,11 @@ interface MascotaDao {
 
     @Query("SELECT COUNT(*) FROM citas WHERE mascotaId = :mascotaId")
     suspend fun contarCitas(mascotaId: Int): Int
+
+    // ---------- Mejora: administrador ----------
+    @Query("DELETE FROM mascotas WHERE duenoId = :duenoId")
+    suspend fun eliminarDeDueno(duenoId: Int)
+
+    @Query("SELECT COUNT(*) FROM mascotas")
+    fun contarTodas(): Flow<Int>
 }

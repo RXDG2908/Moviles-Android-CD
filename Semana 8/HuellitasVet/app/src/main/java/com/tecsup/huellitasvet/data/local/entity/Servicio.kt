@@ -12,5 +12,6 @@ data class Servicio(
     val duracionMin: Int,
     val precio: Double,
     val activo: Boolean = true,
-    val icono: String // heart, syringe, scissors
+    val icono: String, // heart, syringe, scissors, bath, paw, tooth, weight
+    val tipo: String = "SALUD" // mejora: TipoServicio.name -> SALUD, ESTETICA, PREVENCION
 )

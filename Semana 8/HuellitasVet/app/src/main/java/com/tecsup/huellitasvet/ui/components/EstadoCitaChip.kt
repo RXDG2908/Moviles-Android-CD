@@ -10,6 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.tecsup.huellitasvet.model.EstadoCita
+import com.tecsup.huellitasvet.ui.theme.AdminPrimario
+import com.tecsup.huellitasvet.ui.theme.AdminPrimarioOscuro
+import com.tecsup.huellitasvet.ui.theme.AtendidaAdmin
 import com.tecsup.huellitasvet.ui.theme.EstadoAtendida
 import com.tecsup.huellitasvet.ui.theme.EstadoCancelada
 import com.tecsup.huellitasvet.ui.theme.EstadoConfirmada
@@ -25,7 +28,9 @@ fun colorDeEstado(estado: EstadoCita): Color = when (estado) {
 // Píldora con el estado. 'solido' = fondo blanco (para usar sobre la tarjeta del color del rol)
 @Composable
 fun EstadoCitaChip(estado: EstadoCita, modifier: Modifier = Modifier, solido: Boolean = false) {
-    val color = colorDeEstado(estado)
+    // Mejora: en las pantallas del administrador "Atendida" usa azul petróleo en vez de gris
+    val enAdmin = MaterialTheme.colorScheme.primary.let { it == AdminPrimario || it == AdminPrimarioOscuro }
+    val color = if (enAdmin && estado == EstadoCita.ATENDIDA) AtendidaAdmin else colorDeEstado(estado)
     val forma = RoundedCornerShape(50)
     Text(
         text = estado.etiqueta,

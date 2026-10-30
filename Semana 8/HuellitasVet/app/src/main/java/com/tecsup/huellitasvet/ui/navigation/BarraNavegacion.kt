@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.EventNote
+import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material.icons.outlined.LocalOffer
@@ -38,6 +39,15 @@ val itemsVet = listOf(
     ItemBarra(Rutas.PACIENTES, "Pacientes", Icons.Filled.Pets),
     ItemBarra(Rutas.SERVICIOS, "Servicios", Icons.Outlined.LocalOffer),
     ItemBarra(Rutas.AJUSTES, "Ajustes", Icons.Outlined.Settings)
+)
+
+// Mejora: 5 ítems para el administrador (Ajustes va en el ícono del panel)
+val itemsAdmin = listOf(
+    ItemBarra(Rutas.ADMIN_PANEL, "Panel", Icons.Filled.BarChart),
+    ItemBarra(Rutas.ADMIN_USUARIOS, "Usuarios", Icons.Filled.Groups),
+    ItemBarra(Rutas.ADMIN_MASCOTAS, "Mascotas", Icons.Filled.Pets),
+    ItemBarra(Rutas.ADMIN_SERVICIOS, "Servicios", Icons.Outlined.LocalOffer),
+    ItemBarra(Rutas.ADMIN_AGENDA, "Agenda", Icons.Filled.EventNote)
 )
 
 // Barra blanca con línea superior; el ítem elegido va del color del rol (sin "pastilla" de fondo)

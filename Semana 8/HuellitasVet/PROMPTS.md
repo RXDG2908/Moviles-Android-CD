@@ -6,7 +6,7 @@
 
 **Mejoras elegidas (mínimo 3):** gráfico de peso de la mascota, reprogramar cita y búsqueda de pacientes.
 
-**Condición obligatoria:** la View no usa DAO ni Repository; el ViewModel solo conoce la interface `VetRepository`; toda función nueva del Repository se declara primero en la interface. Ninguna mejora cambia ni agrega entidades, así que la `version` de la base sigue en 2.
+**Condición obligatoria:** la View no usa DAO ni Repository; el ViewModel solo conoce la interface `VetRepository`; toda función nueva del Repository se declara primero en la interface. Las mejoras 1 a 5 no cambian entidades (la base siguió en `version = 2`); los cambios del profesor (Prompt 6) agregan columnas, así que la base pasó a `version = 3`.
 
 Capturas de la Fase 2 en [`capturas/fase2`](capturas/fase2).
 
@@ -138,6 +138,33 @@ Capturas de la Fase 2 en [`capturas/fase2`](capturas/fase2).
 **¿Respeta MVVM?:** Sí. Las reglas (formato del correo, largo de la clave, correo repetido) están en `SesionViewModel`; la View solo muestra los `StateFlow` y avisa lo que escribe el usuario. No cambia ninguna entidad: `Usuario` ya tenía nombre, correo, clave y rol, así que la `version` de la base sigue en 2.
 
 Capturas: `09_login_mejorado.png` a `13_inicio_cuenta_nueva.png` en [`capturas/fase2`](capturas/fase2).
+
+---
+
+## Prompt 6 · Cambios del profesor: paleta, tipo de servicio, registro y administrador
+
+**Texto enviado a la IA:**
+
+> Paleta de colores buenos, que coincidan con el app, usar skills de diseño. En servicios, debe tener tipo de servicios, yo pueda seleccionar el tipo como cliente. Cuando registres usuario, debe tener teléfono, correo, distrito. Agregar servicios en combobox, tipo: corte de pelo, baño de perro, etc. Agregar usuario administrador y todas sus funciones, control total de todo, agregar o eliminar mascotas, veterinarios, etc. NO usar color plomo ni colores feos de IA. La paleta no debe ser nueva: los cambios deben seguir el ritmo de diseño que ya tiene la app.
+
+**Qué generó la IA** (detalle completo en [`CAMBIOS-PROFE.md`](CAMBIOS-PROFE.md)):
+
+- **Paleta:** usó la skill `dataviz` y su validador para elegir 3 colores de tipo de servicio (pasan daltonismo y visión normal todos contra todos) y un esquema terracota cálido para el administrador (contraste AA). La paleta original de dueño y veterinario no cambia.
+- **Tipo de servicio:** `TipoServicio` (Salud, Estética, Prevención), columna `servicios.tipo`, 10 servicios de ejemplo, chips de tipo y un combobox reutilizable (`VetCombo`) en Pedir cita; filtros por tipo en Servicios y barras por tipo en el panel.
+- **Registro:** columnas `usuarios.telefono` y `usuarios.distrito`, validaciones en `Validaciones.kt` y combobox con 29 distritos de Lima.
+- **Administrador:** rol `ADMINISTRADOR`, `AdminViewModel`, 4 pantallas en `ui/admin`, grafo de navegación propio con barra de 5 pestañas, y borrado en cascada con transacción.
+- La base pasó a la `version = 3`.
+
+**Qué tuve que corregir yo:**
+
+- La primera propuesta cambiaba toda la paleta (verde y azul más oscuros, neutros teñidos). Se pidió mantener la original: se restauraron los colores de dueño, veterinario y estados, y solo se dejaron los colores nuevos.
+- El combobox de tipos se pensó con 4 tipos, pero el validador de la skill mostró que con 4 colores juntos siempre hay un par que no se distingue. Se dejó en 3 tipos.
+- El Snackbar del administrador salía con el gris por defecto de Material. Se le dio el marrón oscuro del tema (`inverseSurface`), y "Atendida" usa azul petróleo dentro del administrador.
+- En el emulador, con el teclado abierto, el botón del formulario quedaba tapado. Las pantallas de formulario usan `verticalScroll` + `imePadding`.
+
+**¿Respeta MVVM?:** Sí. Las 8 funciones nuevas del Repository se declararon primero en la interface; las reglas del administrador (no borrarse a sí mismo, dejar al menos un admin, borrado en cascada) están en `AdminViewModel`; las pantallas solo observan `StateFlow`.
+
+Capturas: `14_registro_validaciones.png` a `26_admin_mascota_dueno.png` en [`capturas/fase2`](capturas/fase2).
 
 ---
 

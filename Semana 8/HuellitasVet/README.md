@@ -18,6 +18,10 @@ Laboratorio 08 — Programación en Móviles, TECSUP. Todos los datos son fictic
 | Dueño | ana@correo.test | 1234 |
 | Dueño | luis@correo.test | 1234 |
 | Veterinario | vet@huellitas.test | admin |
+| Veterinario | mario@huellitas.test | admin |
+| Administrador | admin@huellitas.test | admin |
+
+Los cambios pedidos por el profesor (paleta, tipo de servicio, registro con celular y distrito, y administrador) están explicados en [`CAMBIOS-PROFE.md`](CAMBIOS-PROFE.md).
 
 ## Arquitectura MVVM + Repository
 

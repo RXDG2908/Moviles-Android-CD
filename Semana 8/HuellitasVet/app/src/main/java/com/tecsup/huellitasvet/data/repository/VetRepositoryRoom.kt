@@ -31,6 +31,33 @@ class VetRepositoryRoom(private val db: VetDatabase) : VetRepository {
     override suspend fun correoRegistrado(correo: String): Boolean = usuarioDao.existeCorreo(correo)
     override suspend fun registrarUsuario(u: Usuario): Long = usuarioDao.insertar(u)
 
+    // ---------- Mejora: administrador ----------
+    override fun observarUsuariosPorRol(rol: Rol): Flow<List<Usuario>> = usuarioDao.observarPorRol(rol.name)
+    override fun contarUsuariosPorRol(rol: Rol): Flow<Int> = usuarioDao.contarPorRol(rol.name)
+    override fun contarMascotas(): Flow<Int> = mascotaDao.contarTodas()
+    override fun contarCitas(): Flow<Int> = citaDao.contarTodas()
+    override suspend fun correoDeOtroUsuario(correo: String, id: Int): Boolean = usuarioDao.existeCorreoDeOtro(correo, id)
+
+    override suspend fun guardarUsuario(u: Usuario) {
+        if (u.id == 0) usuarioDao.insertar(u) else usuarioDao.actualizar(u)
+    }
+
+    // Transacción: citas -> mascotas -> usuario (respeta las llaves foráneas)
+    override suspend fun eliminarUsuarioConTodo(u: Usuario) {
+        db.withTransaction {
+            citaDao.eliminarDeDueno(u.id)
+            mascotaDao.eliminarDeDueno(u.id)
+            usuarioDao.eliminar(u)
+        }
+    }
+
+    override suspend fun eliminarMascotaConCitas(m: Mascota) {
+        db.withTransaction {
+            citaDao.eliminarDeMascota(m.id)
+            mascotaDao.eliminar(m)
+        }
+    }
+
     // ---------- Servicios ----------
     override fun observarServicios(): Flow<List<Servicio>> = servicioDao.observarTodos()
     override fun observarServiciosActivos(): Flow<List<Servicio>> = servicioDao.observarActivos()

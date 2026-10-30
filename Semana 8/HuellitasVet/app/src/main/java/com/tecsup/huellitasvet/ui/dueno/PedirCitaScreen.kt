@@ -43,6 +43,12 @@ import com.tecsup.huellitasvet.ui.components.TituloSeccion
 import com.tecsup.huellitasvet.ui.components.VetButton
 import com.tecsup.huellitasvet.ui.components.VetTextField
 import com.tecsup.huellitasvet.ui.veterinario.iconoServicio
+import androidx.compose.material.icons.outlined.TouchApp
+import com.tecsup.huellitasvet.model.TipoServicio
+import com.tecsup.huellitasvet.ui.components.TipoServicioChip
+import com.tecsup.huellitasvet.ui.components.VetCombo
+import com.tecsup.huellitasvet.ui.components.iconoTipo
+import com.tecsup.huellitasvet.ui.theme.colorDeTipo
 import com.tecsup.huellitasvet.viewmodel.PedirCitaViewModel
 
 @Composable
@@ -52,12 +58,15 @@ fun PedirCitaScreen(
     mascotaInicial: Int?,
     aceptaCitas: Boolean,
     onCitaCreada: () -> Unit,
-    onAtras: () -> Unit
+    onAtras: () -> Unit,
+    tipoInicial: TipoServicio? = null
 ) {
-    LaunchedEffect(duenoId) { vm.iniciar(duenoId, mascotaInicial) }
+    LaunchedEffect(duenoId) { vm.iniciar(duenoId, mascotaInicial, tipoInicial) }
 
     val mascotas by vm.mascotas.collectAsState()
     val servicios by vm.servicios.collectAsState()
+    val serviciosDelTipo by vm.serviciosDelTipo.collectAsState()
+    val tipo by vm.tipo.collectAsState()
     val ocupadas by vm.horasOcupadas.collectAsState()
     val mascotaId by vm.mascotaId.collectAsState()
     val servicioId by vm.servicioId.collectAsState()
@@ -104,21 +113,48 @@ fun PedirCitaScreen(
                 }
             }
 
-            // ---------- Servicio (solo activos) ----------
-            TituloSeccion("Servicio")
-            servicios.forEach { s ->
-                Tarjeta(onClick = { vm.elegirServicio(s.id) }, seleccionada = servicioId == s.id) {
-                    Row(Modifier.padding(horizontal = 14.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            iconoServicio(s.icono), contentDescription = null,
-                            tint = if (servicioId == s.id) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Spacer(Modifier.width(12.dp))
-                        Column(Modifier.weight(1f)) {
-                            Text(s.nombre, style = MaterialTheme.typography.titleSmall)
-                            TextoGris("${s.duracionMin} min")
+            // ---------- Mejora: tipo de servicio -> servicio en combobox ----------
+            TituloSeccion("Tipo de servicio")
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                TipoServicio.entries.forEach { t ->
+                    TipoServicioChip(
+                        tipo = t,
+                        seleccionado = tipo == t,
+                        onClick = { vm.elegirTipo(t) },
+                        modifier = Modifier.weight(1f),
+                        cantidad = servicios.count { it.tipo == t.name }
+                    )
+                }
+            }
+
+            val tipoActual = tipo
+            if (tipoActual == null) {
+                InfoCaja(texto = "Elige un tipo para ver sus servicios", icono = Icons.Outlined.TouchApp)
+            } else {
+                VetCombo(
+                    etiqueta = "Servicio de ${tipoActual.etiqueta.lowercase()}",
+                    opciones = serviciosDelTipo,
+                    seleccion = serviciosDelTipo.firstOrNull { it.id == servicioId },
+                    onSeleccion = { vm.elegirServicio(it.id) },
+                    texto = { it.nombre },
+                    detalle = { "${it.duracionMin} min · S/ %.2f".format(it.precio) },
+                    icono = iconoTipo(tipoActual),
+                    iconoOpcion = { Icon(iconoServicio(it.icono), contentDescription = null, tint = colorDeTipo(tipoActual)) },
+                    vacio = "No hay servicios activos de este tipo"
+                )
+                // Detalle del servicio elegido
+                serviciosDelTipo.firstOrNull { it.id == servicioId }?.let { s ->
+                    Tarjeta(fondo = colorDeTipo(tipoActual).copy(alpha = 0.10f)) {
+                        Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
+                            Icon(iconoServicio(s.icono), contentDescription = null, tint = colorDeTipo(tipoActual))
+                            Spacer(Modifier.width(12.dp))
+                            Column(Modifier.weight(1f)) {
+                                Text(s.nombre, style = MaterialTheme.typography.titleSmall)
+                                TextoGris(s.descripcion.ifBlank { tipoActual.descripcion })
+                                TextoGris("Duración: ${s.duracionMin} min")
+                            }
+                            Text("S/ %.0f".format(s.precio), style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
                         }
-                        Text("S/ %.0f".format(s.precio), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
                     }
                 }
             }
@@ -134,7 +170,7 @@ fun PedirCitaScreen(
             // ---------- Hora: 18 horarios en filas de 4 ----------
             Row(verticalAlignment = Alignment.CenterVertically) {
                 TituloSeccion("Hora", Modifier.weight(1f))
-                TextoGris("Ocupado = gris")
+                TextoGris("Ocupado = tachado")
             }
             Horarios.delDia.chunked(4).forEach { fila ->
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {

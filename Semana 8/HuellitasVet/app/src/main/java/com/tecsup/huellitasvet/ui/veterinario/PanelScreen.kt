@@ -35,6 +35,8 @@ import com.tecsup.huellitasvet.ui.components.graficos.GraficoDona
 import com.tecsup.huellitasvet.ui.theme.EstadoAtendida
 import com.tecsup.huellitasvet.ui.theme.EstadoPendiente
 import com.tecsup.huellitasvet.viewmodel.PanelViewModel
+import com.tecsup.huellitasvet.ui.components.TipoServicioEtiqueta
+import com.tecsup.huellitasvet.ui.theme.colorDeTipo
 import java.time.LocalDate
 
 @Composable
@@ -47,9 +49,10 @@ fun PanelScreen(vm: PanelViewModel, onVerPendientes: () -> Unit) {
     val porEstado by vm.porEstado.collectAsState()
     val porServicio by vm.porServicio.collectAsState()
 
-    // Barras: la primera del color del rol y las demás más claras
     val primario = MaterialTheme.colorScheme.primary
-    val barras = porServicio.mapIndexed { i, d -> d.copy(color = if (i == 0) primario else primario.copy(alpha = 0.4f)) }
+    // Mejora: cada barra con el color de su tipo de servicio (y leyenda debajo)
+    val barras = porServicio.map { (d, tipo) -> d.copy(color = colorDeTipo(tipo)) }
+    val tiposPresentes = porServicio.map { it.second }.distinct()
 
     Column(
         Modifier.verticalScroll(rememberScrollState()).padding(16.dp),
@@ -91,7 +94,13 @@ fun PanelScreen(vm: PanelViewModel, onVerPendientes: () -> Unit) {
         Tarjeta { GraficoDona(porEstado, Modifier.padding(16.dp)) }
 
         TituloSeccion("Citas por servicio")
-        Tarjeta { GraficoBarras(barras, Modifier.padding(16.dp)) }
+        Tarjeta {
+            GraficoBarras(barras, Modifier.padding(16.dp))
+            Row(
+                Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, bottom = 14.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+            ) { tiposPresentes.forEach { TipoServicioEtiqueta(it) } }
+        }
 
         // ---------- Alerta de citas por confirmar ----------
         if (pendientes > 0) {

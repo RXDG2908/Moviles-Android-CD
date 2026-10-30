@@ -46,7 +46,8 @@ import com.tecsup.huellitasvet.ui.components.Tarjeta
 import com.tecsup.huellitasvet.ui.components.TextoGris
 import com.tecsup.huellitasvet.ui.components.TituloSeccion
 import com.tecsup.huellitasvet.ui.components.VetButton
-import com.tecsup.huellitasvet.ui.veterinario.iconoServicio
+import com.tecsup.huellitasvet.model.TipoServicio
+import com.tecsup.huellitasvet.ui.components.TipoServicioChip
 import com.tecsup.huellitasvet.viewmodel.InicioViewModel
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
@@ -60,7 +61,8 @@ fun InicioScreen(
     onMascota: (Int) -> Unit,
     onVerTodas: () -> Unit,
     onAgregar: () -> Unit,
-    onPedirCita: () -> Unit
+    onPedirCita: () -> Unit,
+    onPedirCitaTipo: (TipoServicio) -> Unit = { onPedirCita() }
 ) {
     LaunchedEffect(duenoId) { vm.iniciar(duenoId) }
     val mascotas by vm.mascotas.collectAsState()
@@ -92,24 +94,18 @@ fun InicioScreen(
             item { AgregarMini(onAgregar) }
         }
 
-        // ---------- Servicios (accesos rápidos) ----------
+        // ---------- Mejora: tipos de servicio (accesos rápidos a Pedir cita con el tipo ya elegido) ----------
         TituloSeccion("Servicios")
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            val accesos = servicios.take(3)
-            accesos.forEach { s ->
-                Tarjeta(Modifier.weight(1f), onClick = onPedirCita, fondo = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f)) {
-                    Column(
-                        Modifier.fillMaxWidth().padding(vertical = 14.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Icon(iconoServicio(s.icono), contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-                        Spacer(Modifier.height(6.dp))
-                        Text(s.nombre.substringBefore(" "), style = MaterialTheme.typography.labelMedium)
-                    }
-                }
+            TipoServicio.entries.forEach { t ->
+                TipoServicioChip(
+                    tipo = t,
+                    seleccionado = false,
+                    onClick = { onPedirCitaTipo(t) },
+                    modifier = Modifier.weight(1f),
+                    cantidad = servicios.count { it.tipo == t.name }
+                )
             }
-            // Si hay menos de 3 servicios activos, las tarjetas mantienen su ancho
-            repeat(3 - accesos.size) { Spacer(Modifier.weight(1f)) }
         }
 
         // ---------- Recordatorio: la cita que sigue después de la próxima ----------

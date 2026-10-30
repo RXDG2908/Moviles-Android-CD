@@ -78,7 +78,14 @@ fun LoginScreen(vm: SesionViewModel, oscuro: Boolean, onEntrar: (Rol) -> Unit, o
             ) {
                 Spacer(Modifier.height(12.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    MascotaAvatar(if (rol == Rol.ADMIN) Especie.GATO else Especie.PERRO, tamano = 56.dp)
+                    MascotaAvatar(
+                        when (rol) {
+                            Rol.CLIENTE -> Especie.PERRO
+                            Rol.ADMIN -> Especie.GATO
+                            Rol.ADMINISTRADOR -> Especie.OTRO
+                        },
+                        tamano = 56.dp
+                    )
                     Spacer(Modifier.width(12.dp))
                     Text(
                         "HuellitasVet",
@@ -89,7 +96,13 @@ fun LoginScreen(vm: SesionViewModel, oscuro: Boolean, onEntrar: (Rol) -> Unit, o
                 }
                 Column {
                     Text("Bienvenido", style = MaterialTheme.typography.headlineMedium)
-                    TextoGris(if (rol == Rol.ADMIN) "Ingresa al panel de la clínica" else "Ingresa para cuidar a tus mascotas")
+                    TextoGris(
+                        when (rol) {
+                            Rol.CLIENTE -> "Ingresa para cuidar a tus mascotas"
+                            Rol.ADMIN -> "Ingresa al panel de la clínica"
+                            Rol.ADMINISTRADOR -> "Control total de usuarios, mascotas y servicios"
+                        }
+                    )
                 }
 
                 SelectorPestanas(
@@ -133,10 +146,15 @@ fun LoginScreen(vm: SesionViewModel, oscuro: Boolean, onEntrar: (Rol) -> Unit, o
                             Text("Regístrate", fontWeight = FontWeight.SemiBold)
                         }
                     }
-                } else {
+                } else if (rol == Rol.ADMIN) {
                     InfoCaja(
                         titulo = "Modo práctica",
                         texto = "Puedes cambiar de perfil desde Ajustes para probar ambos roles."
+                    )
+                } else {
+                    InfoCaja(
+                        titulo = "Administrador",
+                        texto = "Crea y elimina dueños, veterinarios, mascotas y servicios. Las cuentas de administrador solo las crea otro administrador."
                     )
                 }
             }

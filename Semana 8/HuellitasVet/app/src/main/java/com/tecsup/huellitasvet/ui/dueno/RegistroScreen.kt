@@ -31,7 +31,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.material.icons.outlined.LocationOn
+import androidx.compose.material.icons.outlined.Phone
+import com.tecsup.huellitasvet.model.Distritos
 import com.tecsup.huellitasvet.model.Rol
+import com.tecsup.huellitasvet.ui.components.VetCombo
 import com.tecsup.huellitasvet.ui.components.AppTopBar
 import com.tecsup.huellitasvet.ui.components.InfoCaja
 import com.tecsup.huellitasvet.ui.components.TextoGris
@@ -46,6 +50,8 @@ import com.tecsup.huellitasvet.viewmodel.SesionViewModel
 fun RegistroScreen(vm: SesionViewModel, oscuro: Boolean, onRegistrado: () -> Unit, onAtras: () -> Unit) {
     var nombre by rememberSaveable { mutableStateOf("") }
     var correo by rememberSaveable { mutableStateOf("") }
+    var telefono by rememberSaveable { mutableStateOf("") }
+    var distrito by rememberSaveable { mutableStateOf<String?>(null) }
     var clave by rememberSaveable { mutableStateOf("") }
     var confirmar by rememberSaveable { mutableStateOf("") }
     val errores by vm.errores.collectAsState()
@@ -55,7 +61,7 @@ fun RegistroScreen(vm: SesionViewModel, oscuro: Boolean, onRegistrado: () -> Uni
 
     val crear = {
         foco.clearFocus()
-        vm.registrar(nombre, correo, clave, confirmar, onRegistrado)
+        vm.registrar(nombre, correo, telefono, distrito ?: "", clave, confirmar, onRegistrado)
     }
     val volver = { vm.limpiarError(); onAtras() }
 
@@ -90,6 +96,23 @@ fun RegistroScreen(vm: SesionViewModel, oscuro: Boolean, onRegistrado: () -> Uni
                     teclado = KeyboardType.Email,
                     icono = Icons.Outlined.Email,
                     imeAccion = ImeAction.Next, onIme = siguiente
+                )
+                // Mejora: celular (solo dígitos, máximo 9) y distrito en combobox
+                VetTextField(
+                    telefono, { nuevo -> telefono = nuevo.filter { it.isDigit() }.take(9); vm.limpiarCampo(Campo.TELEFONO) }, "Celular",
+                    error = errores.telefono,
+                    teclado = KeyboardType.Phone,
+                    icono = Icons.Outlined.Phone,
+                    imeAccion = ImeAction.Next, onIme = { foco.clearFocus() }
+                )
+                VetCombo(
+                    etiqueta = "Distrito",
+                    opciones = Distritos.lima,
+                    seleccion = distrito,
+                    onSeleccion = { distrito = it; vm.limpiarCampo(Campo.DISTRITO) },
+                    texto = { it },
+                    error = errores.distrito,
+                    icono = Icons.Outlined.LocationOn
                 )
                 VetTextField(
                     clave, { clave = it; vm.limpiarCampo(Campo.CLAVE) }, "Contraseña",

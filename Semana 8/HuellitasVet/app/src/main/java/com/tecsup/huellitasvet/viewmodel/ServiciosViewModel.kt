@@ -4,9 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tecsup.huellitasvet.data.local.entity.Servicio
 import com.tecsup.huellitasvet.data.repository.VetRepository
+import com.tecsup.huellitasvet.model.TipoServicio
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -25,6 +27,16 @@ class ServiciosViewModel(private val repo: VetRepository) : ViewModel() {
 
     val servicios: StateFlow<List<Servicio>> = repo.observarServicios()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    // Mejora: filtro por tipo de servicio (null = todos)
+    private val _filtroTipo = MutableStateFlow<TipoServicio?>(null)
+    val filtroTipo: StateFlow<TipoServicio?> = _filtroTipo
+
+    val serviciosFiltrados: StateFlow<List<Servicio>> = combine(servicios, _filtroTipo) { lista, tipo ->
+        if (tipo == null) lista else lista.filter { it.tipo == tipo.name }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    fun filtrar(tipo: TipoServicio?) { _filtroTipo.value = tipo }
 
     private val _errores = MutableStateFlow(ErroresServicio())
     val errores: StateFlow<ErroresServicio> = _errores

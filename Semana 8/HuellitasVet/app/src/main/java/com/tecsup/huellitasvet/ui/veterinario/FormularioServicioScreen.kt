@@ -26,7 +26,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.Spacer
 import com.tecsup.huellitasvet.data.local.entity.Servicio
+import com.tecsup.huellitasvet.model.TipoServicio
+import com.tecsup.huellitasvet.ui.components.TipoServicioChip
+import com.tecsup.huellitasvet.ui.theme.colorDeTipo
 import com.tecsup.huellitasvet.ui.components.AppTopBar
 import com.tecsup.huellitasvet.ui.components.FilaSwitch
 import com.tecsup.huellitasvet.ui.components.OpcionChip
@@ -45,6 +49,7 @@ fun FormularioServicioScreen(vm: ServiciosViewModel, servicioId: Int?, onListo: 
     var descripcion by remember { mutableStateOf("") }
     var icono by remember { mutableStateOf("heart") }
     var activo by remember { mutableStateOf(true) }
+    var tipo by remember { mutableStateOf(TipoServicio.SALUD) } // mejora: tipo de servicio
 
     val errores by vm.errores.collectAsState()
     val mensaje by vm.mensaje.collectAsState()
@@ -57,6 +62,7 @@ fun FormularioServicioScreen(vm: ServiciosViewModel, servicioId: Int?, onListo: 
         if (s != null && !cargado) {
             nombre = s.nombre; duracion = s.duracionMin; precio = "%.2f".format(s.precio)
             descripcion = s.descripcion; icono = s.icono; activo = s.activo
+            tipo = TipoServicio.de(s.tipo)
             cargado = true
         }
     }
@@ -72,6 +78,13 @@ fun FormularioServicioScreen(vm: ServiciosViewModel, servicioId: Int?, onListo: 
         ) {
             VetTextField(nombre, { nombre = it }, "Nombre del servicio", error = errores.nombre)
 
+            TituloSeccion("Tipo de servicio")
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                TipoServicio.entries.forEach { t ->
+                    TipoServicioChip(t, tipo == t, { tipo = t }, Modifier.weight(1f))
+                }
+            }
+
             TituloSeccion("Duración")
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 listOf(15, 30, 45, 60).forEach { d ->
@@ -84,16 +97,20 @@ fun FormularioServicioScreen(vm: ServiciosViewModel, servicioId: Int?, onListo: 
             VetTextField(descripcion, { descripcion = it }, "Descripción", lineas = 2)
 
             TituloSeccion("Ícono")
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                listOf("heart", "syringe", "scissors").forEach { i ->
-                    Tarjeta(Modifier.weight(1f), onClick = { icono = i }, seleccionada = icono == i) {
-                        Box(Modifier.fillMaxWidth().padding(vertical = 16.dp), contentAlignment = Alignment.Center) {
-                            Icon(
-                                iconoServicio(i), contentDescription = i,
-                                tint = if (icono == i) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-                            )
+            // Mejora: 7 íconos en filas de 4
+            iconosServicio.chunked(4).forEach { fila ->
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    fila.forEach { i ->
+                        Tarjeta(Modifier.weight(1f), onClick = { icono = i }, seleccionada = icono == i) {
+                            Box(Modifier.fillMaxWidth().padding(vertical = 14.dp), contentAlignment = Alignment.Center) {
+                                Icon(
+                                    iconoServicio(i), contentDescription = i,
+                                    tint = if (icono == i) colorDeTipo(tipo) else MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
                         }
                     }
+                    repeat(4 - fila.size) { Spacer(Modifier.weight(1f)) }
                 }
             }
 
@@ -114,7 +131,8 @@ fun FormularioServicioScreen(vm: ServiciosViewModel, servicioId: Int?, onListo: 
                         duracionMin = duracion,
                         precio = precio.replace(",", ".").toDoubleOrNull() ?: 0.0,
                         activo = activo,
-                        icono = icono
+                        icono = icono,
+                        tipo = tipo.name
                     ),
                     alGuardar = onListo
                 )

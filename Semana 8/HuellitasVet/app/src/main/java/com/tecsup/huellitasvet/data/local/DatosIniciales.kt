@@ -8,6 +8,7 @@ import com.tecsup.huellitasvet.model.Especie
 import com.tecsup.huellitasvet.model.EstadoCita
 import com.tecsup.huellitasvet.model.Rol
 import com.tecsup.huellitasvet.model.Sexo
+import com.tecsup.huellitasvet.model.TipoServicio
 import java.time.LocalDate
 
 // Datos de prueba (ficticios, Ley 29733). Se cargan solo la primera vez.
@@ -21,25 +22,40 @@ object DatosIniciales {
 
         // ---------- Servicios ----------
         val servicioDao = db.servicioDao()
+        // Mejora: cada servicio tiene su tipo (Salud, Estética, Prevención)
+        val salud = TipoServicio.SALUD.name
+        val estetica = TipoServicio.ESTETICA.name
+        val prevencion = TipoServicio.PREVENCION.name
         val consulta = servicioDao.insertar(
-            Servicio(nombre = "Consulta general", descripcion = "Revisión completa de la mascota", duracionMin = 30, precio = 60.0, icono = "heart")
+            Servicio(nombre = "Consulta general", descripcion = "Revisión completa de la mascota", duracionMin = 30, precio = 60.0, icono = "heart", tipo = salud)
         ).toInt()
         val vacuna = servicioDao.insertar(
-            Servicio(nombre = "Vacunación", descripcion = "Aplicación de vacunas", duracionMin = 30, precio = 45.0, icono = "syringe")
+            Servicio(nombre = "Vacunación", descripcion = "Aplicación de vacunas", duracionMin = 30, precio = 45.0, icono = "syringe", tipo = prevencion)
         ).toInt()
         val bano = servicioDao.insertar(
-            Servicio(nombre = "Baño y corte", descripcion = "Baño, secado y corte de pelo", duracionMin = 60, precio = 50.0, icono = "scissors")
+            Servicio(nombre = "Baño de perro", descripcion = "Baño con champú, secado y perfume", duracionMin = 60, precio = 50.0, icono = "bath", tipo = estetica)
         ).toInt()
-        servicioDao.insertar(
-            Servicio(nombre = "Desparasitación", descripcion = "Control de parásitos", duracionMin = 15, precio = 25.0, activo = false, icono = "syringe")
+        servicioDao.insertarTodos(
+            listOf(
+                Servicio(nombre = "Control de peso", descripcion = "Pesaje y plan de alimentación", duracionMin = 15, precio = 30.0, icono = "weight", tipo = salud),
+                Servicio(nombre = "Limpieza dental", descripcion = "Retiro de sarro con ultrasonido", duracionMin = 45, precio = 120.0, icono = "tooth", tipo = salud),
+                Servicio(nombre = "Baño de gato", descripcion = "Baño en seco o con agua tibia", duracionMin = 45, precio = 45.0, icono = "bath", tipo = estetica),
+                Servicio(nombre = "Corte de pelo", descripcion = "Corte a tijera o máquina según la raza", duracionMin = 60, precio = 55.0, icono = "scissors", tipo = estetica),
+                Servicio(nombre = "Corte de uñas", descripcion = "Corte y limado de uñas", duracionMin = 15, precio = 20.0, icono = "paw", tipo = estetica),
+                Servicio(nombre = "Desparasitación", descripcion = "Control de parásitos internos y externos", duracionMin = 15, precio = 25.0, icono = "syringe", tipo = prevencion),
+                Servicio(nombre = "Microchip", descripcion = "Identificación con microchip", duracionMin = 15, precio = 70.0, icono = "paw", tipo = prevencion, activo = false)
+            )
         )
 
-        // ---------- Usuarios (ids 1, 2 y 3 en ese orden) ----------
+        // ---------- Usuarios ----------
         db.usuarioDao().insertarTodos(
             listOf(
-                Usuario(nombre = "Ana Torres", correo = "ana@correo.test", clave = "1234", rol = Rol.CLIENTE.name),
-                Usuario(nombre = "Luis Ramos", correo = "luis@correo.test", clave = "1234", rol = Rol.CLIENTE.name),
-                Usuario(nombre = "Dra. Carla Vet", correo = "vet@huellitas.test", clave = "admin", rol = Rol.ADMIN.name)
+                Usuario(nombre = "Ana Torres", correo = "ana@correo.test", clave = "1234", rol = Rol.CLIENTE.name, telefono = "987654321", distrito = "Miraflores"),
+                Usuario(nombre = "Luis Ramos", correo = "luis@correo.test", clave = "1234", rol = Rol.CLIENTE.name, telefono = "912345678", distrito = "Santiago de Surco"),
+                Usuario(nombre = "Dra. Carla Vet", correo = "vet@huellitas.test", clave = "admin", rol = Rol.ADMIN.name, telefono = "955111222", distrito = "San Isidro"),
+                Usuario(nombre = "Dr. Mario Paz", correo = "mario@huellitas.test", clave = "admin", rol = Rol.ADMIN.name, telefono = "955333444", distrito = "San Borja"),
+                // Mejora: administrador con control total
+                Usuario(nombre = "Renzo Admin", correo = "admin@huellitas.test", clave = "admin", rol = Rol.ADMINISTRADOR.name, telefono = "999000111", distrito = "Lima Cercado")
             )
         )
         val ana = db.usuarioDao().login("ana@correo.test", "1234")!!.id

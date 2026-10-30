@@ -30,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.tecsup.huellitasvet.data.local.entity.Usuario
 import com.tecsup.huellitasvet.model.Rol
 import com.tecsup.huellitasvet.ui.components.AppTopBar
 import com.tecsup.huellitasvet.ui.components.FilaSwitch
@@ -41,7 +42,12 @@ import com.tecsup.huellitasvet.ui.components.VetButton
 import com.tecsup.huellitasvet.viewmodel.SesionViewModel
 
 @Composable
-fun AjustesScreen(sesion: SesionViewModel, onCambiarPerfil: (Rol) -> Unit, onCerrarSesion: () -> Unit) {
+fun AjustesScreen(
+    sesion: SesionViewModel,
+    onCambiarPerfil: (Rol) -> Unit,
+    onCerrarSesion: () -> Unit,
+    esAdministrador: Boolean = false // mejora: el administrador no usa el modo práctica
+) {
     val usuario by sesion.usuarioActual.collectAsState()
     val oscuro by sesion.modoOscuro.collectAsState()
     val notificaciones by sesion.notificaciones.collectAsState()
@@ -50,9 +56,13 @@ fun AjustesScreen(sesion: SesionViewModel, onCambiarPerfil: (Rol) -> Unit, onCer
     Column(Modifier.verticalScroll(rememberScrollState())) {
         AppTopBar("Ajustes")
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            TarjetaUsuario(usuario?.nombre ?: "", usuario?.correo ?: "")
+            TarjetaUsuario(usuario?.nombre ?: "", usuario?.correo ?: "", detalleDe(usuario))
 
-            TarjetaCambiarPerfil("Modo práctica: ir a vista Dueño") { sesion.cambiarPerfil(onCambiarPerfil) }
+            if (esAdministrador) {
+                InfoCaja(titulo = "Control total", texto = "Como administrador puedes crear, editar y eliminar usuarios, mascotas, servicios y citas.")
+            } else {
+                TarjetaCambiarPerfil("Modo práctica: ir a vista Dueño") { sesion.cambiarPerfil(onCambiarPerfil) }
+            }
 
             TituloSeccion("Preferencias")
             Tarjeta {
@@ -71,9 +81,13 @@ fun AjustesScreen(sesion: SesionViewModel, onCambiarPerfil: (Rol) -> Unit, onCer
     }
 }
 
+// Mejora: "celular · distrito" debajo del correo
+fun detalleDe(u: Usuario?): String? =
+    u?.let { listOf(it.telefono, it.distrito).filter { d -> d.isNotBlank() }.joinToString(" · ") }?.ifBlank { null }
+
 // Tarjeta con el usuario y la píldora "Perfil activo" (también la usa Perfil del dueño)
 @Composable
-fun TarjetaUsuario(nombre: String, correo: String) {
+fun TarjetaUsuario(nombre: String, correo: String, detalle: String? = null) {
     Tarjeta {
         Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             Box(
@@ -86,6 +100,7 @@ fun TarjetaUsuario(nombre: String, correo: String) {
             Column {
                 Text(nombre, style = MaterialTheme.typography.titleMedium)
                 TextoGris(correo)
+                detalle?.let { TextoGris(it) }
                 Text(
                     "Perfil activo",
                     style = MaterialTheme.typography.labelMedium,

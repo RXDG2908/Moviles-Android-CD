@@ -80,8 +80,8 @@ interface CitaDao {
     fun contarPorEstado(estado: String): Flow<Int>
 
     @Query(
-        "SELECT s.nombre AS nombre, COUNT(c.id) AS cantidad FROM citas c " +
-            "INNER JOIN servicios s ON c.servicioId = s.id GROUP BY s.id, s.nombre ORDER BY cantidad DESC"
+        "SELECT s.nombre AS nombre, s.tipo AS tipo, COUNT(c.id) AS cantidad FROM citas c " +
+            "INNER JOIN servicios s ON c.servicioId = s.id GROUP BY s.id, s.nombre, s.tipo ORDER BY cantidad DESC"
     )
     fun contarPorServicio(): Flow<List<ConteoServicio>>
 
@@ -97,4 +97,14 @@ interface CitaDao {
 
     @Query("SELECT mascotaId, MAX(fecha) AS fecha FROM citas WHERE estado = 'ATENDIDA' GROUP BY mascotaId")
     fun observarUltimasVisitas(): Flow<List<UltimaVisita>>
+
+    // ---------- Mejora: administrador (borrado en cascada) ----------
+    @Query("DELETE FROM citas WHERE mascotaId = :mascotaId")
+    suspend fun eliminarDeMascota(mascotaId: Int)
+
+    @Query("DELETE FROM citas WHERE mascotaId IN (SELECT id FROM mascotas WHERE duenoId = :duenoId)")
+    suspend fun eliminarDeDueno(duenoId: Int)
+
+    @Query("SELECT COUNT(*) FROM citas")
+    fun contarTodas(): Flow<Int>
 }
