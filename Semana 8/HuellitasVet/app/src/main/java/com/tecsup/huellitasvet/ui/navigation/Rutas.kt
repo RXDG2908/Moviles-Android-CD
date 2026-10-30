@@ -4,6 +4,7 @@ package com.tecsup.huellitasvet.ui.navigation
 object Rutas {
     const val SPLASH = "splash"
     const val LOGIN = "login"
+    const val REGISTRO = "registro" // mejora: registro de dueños
 
     // Dueño
     const val INICIO = "inicio"

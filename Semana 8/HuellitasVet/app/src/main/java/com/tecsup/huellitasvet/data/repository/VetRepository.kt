@@ -20,6 +20,8 @@ interface VetRepository {
     suspend fun login(correo: String, clave: String): Usuario?
     suspend fun obtenerUsuario(id: Int): Usuario?              // extra: restaurar sesión
     suspend fun obtenerUsuarioPorRol(rol: Rol): Usuario?       // extra: cambiar de perfil
+    suspend fun correoRegistrado(correo: String): Boolean      // mejora: registro
+    suspend fun registrarUsuario(u: Usuario): Long             // mejora: registro
 
     // Servicios (ejemplo resuelto)
     fun observarServicios(): Flow<List<Servicio>>

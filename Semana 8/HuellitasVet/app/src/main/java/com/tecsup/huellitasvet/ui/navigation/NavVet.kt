@@ -25,6 +25,7 @@ import com.tecsup.huellitasvet.ui.dueno.MascotasScreen
 import com.tecsup.huellitasvet.ui.dueno.MisCitasScreen
 import com.tecsup.huellitasvet.ui.dueno.PerfilScreen
 import com.tecsup.huellitasvet.ui.dueno.PedirCitaScreen
+import com.tecsup.huellitasvet.ui.dueno.RegistroScreen
 import com.tecsup.huellitasvet.ui.dueno.ReprogramarCitaScreen
 import com.tecsup.huellitasvet.ui.dueno.SplashScreen
 import com.tecsup.huellitasvet.ui.veterinario.AgendaScreen
@@ -98,7 +99,22 @@ fun NavVet(factory: VetViewModelFactory, sesion: SesionViewModel) {
             }
 
             composable(Rutas.LOGIN) {
-                LoginScreen(vm = sesion, oscuro = oscuro, onEntrar = { rol -> nav.irAlInicio(rol) })
+                LoginScreen(
+                    vm = sesion,
+                    oscuro = oscuro,
+                    onEntrar = { rol -> nav.irAlInicio(rol) },
+                    onRegistrarse = { nav.navigate(Rutas.REGISTRO) { launchSingleTop = true } }
+                )
+            }
+
+            // Mejora: al crear la cuenta vuelve al login (que ya muestra el correo escrito)
+            composable(Rutas.REGISTRO) {
+                RegistroScreen(
+                    vm = sesion,
+                    oscuro = oscuro,
+                    onRegistrado = { nav.popBackStack(Rutas.LOGIN, inclusive = false) },
+                    onAtras = { nav.popBackStack() }
+                )
             }
 
             // ==================== Grafo del dueño ====================

@@ -7,11 +7,19 @@ import com.tecsup.huellitasvet.data.local.entity.Usuario
 
 @Dao
 interface UsuarioDao {
-    @Query("SELECT * FROM usuarios WHERE correo = :correo AND clave = :clave LIMIT 1")
+    // El correo se compara sin importar mayúsculas (Ana@Correo.test = ana@correo.test)
+    @Query("SELECT * FROM usuarios WHERE LOWER(correo) = LOWER(:correo) AND clave = :clave LIMIT 1")
     suspend fun login(correo: String, clave: String): Usuario?
 
     @Insert
     suspend fun insertarTodos(lista: List<Usuario>)
+
+    // Mejora: registro de dueños
+    @Insert
+    suspend fun insertar(usuario: Usuario): Long
+
+    @Query("SELECT COUNT(*) > 0 FROM usuarios WHERE LOWER(correo) = LOWER(:correo)")
+    suspend fun existeCorreo(correo: String): Boolean
 
     @Query("SELECT COUNT(*) FROM usuarios")
     suspend fun contar(): Int

@@ -111,6 +111,36 @@ Capturas de la Fase 2 en [`capturas/fase2`](capturas/fase2).
 
 ---
 
+## Prompt 5 · Registro de dueños y login mejorado (extra)
+
+**Texto enviado a la IA:**
+
+> una vez todo este bien, primer agregado, meter register y mejorar login
+
+**Qué generó la IA:**
+
+- `UsuarioDao`: `insertar(usuario)` y `existeCorreo(correo)`. El `login` ahora compara el correo con `LOWER(...)`, así que `ANA@correo.test` también entra.
+- `VetRepository.correoRegistrado` y `VetRepository.registrarUsuario` (declaradas primero en la interface) y su implementación en `VetRepositoryRoom`.
+- `SesionViewModel`:
+  - `registrar(...)` valida nombre (mínimo 3 letras), formato de correo, contraseña (mínimo 4 caracteres) y que las dos contraseñas coincidan; revisa que el correo no tenga cuenta y guarda al usuario con rol `CLIENTE`;
+  - `login(...)` valida el correo y la contraseña antes de consultar Room;
+  - nuevos `StateFlow`: `errores` (un error por campo), `cargando` (bloquea el botón mientras consulta), `mensaje` y `correoSugerido` (para el login después de registrarse).
+- `RegistroScreen` (nueva): nombre, correo, contraseña y repetir contraseña, con el error debajo de cada campo.
+- `LoginScreen`: logo de la app, subtítulo según el rol, errores por campo, botón *Ingresando...* mientras consulta, aviso de cuenta creada con el correo ya escrito y el enlace *¿No tienes cuenta? Regístrate* (solo en la pestaña Dueño).
+- `VetTextField`: ojo para mostrar u ocultar la contraseña, teclado de contraseña y botón *Siguiente / Listo* en el teclado (Listo envía el formulario).
+- Ruta `registro` en `Rutas` y `NavVet`. Al crear la cuenta vuelve al login, igual que pidió el profesor en la tarea de SaludPlus (iniciar sesión después de registrarse).
+
+**Qué tuve que corregir yo:**
+
+- El ojo de la contraseña usaba `rememberSaveable` y al volver del registro el login mostraba la clave visible. Se cambió a `remember` para que siempre empiece oculta.
+- Al probar en el emulador, con el teclado abierto el botón *Crear cuenta* quedaba tapado. Se agregó `verticalScroll` e `imePadding` a las dos pantallas y la acción *Listo* del teclado, que envía el formulario.
+
+**¿Respeta MVVM?:** Sí. Las reglas (formato del correo, largo de la clave, correo repetido) están en `SesionViewModel`; la View solo muestra los `StateFlow` y avisa lo que escribe el usuario. No cambia ninguna entidad: `Usuario` ya tenía nombre, correo, clave y rol, así que la `version` de la base sigue en 2.
+
+Capturas: `09_login_mejorado.png` a `13_inicio_cuenta_nueva.png` en [`capturas/fase2`](capturas/fase2).
+
+---
+
 ## Reflexión (5 líneas)
 
 - La IA mejoró la velocidad: armó las cuatro capas de cada mejora siguiendo el mismo patrón del ejemplo resuelto (Servicio).
