@@ -79,6 +79,8 @@ interface CitaDao {
     @Query("SELECT COUNT(*) FROM citas WHERE estado = :estado")
     fun contarPorEstado(estado: String): Flow<Int>
 
+    // Mejora (tipo de servicio): también devuelve s.tipo para pintar cada barra del panel
+    // con el color de su tipo. El alias "tipo" coincide con ConteoServicio.tipo.
     @Query(
         "SELECT s.nombre AS nombre, s.tipo AS tipo, COUNT(c.id) AS cantidad FROM citas c " +
             "INNER JOIN servicios s ON c.servicioId = s.id GROUP BY s.id, s.nombre, s.tipo ORDER BY cantidad DESC"

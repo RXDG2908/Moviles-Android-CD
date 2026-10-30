@@ -33,6 +33,13 @@ data class ResumenAdmin(
 }
 
 // Mejora: administrador con control total (usuarios de los 3 roles y mascotas de todos)
+// Lo usan las 4 pantallas de ui/admin; NavVet.adminVm() comparte UNA sola instancia en todo el grafo.
+// Reglas de negocio (aquí, no en la pantalla):
+//   - no puede eliminar su propia cuenta
+//   - siempre debe quedar al menos un administrador
+//   - eliminar un dueño borra también sus mascotas y citas (VetRepositoryRoom.eliminarUsuarioConTodo)
+//   - eliminar una mascota borra también su historial de citas (eliminarMascotaConCitas)
+//   - al editar, la contraseña vacía conserva la anterior
 @OptIn(ExperimentalCoroutinesApi::class)
 class AdminViewModel(private val repo: VetRepository) : ViewModel() {
 

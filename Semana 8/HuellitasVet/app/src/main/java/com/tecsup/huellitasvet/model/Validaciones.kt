@@ -1,6 +1,8 @@
 package com.tecsup.huellitasvet.model
 
-// Reglas de los formularios de usuario (registro y administrador). null = sin error.
+// Mejora: reglas de los formularios de usuario en un solo lugar. null = sin error.
+// Las usan SesionViewModel.registrar() (registro del dueño) y AdminViewModel.guardarUsuario() (administrador),
+// así las dos pantallas validan igual el celular (9 dígitos, empieza con 9) y el distrito (de Distritos.lima).
 object Validaciones {
     private val FORMATO_CORREO = Regex("^[\\w.+-]+@[\\w-]+(\\.[\\w-]+)+$")
     private val FORMATO_CELULAR = Regex("^9\\d{8}$") // celular peruano: 9 dígitos, empieza con 9

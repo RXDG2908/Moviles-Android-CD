@@ -62,6 +62,7 @@ private const val GRAFO_VET = "grafo_vet"
 private const val GRAFO_ADMIN = "grafo_admin" // mejora: administrador
 
 // Navega al grafo del rol y limpia la pila (no se puede volver al login)
+// Mejora (administrador): Rol.ADMINISTRADOR entra a su propio grafo con barra de 5 pestañas
 fun NavHostController.irAlInicio(rol: Rol) {
     val destino = when (rol) {
         Rol.ADMIN -> GRAFO_VET
@@ -202,6 +203,7 @@ fun NavVet(factory: VetViewModelFactory, sesion: SesionViewModel) {
                     Rutas.PEDIR_CITA,
                     arguments = listOf(
                         navArgument("mascotaId") { type = NavType.IntType; defaultValue = -1 },
+                        // Mejora (tipo de servicio): tipo opcional que llega desde las tarjetas de Inicio
                         navArgument("tipo") { type = NavType.StringType; nullable = true; defaultValue = null }
                     )
                 ) { entrada ->
@@ -485,7 +487,9 @@ fun NavVet(factory: VetViewModelFactory, sesion: SesionViewModel) {
     }
 }
 
-// AdminViewModel guardado en la entrada del grafo del administrador (compartido)
+// Mejora (administrador): AdminViewModel guardado en la entrada del grafo del administrador.
+// Así Panel, Usuarios, Formulario y Mascotas usan la MISMA instancia: la pestaña de rol elegida
+// y el mensaje del Snackbar (por ejemplo "Veterinario creado") pasan de una pantalla a otra.
 @Composable
 private fun adminVm(nav: NavHostController, entrada: NavBackStackEntry, factory: VetViewModelFactory): AdminViewModel {
     val padre = remember(entrada) { nav.getBackStackEntry(GRAFO_ADMIN) }

@@ -95,6 +95,7 @@ fun ServiciosScreen(vm: ServiciosViewModel, onEditar: (Int) -> Unit, onNuevo: ()
 }
 
 // Íconos disponibles para un servicio (el valor se guarda en Room)
+// Mejora (tipo de servicio): de 3 íconos a 7 (baño, huella, diente y balanza) para los servicios nuevos
 val iconosServicio = listOf("heart", "syringe", "scissors", "bath", "paw", "tooth", "weight")
 
 fun iconoServicio(icono: String): ImageVector = when (icono) {

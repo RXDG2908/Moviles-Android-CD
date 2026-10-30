@@ -58,6 +58,7 @@ fun PerfilScreen(
     Column(Modifier.verticalScroll(rememberScrollState())) {
         AppTopBar("Perfil")
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+            // Mejora (registro): debajo del correo muestra "celular · distrito" del dueño
             TarjetaUsuario(usuario?.nombre ?: "", usuario?.correo ?: "", detalleDe(usuario))
 
             // Contadores

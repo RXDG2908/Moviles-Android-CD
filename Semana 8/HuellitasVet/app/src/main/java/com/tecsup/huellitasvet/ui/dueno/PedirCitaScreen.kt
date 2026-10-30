@@ -59,6 +59,8 @@ fun PedirCitaScreen(
     aceptaCitas: Boolean,
     onCitaCreada: () -> Unit,
     onAtras: () -> Unit,
+    // Mejora (tipo de servicio): llega desde las tarjetas de Inicio (ruta pedir_cita?tipo=ESTETICA)
+    // para que el tipo ya venga elegido y el combobox muestre sus servicios
     tipoInicial: TipoServicio? = null
 ) {
     LaunchedEffect(duenoId) { vm.iniciar(duenoId, mascotaInicial, tipoInicial) }

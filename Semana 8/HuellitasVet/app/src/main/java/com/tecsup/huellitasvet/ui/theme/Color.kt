@@ -2,6 +2,12 @@ package com.tecsup.huellitasvet.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+// Mejora (paleta): los colores de Dueño, Veterinario, estados y modo oscuro son los ORIGINALES (no cambian).
+// Solo se agregan, con el mismo ritmo de diseño (primario fuerte + contenedor claro + fondo teñido):
+//   - Admin*  -> esquema del administrador, cálido y sin grises
+//   - Tipo*   -> color de cada tipo de servicio
+// Ambos se validaron con la skill dataviz (contraste WCAG y separación para daltonismo).
+
 // Dueño (esmeralda)
 val DuenoPrimario = Color(0xFF059669)
 val DuenoContenedor = Color(0xFFD1FAE5)

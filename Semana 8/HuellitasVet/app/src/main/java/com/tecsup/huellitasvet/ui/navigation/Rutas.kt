@@ -11,7 +11,7 @@ object Rutas {
     const val MASCOTAS = "mascotas"
     const val FORMULARIO_MASCOTA = "formulario_mascota?id={id}"
     const val FICHA_MASCOTA = "ficha_mascota/{id}"
-    const val PEDIR_CITA = "pedir_cita?mascotaId={mascotaId}&tipo={tipo}"
+    const val PEDIR_CITA = "pedir_cita?mascotaId={mascotaId}&tipo={tipo}" // mejora: &tipo= (tipo de servicio ya elegido)
     const val MIS_CITAS = "mis_citas"
     const val REPROGRAMAR_CITA = "reprogramar_cita/{id}"
     const val PERFIL = "perfil"

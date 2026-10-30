@@ -78,6 +78,8 @@ fun LoginScreen(vm: SesionViewModel, oscuro: Boolean, onEntrar: (Rol) -> Unit, o
             ) {
                 Spacer(Modifier.height(12.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
+                    // Mejora (administrador): la tercera pestaña "Admin" cambia el ícono, el texto
+                    // y el color de toda la pantalla (VetTheme con Rol.ADMINISTRADOR = terracota)
                     MascotaAvatar(
                         when (rol) {
                             Rol.CLIENTE -> Especie.PERRO

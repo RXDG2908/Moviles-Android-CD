@@ -5,5 +5,7 @@ package com.tecsup.huellitasvet.model
 enum class Rol(val etiqueta: String) {
     CLIENTE("Dueño"),
     ADMIN("Veterinario"),
+    // Mejora (administrador): tercer rol con control total. Al iniciar sesión va a su grafo
+    // (NavVet.irAlInicio), usa su tema terracota (VetTheme) y sus pantallas están en ui/admin.
     ADMINISTRADOR("Admin")
 }
