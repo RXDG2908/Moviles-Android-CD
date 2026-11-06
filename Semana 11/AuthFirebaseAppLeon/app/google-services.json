@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "601027461104",
+    "project_id": "authfirebaseappleon",
+    "storage_bucket": "authfirebaseappleon.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:601027461104:android:28e468e0677512475ca735",
+        "android_client_info": {
+          "package_name": "com.tecsup.authfirebaseappleon"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9NeEIJ7LD6u4Gs-VjHfLc0H_XDo47QDM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
