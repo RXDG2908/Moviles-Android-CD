@@ -17,10 +17,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
-fun HomeScreen(auth: FirebaseAuth, onLogout: () -> Unit) {
+fun HomeScreen(
+    onLogout: () -> Unit
+) {
+    val auth = FirebaseAuth.getInstance()
     val db = remember { FirebaseFirestore.getInstance() }
     val uid = auth.currentUser?.uid ?: ""
-    val email = auth.currentUser?.email ?: ""
+    val email = auth.currentUser?.email ?: "Usuario"
 
     var cursos by remember { mutableStateOf<List<Curso>>(emptyList()) }
     var error by remember { mutableStateOf<String?>(null) }
@@ -46,7 +49,6 @@ fun HomeScreen(auth: FirebaseAuth, onLogout: () -> Unit) {
     }
 
     Scaffold(
-        topBar = { BarraTecsup() },
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = { editando = null; mostrarForm = true },
@@ -59,36 +61,28 @@ fun HomeScreen(auth: FirebaseAuth, onLogout: () -> Unit) {
         Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.TopCenter) {
             LazyColumn(
                 modifier = Modifier.widthIn(max = 560.dp).fillMaxWidth(),
-                contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 100.dp),
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 100.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Bienvenida (pantalla del profesor): logo, saludo, correo y cerrar sesión
+                // Bienvenida (igual a la guía)
                 item {
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(20.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant
-                        )
+                    Column(
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Column(
-                            modifier = Modifier.fillMaxWidth().padding(24.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                        Text("Bienvenido/a 🎉", style = MaterialTheme.typography.headlineMedium)
+                        Spacer(Modifier.height(8.dp))
+                        Text("Sesión iniciada como: $email", textAlign = TextAlign.Center)
+                        Spacer(Modifier.height(24.dp))
+                        Button(
+                            onClick = {
+                                auth.signOut()
+                                onLogout()
+                            },
+                            modifier = Modifier.fillMaxWidth()
                         ) {
-                            LogoTecsup(ancho = 170)
-                            Spacer(Modifier.height(16.dp))
-                            Text("Bienvenido/a 🎉", style = MaterialTheme.typography.headlineSmall)
-                            Spacer(Modifier.height(6.dp))
-                            Text("Has iniciado sesión como:", style = MaterialTheme.typography.bodyMedium)
-                            Text(
-                                email,
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.SemiBold,
-                                textAlign = TextAlign.Center
-                            )
-                            Spacer(Modifier.height(18.dp))
-                            BotonPrincipal("Cerrar sesión", onClick = onLogout)
+                            Text("Cerrar sesión")
                         }
                     }
                 }
@@ -96,7 +90,7 @@ fun HomeScreen(auth: FirebaseAuth, onLogout: () -> Unit) {
                     Text(
                         "Mis Cursos",
                         style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(top = 6.dp)
+                        modifier = Modifier.padding(top = 10.dp)
                     )
                 }
                 error?.let { msg ->

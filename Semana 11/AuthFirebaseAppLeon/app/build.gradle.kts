@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.tecsup.authfirebaseappleon"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"
@@ -36,10 +36,13 @@ android {
 }
 
 dependencies {
-    // Firebase (BoM controla las versiones)
-    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-firestore")
+    // Firebase: BoM + Authentication + Firestore
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx")
+
+    // Navigation Compose (NavHost, NavController, composable, etc.)
+    implementation("androidx.navigation:navigation-compose:2.8.0")
 
     implementation("androidx.compose.material:material-icons-core")
 
