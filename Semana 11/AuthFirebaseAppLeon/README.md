@@ -62,6 +62,23 @@ AuthFirebaseAppLeon/
             └── mipmap-*/                  ← icono de la app
 ```
 
+
+**Acceso rápido a los archivos principales** (clic para abrir):
+
+| Archivo | Para qué sirve |
+|---|---|
+| [`MainActivity.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/MainActivity.kt) | Punto de entrada: Firebase y tema |
+| [`AuthApp.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/AuthApp.kt) | Rutas y navegación |
+| [`LoginScreen.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/LoginScreen.kt) | Inicio de sesión |
+| [`RegisterScreen.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/RegisterScreen.kt) | Registro de usuario |
+| [`HomeScreen.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/HomeScreen.kt) | Bienvenida + CRUD de cursos |
+| [`Curso.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/Curso.kt) | Modelo del curso |
+| [`app/build.gradle.kts`](app/build.gradle.kts) | Gradle del módulo |
+| [`build.gradle.kts`](build.gradle.kts) | Gradle del proyecto |
+| [`libs.versions.toml`](gradle/libs.versions.toml) | Catálogo de versiones |
+| [`AndroidManifest.xml`](app/src/main/AndroidManifest.xml) | Manifest |
+| [`google-services.json`](app/google-services.json) | Configuración de Firebase |
+
 ---
 
 ## 4. Cómo funciona
@@ -70,7 +87,7 @@ AuthFirebaseAppLeon/
 `MainActivity` inicializa Firebase (`FirebaseApp.initializeApp`) y muestra `AuthApp()` dentro de un
 tema Material 3 (morado como color principal y el celeste de Tecsup como secundario).
 
-### 4.2 Navegación (`AuthApp.kt`)
+### 4.2 Navegación ([`AuthApp.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/AuthApp.kt))
 Usa Navigation Compose con tres rutas definidas en el objeto `Destinations`:
 
 ```
@@ -95,7 +112,7 @@ Al entrar al `home` se usa `popUpTo(...) { inclusive = true }`, así el botón *
 - Mientras Firebase responde, el botón se desactiva y muestra `Cargando...` o `Creando...`.
 - El login incluye el pie de página `Renzo León - Tecsup`.
 
-### 4.4 Home y CRUD de cursos (`HomeScreen.kt`)
+### 4.4 Home y CRUD de cursos ([`HomeScreen.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/HomeScreen.kt))
 Muestra el saludo, `Sesión iniciada como: correo`, el botón **Cerrar sesión** y la lista **Mis Cursos**.
 
 | Operación | Cómo se hace |
@@ -141,7 +158,7 @@ Con estas reglas un usuario solo puede crear cursos a su nombre y leer, editar o
 1. Crear el proyecto en Firebase Console (`authfirebaseappleon`).
 2. Registrar la app Android con el package name `com.tecsup.authfirebaseappleon`
    (debe coincidir con el `applicationId`).
-3. Descargar `google-services.json` y colocarlo en **`app/google-services.json`**.
+3. Descargar `google-services.json` y colocarlo en **[`app/google-services.json`](app/google-services.json)**.
 4. En **Authentication → Método de acceso** activar **Correo electrónico/Contraseña**.
 5. En **Firestore Database** crear la base de datos `(default)` y publicar las reglas de la sección 5.
 
@@ -195,56 +212,56 @@ Guía: **LAB11 – Firebase Autenticación** (docente Juan León S.). Las rutas 
 
 | Lo que pide la guía | Dónde está / cómo se cumple |
 |---|---|
-| El proyecto debe llevar el **apellido del alumno** | Nombre `AuthFirebaseAppLeon` (carpeta y `rootProject.name` en `settings.gradle.kts`) |
-| Proyecto Kotlin + Jetpack Compose (Empty Compose Activity) | `app/build.gradle.kts` → `buildFeatures { compose = true }` |
-| **Package name** = `applicationId` = el de Firebase | `app/build.gradle.kts` línea 19 (`applicationId`) y `namespace`; `google-services.json` → `package_name` |
-| Minimum SDK 24 o 26 | `app/build.gradle.kts` línea 22 (`minSdk = 26`) |
+| El proyecto debe llevar el **apellido del alumno** | Nombre `AuthFirebaseAppLeon` (carpeta y `rootProject.name` en [`settings.gradle.kts`](settings.gradle.kts)) |
+| Proyecto Kotlin + Jetpack Compose (Empty Compose Activity) | [`app/build.gradle.kts`](app/build.gradle.kts) → `buildFeatures { compose = true }` |
+| **Package name** = `applicationId` = el de Firebase | [`app/build.gradle.kts` línea 19](app/build.gradle.kts#L19) (`applicationId`) y `namespace`; `google-services.json` → `package_name` |
+| Minimum SDK 24 o 26 | [`app/build.gradle.kts` línea 22](app/build.gradle.kts#L22) (`minSdk = 26`) |
 | Crear el proyecto en Firebase y registrar la app | Consola de Firebase: proyecto `authfirebaseappleon` |
-| Descargar **`google-services.json`** y ponerlo dentro de `app/` | `app/google-services.json` |
+| Descargar **`google-services.json`** y ponerlo dentro de `app/` | [`app/google-services.json`](app/google-services.json) |
 | Activar **Email/Password** en Authentication | Consola de Firebase → Authentication → Método de acceso |
 
 ### 10.2 Gradle y dependencias
 
 | Lo que pide la guía | Dónde está |
 |---|---|
-| Plugin `com.google.gms.google-services` **4.4.2** (nivel Proyecto, `apply false`) | `build.gradle.kts` línea 4 y versión en `gradle/libs.versions.toml` línea 31 |
-| Aplicar el plugin en el módulo `app` | `app/build.gradle.kts` línea 5 |
-| `firebase-bom` **33.1.0** | `app/build.gradle.kts` línea 51 |
-| `firebase-auth-ktx` | `app/build.gradle.kts` línea 52 |
-| `navigation-compose` **2.8.0** | `app/build.gradle.kts` línea 56 |
-| Dependencias de Compose y AndroidX (por catálogo `libs`) | `app/build.gradle.kts` bloque `dependencies` + `gradle/libs.versions.toml` |
-| Extra de la actividad: `firebase-firestore-ktx` | `app/build.gradle.kts` línea 53 |
-| Permiso de internet | `app/src/main/AndroidManifest.xml` línea 5 |
+| Plugin `com.google.gms.google-services` **4.4.2** (nivel Proyecto, `apply false`) | [`build.gradle.kts` línea 4](build.gradle.kts#L4) y versión en [`gradle/libs.versions.toml` línea 31](gradle/libs.versions.toml#L31) |
+| Aplicar el plugin en el módulo `app` | [`app/build.gradle.kts` línea 5](app/build.gradle.kts#L5) |
+| `firebase-bom` **33.1.0** | [`app/build.gradle.kts` línea 51](app/build.gradle.kts#L51) |
+| `firebase-auth-ktx` | [`app/build.gradle.kts` línea 52](app/build.gradle.kts#L52) |
+| `navigation-compose` **2.8.0** | [`app/build.gradle.kts` línea 56](app/build.gradle.kts#L56) |
+| Dependencias de Compose y AndroidX (por catálogo `libs`) | [`app/build.gradle.kts`](app/build.gradle.kts) bloque `dependencies` + [`gradle/libs.versions.toml`](gradle/libs.versions.toml) |
+| Extra de la actividad: `firebase-firestore-ktx` | [`app/build.gradle.kts` línea 53](app/build.gradle.kts#L53) |
+| Permiso de internet | [`app/src/main/AndroidManifest.xml` línea 5](app/src/main/AndroidManifest.xml#L5) |
 
 ### 10.3 Archivos de código pedidos
 
 | Archivo pedido | Ubicación | Qué hace |
 |---|---|---|
-| `MainActivity.kt` | `P/MainActivity.kt` | Inicia Firebase (línea 20: `FirebaseApp.initializeApp(this)`) y llama a `AuthApp()` |
-| `AuthApp.kt` | `P/AuthApp.kt` | Objeto `Destinations` (línea 10) y `NavHost` (línea 26) con login, register y home |
-| `LoginScreen.kt` | `P/LoginScreen.kt` | Pantalla de Autenticación |
-| `RegisterScreen.kt` | `P/RegisterScreen.kt` | Pantalla de Registro de Usuario |
-| `HomeScreen.kt` | `P/HomeScreen.kt` | Pantalla de Bienvenida (+ CRUD de cursos) |
+| [`MainActivity.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/MainActivity.kt) | [`P/MainActivity.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/MainActivity.kt) | Inicia Firebase ([línea 20](app/src/main/java/com/tecsup/authfirebaseappleon/MainActivity.kt#L20): `FirebaseApp.initializeApp(this)`) y llama a `AuthApp()` |
+| [`AuthApp.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/AuthApp.kt) | [`P/AuthApp.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/AuthApp.kt) | Objeto `Destinations` ([línea 10](app/src/main/java/com/tecsup/authfirebaseappleon/AuthApp.kt#L10)) y `NavHost` ([línea 26](app/src/main/java/com/tecsup/authfirebaseappleon/AuthApp.kt#L26)) con login, register y home |
+| [`LoginScreen.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/LoginScreen.kt) | [`P/LoginScreen.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/LoginScreen.kt) | Pantalla de Autenticación |
+| [`RegisterScreen.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/RegisterScreen.kt) | [`P/RegisterScreen.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/RegisterScreen.kt) | Pantalla de Registro de Usuario |
+| [`HomeScreen.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/HomeScreen.kt) | [`P/HomeScreen.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/HomeScreen.kt) | Pantalla de Bienvenida (+ CRUD de cursos) |
 
 ### 10.4 Pantallas: lo que muestra la guía y dónde está en el código
 
-**Login (`LoginScreen.kt`)**
-- Título superior "Programación Móvil - Tecsup" → línea 46.
-- Logo de Tecsup debajo del título, `R.drawable.tecsup` (120dp) → línea 55; imagen en `app/src/main/res/drawable/tecsup.png`.
+**Login ([`LoginScreen.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/LoginScreen.kt))**
+- Título superior "Programación Móvil - Tecsup" → [línea 46](app/src/main/java/com/tecsup/authfirebaseappleon/LoginScreen.kt#L46).
+- Logo de Tecsup debajo del título, `R.drawable.tecsup` (120dp) → [línea 55](app/src/main/java/com/tecsup/authfirebaseappleon/LoginScreen.kt#L55); imagen en [`app/src/main/res/drawable/tecsup.png`](app/src/main/res/drawable/tecsup.png).
 - "Iniciar Sesión 🔐", campos "Correo electrónico" y "Contraseña", botón "Ingresar" (muestra "Cargando...").
-- Inicio de sesión con `signInWithEmailAndPassword` → línea 105.
+- Inicio de sesión con `signInWithEmailAndPassword` → [línea 105](app/src/main/java/com/tecsup/authfirebaseappleon/LoginScreen.kt#L105).
 - Enlace "¿No tienes cuenta? Regístrate aquí" → va al registro.
-- Pie de página "Renzo León - Tecsup" (la guía pone el nombre del profe; aquí va el del alumno) → línea 134.
+- Pie de página "Renzo León - Tecsup" (la guía pone el nombre del profe; aquí va el del alumno) → [línea 134](app/src/main/java/com/tecsup/authfirebaseappleon/LoginScreen.kt#L134).
 
-**Registro (`RegisterScreen.kt`)**
+**Registro ([`RegisterScreen.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/RegisterScreen.kt))**
 - "Crear cuenta ✨", campos "Correo electrónico", "Contraseña" y "Confirmar contraseña".
-- Validaciones: campos vacíos, "Las contraseñas no coinciden" (línea 81) y "Mínimo 6 caracteres".
-- Alta de usuario con `createUserWithEmailAndPassword` → línea 91.
+- Validaciones: campos vacíos, "Las contraseñas no coinciden" ([línea 81](app/src/main/java/com/tecsup/authfirebaseappleon/RegisterScreen.kt#L81)) y "Mínimo 6 caracteres".
+- Alta de usuario con `createUserWithEmailAndPassword` → [línea 91](app/src/main/java/com/tecsup/authfirebaseappleon/RegisterScreen.kt#L91).
 - Botón "Registrarse" (muestra "Creando...") y enlace "← Volver al login".
 
-**Bienvenida (`HomeScreen.kt`)**
-- "Bienvenido/a 🎉" y "Sesión iniciada como: correo" → línea 83.
-- Botón "Cerrar sesión" que ejecuta `auth.signOut()` → línea 88.
+**Bienvenida ([`HomeScreen.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/HomeScreen.kt))**
+- "Bienvenido/a 🎉" y "Sesión iniciada como: correo" → [línea 83](app/src/main/java/com/tecsup/authfirebaseappleon/HomeScreen.kt#L83).
+- Botón "Cerrar sesión" que ejecuta `auth.signOut()` → [línea 88](app/src/main/java/com/tecsup/authfirebaseappleon/HomeScreen.kt#L88).
 
 **Mensajes (Toast), como en la guía:** "Complete todos los campos", "Inicio exitoso ✅",
 "Usuario creado ✅", "Las contraseñas no coinciden", "Mínimo 6 caracteres" y "Error: …".
@@ -253,18 +270,18 @@ Guía: **LAB11 – Firebase Autenticación** (docente Juan León S.). Las rutas 
 
 | Requisito de la guía | Dónde está |
 |---|---|
-| Autenticación con Firebase Authentication (Email/Password) | `LoginScreen.kt` y `RegisterScreen.kt` |
-| Manejo de datos en la nube con **Cloud Firestore** | `HomeScreen.kt`, colección `cursos`; modelo en `P/Curso.kt` |
+| Autenticación con Firebase Authentication (Email/Password) | [`LoginScreen.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/LoginScreen.kt) y [`RegisterScreen.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/RegisterScreen.kt) |
+| Manejo de datos en la nube con **Cloud Firestore** | [`HomeScreen.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/HomeScreen.kt), colección `cursos`; modelo en [`P/Curso.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/Curso.kt) |
 | Pantallas con Jetpack Compose | Todos los archivos `*Screen.kt` |
-| **Crear** cursos | `HomeScreen.kt` línea 177 (`ref.add(datos)`) |
-| **Leer / visualizar** cursos | `HomeScreen.kt` línea 41 (`addSnapshotListener`, tiempo real) |
-| **Editar** cursos | `HomeScreen.kt` botón *Editar* + `set(datos)` sobre el mismo documento |
-| **Eliminar** cursos | `HomeScreen.kt` línea 148 (`.delete()`) |
-| Cada usuario **solo ve sus propios cursos** | Filtro `whereEqualTo("uid", uid)` en `HomeScreen.kt` + reglas de seguridad de la sección 5 |
+| **Crear** cursos | [`HomeScreen.kt` línea 177](app/src/main/java/com/tecsup/authfirebaseappleon/HomeScreen.kt#L177) (`ref.add(datos)`) |
+| **Leer / visualizar** cursos | [`HomeScreen.kt` línea 41](app/src/main/java/com/tecsup/authfirebaseappleon/HomeScreen.kt#L41) (`addSnapshotListener`, tiempo real) |
+| **Editar** cursos | [`HomeScreen.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/HomeScreen.kt) botón *Editar* + `set(datos)` sobre el mismo documento |
+| **Eliminar** cursos | [`HomeScreen.kt` línea 148](app/src/main/java/com/tecsup/authfirebaseappleon/HomeScreen.kt#L148) (`.delete()`) |
+| Cada usuario **solo ve sus propios cursos** | Filtro `whereEqualTo("uid", uid)` en [`HomeScreen.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/HomeScreen.kt) + reglas de seguridad de la sección 5 |
 
 ### 10.6 Extras (no pedidos, mejoran el diseño)
-- Logo e icono de Tecsup en HD y como icono de la app (`res/drawable/tecsup_icon.png`, `res/mipmap-*`).
-- Colores: morado en botones y celeste de Tecsup (`MainActivity.kt`).
+- Logo e icono de Tecsup en HD y como icono de la app ([`res/drawable/tecsup_icon.png`](app/src/main/res/drawable/tecsup_icon.png), `res/mipmap-*`).
+- Colores: morado en botones y celeste de Tecsup ([`MainActivity.kt`](app/src/main/java/com/tecsup/authfirebaseappleon/MainActivity.kt)).
 - Tarjetas de cursos con chip de créditos y botón flotante centrado "Nuevo curso".
 
 > Los números de línea son de la versión actual del código y pueden moverse si se edita el archivo.
