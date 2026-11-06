@@ -16,21 +16,26 @@ import androidx.compose.ui.unit.dp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
+// Pantalla de Bienvenida + CRUD de "Mis Cursos" en Cloud Firestore.
+// Cada usuario solo ve y modifica sus propios cursos (filtro por uid).
 @Composable
 fun HomeScreen(
     onLogout: () -> Unit
 ) {
+    // Usuario autenticado: su uid identifica a quién pertenecen los cursos
     val auth = FirebaseAuth.getInstance()
     val db = remember { FirebaseFirestore.getInstance() }
     val uid = auth.currentUser?.uid ?: ""
     val email = auth.currentUser?.email ?: "Usuario"
 
+    // Estados de la pantalla: lista de cursos, mensaje de error y control del diálogo (crear/editar)
     var cursos by remember { mutableStateOf<List<Curso>>(emptyList()) }
     var error by remember { mutableStateOf<String?>(null) }
     var editando by remember { mutableStateOf<Curso?>(null) }
     var mostrarForm by remember { mutableStateOf(false) }
 
-    // Lectura en tiempo real: solo los cursos del usuario autenticado
+    // READ: escucha en tiempo real la colección "cursos" filtrada por el uid del usuario.
+    // Cualquier cambio en Firestore actualiza la lista automáticamente.
     DisposableEffect(uid) {
         val reg = db.collection("cursos").whereEqualTo("uid", uid)
             .addSnapshotListener { snap, e ->
@@ -45,9 +50,11 @@ fun HomeScreen(
                     )
                 }?.sortedBy { it.nombre.lowercase() } ?: emptyList()
             }
+        // Al salir de la pantalla se deja de escuchar (evita fugas de memoria)
         onDispose { reg.remove() }
     }
 
+    // Estructura de la pantalla con el botón flotante "Nuevo curso" (CREATE)
     Scaffold(
         floatingActionButton = {
             ExtendedFloatingActionButton(
@@ -65,7 +72,7 @@ fun HomeScreen(
                 verticalArrangement = Arrangement.spacedBy(14.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Bienvenida (igual a la guía)
+                // Bienvenida (igual a la guía): saludo, correo y botón Cerrar sesión
                 item {
                     Column(
                         modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
@@ -76,6 +83,7 @@ fun HomeScreen(
                         Text("Sesión iniciada como: $email", textAlign = TextAlign.Center)
                         Spacer(Modifier.height(24.dp))
                         Button(
+                            // Cierra la sesión en Firebase y vuelve al Login
                             onClick = {
                                 auth.signOut()
                                 onLogout()
@@ -105,6 +113,7 @@ fun HomeScreen(
                         )
                     }
                 }
+                // Tarjeta de cada curso: nombre, créditos, descripción y botones Editar / Eliminar
                 items(cursos, key = { it.id }) { c ->
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -129,10 +138,12 @@ fun HomeScreen(
                             Spacer(Modifier.height(14.dp))
                             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                                 OutlinedButton(
+                                    // UPDATE: abre el diálogo con los datos del curso
                                     onClick = { editando = c; mostrarForm = true },
                                     modifier = Modifier.weight(1f)
                                 ) { Text("Editar") }
                                 OutlinedButton(
+                                    // DELETE: borra el documento del curso en Firestore
                                     onClick = {
                                         db.collection("cursos").document(c.id).delete()
                                             .addOnFailureListener { error = it.localizedMessage }
@@ -150,16 +161,19 @@ fun HomeScreen(
         }
     }
 
+    // Diálogo para crear o editar un curso
     if (mostrarForm) {
         CursoDialog(
             inicial = editando,
             onCancelar = { mostrarForm = false },
             onGuardar = { nombre, desc, cred ->
+                // Datos que se guardan; "uid" asocia el curso al usuario dueño
                 val datos = hashMapOf(
                     "nombre" to nombre, "descripcion" to desc,
                     "creditos" to cred, "uid" to uid
                 )
                 val ref = db.collection("cursos")
+                // Si no hay curso en edición -> CREATE (add); si hay -> UPDATE (set sobre el mismo documento)
                 val tarea = if (editando == null) ref.add(datos)
                 else ref.document(editando!!.id).set(datos)
                 tarea.addOnFailureListener { error = it.localizedMessage }
@@ -169,6 +183,8 @@ fun HomeScreen(
     }
 }
 
+// Diálogo con el formulario del curso (nombre, descripción y créditos).
+// "inicial" es null al crear y trae los datos al editar.
 @Composable
 private fun CursoDialog(
     inicial: Curso?,

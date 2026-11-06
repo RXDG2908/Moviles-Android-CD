@@ -11,14 +11,17 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.google.firebase.auth.FirebaseAuth
 
+// Pantalla de Registro: crea un usuario nuevo con Firebase Authentication (Email/Password)
 @Composable
 fun RegisterScreen(
     onRegisterSuccess: () -> Unit,
     onNavigateBack: () -> Unit
 ) {
+    // Instancia de Firebase Auth y contexto (para Toasts)
     val auth = FirebaseAuth.getInstance()
     val context = LocalContext.current
 
+    // Estados de los campos y del botón
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -30,6 +33,7 @@ fun RegisterScreen(
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
+            // Título y campos del formulario
             Text("Crear cuenta ✨", style = MaterialTheme.typography.headlineMedium)
             Spacer(Modifier.height(16.dp))
 
@@ -65,8 +69,10 @@ fun RegisterScreen(
 
             Spacer(Modifier.height(16.dp))
 
+            // Botón Registrarse: valida y crea el usuario en Firebase
             Button(
                 onClick = {
+                    // Validaciones: campos vacíos, contraseñas iguales y mínimo 6 caracteres (regla de Firebase)
                     if (email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
                         Toast.makeText(context, "Complete todos los campos", Toast.LENGTH_SHORT).show()
                         return@Button
@@ -80,6 +86,7 @@ fun RegisterScreen(
                         return@Button
                     }
 
+                    // Crea el usuario; si sale bien, entra al Home
                     isLoading = true
                     auth.createUserWithEmailAndPassword(email.trim(), password)
                         .addOnCompleteListener { task ->
@@ -102,6 +109,7 @@ fun RegisterScreen(
                 Text(if (isLoading) "Creando..." else "Registrarse")
             }
 
+            // Vuelve a la pantalla de login
             TextButton(onClick = onNavigateBack) {
                 Text("← Volver al login")
             }

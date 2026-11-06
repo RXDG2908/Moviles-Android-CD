@@ -14,14 +14,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.google.firebase.auth.FirebaseAuth
 
+// Pantalla de Inicio de Sesión con Firebase Authentication (Email/Password)
 @Composable
 fun LoginScreen(
     onNavigateToRegister: () -> Unit,
     onLoginSuccess: () -> Unit
 ) {
+    // Instancia de Firebase Auth y contexto (necesario para mostrar Toasts)
     val auth = FirebaseAuth.getInstance()
     val context = LocalContext.current
 
+    // Estados de los campos y del botón (se recomponen al cambiar)
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
@@ -63,6 +66,7 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
+            // Título y campos del formulario
             Text("Iniciar Sesión 🔐", style = MaterialTheme.typography.headlineMedium)
             Spacer(Modifier.height(16.dp))
 
@@ -87,13 +91,16 @@ fun LoginScreen(
 
             Spacer(Modifier.height(16.dp))
 
+            // Botón Ingresar: valida los campos y llama a Firebase para iniciar sesión
             Button(
                 onClick = {
+                    // Validación: no permite campos vacíos
                     if (email.isBlank() || password.isBlank()) {
                         Toast.makeText(context, "Complete todos los campos", Toast.LENGTH_SHORT).show()
                         return@Button
                     }
 
+                    // Firebase valida correo y contraseña; el resultado llega en addOnCompleteListener
                     isLoading = true
                     auth.signInWithEmailAndPassword(email.trim(), password)
                         .addOnCompleteListener { task ->
@@ -116,6 +123,7 @@ fun LoginScreen(
                 Text(if (isLoading) "Cargando..." else "Ingresar")
             }
 
+            // Enlace para ir a la pantalla de registro
             TextButton(onClick = onNavigateToRegister) {
                 Text("¿No tienes cuenta? Regístrate aquí")
             }
