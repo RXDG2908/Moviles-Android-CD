@@ -2,8 +2,8 @@
 <resources>
 
     <style name="Theme.TecsupNite" parent="android:Theme.Material.NoActionBar">
-        <item name="android:windowBackground">#0B0B1A</item>
-        <item name="android:statusBarColor">#0B0B1A</item>
-        <item name="android:navigationBarColor">#0B0B1A</item>
+        <item name="android:windowBackground">#0A2A66</item>
+        <item name="android:statusBarColor">#0A2A66</item>
+        <item name="android:navigationBarColor">#0A2A66</item>
     </style>
 </resources>
