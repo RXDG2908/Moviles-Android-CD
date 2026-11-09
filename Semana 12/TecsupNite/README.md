@@ -26,8 +26,8 @@ Los favoritos se conservan aunque ya no estén en la tienda de hoy, por eso tamb
 
 Inspirado en la tienda del juego, sobre Material 3:
 
-- Fondo celeste con rayos, barras y tarjetas en azul noche, acciones en amarillo.
-- Fuente Burbank Big Condensed (la del juego) en todos los textos; títulos inclinados y en mayúsculas.
+- Colores y formas basados en la tienda de regalitos.shop: fondo azul rey, paneles y buscador azul marino con borde azul, acciones en amarillo eléctrico, chips en forma de píldora con su contador.
+- Burbank Big Condensed (la del juego) solo en los títulos, inclinados y en mayúsculas; el resto del texto en Inter (licencia SIL Open Font License, https://github.com/rsms/inter).
 - La tienda se divide como en el juego: «Destacados» (1500 V-Bucks o más, tarjetas grandes) y «Diarios».
 - Cada tarjeta tiene el fondo y la franja del color de su rareza, con el nombre y el precio encima de la imagen. Los lotes y los descuentos llevan una etiqueta.
 - Chips y etiquetas en forma de paralelogramo; botones y tarjetas con esquinas redondeadas.

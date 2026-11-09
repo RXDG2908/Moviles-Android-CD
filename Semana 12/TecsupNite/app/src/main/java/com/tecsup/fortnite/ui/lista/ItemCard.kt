@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.tecsup.fortnite.domain.model.Item
 import com.tecsup.fortnite.ui.components.PrecioVBucks
@@ -101,7 +102,9 @@ fun ItemCard(
         ) {
             Text(
                 item.titulo.uppercase(),
-                style = if (destacado) MaterialTheme.typography.headlineMedium else MaterialTheme.typography.titleMedium,
+                // El nombre es el título de la tarjeta, por eso va en Burbank
+                style = if (destacado) MaterialTheme.typography.headlineMedium
+                else MaterialTheme.typography.headlineSmall.copy(fontSize = 21.sp, lineHeight = 22.sp),
                 color = Blanco,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis

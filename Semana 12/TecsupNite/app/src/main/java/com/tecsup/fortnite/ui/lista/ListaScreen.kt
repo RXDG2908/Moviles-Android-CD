@@ -2,6 +2,7 @@ package com.tecsup.fortnite.ui.lista
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,8 +42,9 @@ import com.tecsup.fortnite.ui.components.Cargando
 import com.tecsup.fortnite.ui.components.ErrorView
 import com.tecsup.fortnite.ui.components.Vacio
 import com.tecsup.fortnite.ui.theme.Blanco
-import com.tecsup.fortnite.ui.theme.CieloFuerte
-import com.tecsup.fortnite.ui.theme.FormaInclinada
+import com.tecsup.fortnite.ui.theme.Borde
+import com.tecsup.fortnite.ui.theme.CelesteTexto
+import com.tecsup.fortnite.ui.theme.NocheClara
 import com.tecsup.fortnite.ui.theme.Noche
 import com.tecsup.fortnite.ui.theme.Oro
 
@@ -124,27 +126,27 @@ private fun ContenidoLista(
                 value = busqueda,
                 onValueChange = { busqueda = it },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("Buscar en la tienda", color = CieloFuerte) },
-                leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null, tint = Noche) },
+                placeholder = { Text("Busca un cosmético…", color = CelesteTexto) },
+                leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null, tint = Blanco) },
                 singleLine = true,
                 textStyle = MaterialTheme.typography.bodyLarge,
                 shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Blanco,
-                    unfocusedContainerColor = Blanco,
-                    focusedTextColor = Noche,
-                    unfocusedTextColor = Noche,
-                    cursorColor = Noche,
+                    focusedContainerColor = Noche,
+                    unfocusedContainerColor = Noche,
+                    focusedTextColor = Blanco,
+                    unfocusedTextColor = Blanco,
+                    cursorColor = Oro,
                     focusedBorderColor = Oro,
-                    unfocusedBorderColor = Color.Transparent
+                    unfocusedBorderColor = Borde
                 )
             )
         }
         item(span = { GridItemSpan(maxLineSpan) }) {
             LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                item { ChipTipo("Todos", tipo == "") { tipo = "" } }
+                item { ChipTipo("Todos", datos.size, tipo == "") { tipo = "" } }
                 items(tipos) { t ->
-                    ChipTipo(t.subtitulo, tipo == t.tipoClave) { tipo = t.tipoClave }
+                    ChipTipo(t.subtitulo, datos.count { it.tipoClave == t.tipoClave }, tipo == t.tipoClave) { tipo = t.tipoClave }
                 }
             }
         }
@@ -168,13 +170,12 @@ private fun LazyGridScope.seccion(
 ) {
     if (lista.isEmpty()) return
     item(span = { GridItemSpan(maxLineSpan) }) {
-        Row(Modifier.padding(top = 10.dp), verticalAlignment = Alignment.Bottom) {
+        Column(Modifier.padding(top = 12.dp)) {
             Text(titulo.uppercase(), style = MaterialTheme.typography.displaySmall, color = Blanco)
             Text(
-                "  ${lista.size}",
-                modifier = Modifier.padding(bottom = 6.dp),
-                style = MaterialTheme.typography.titleMedium,
-                color = Noche
+                "${lista.size} objetos",
+                style = MaterialTheme.typography.titleSmall,
+                color = CelesteTexto
             )
         }
     }
@@ -192,14 +193,34 @@ private fun LazyGridScope.seccion(
     }
 }
 
+// Chip en forma de píldora con su contador, como en la web
 @Composable
-private fun ChipTipo(texto: String, seleccionado: Boolean, onClick: () -> Unit) {
+private fun ChipTipo(texto: String, cantidad: Int, seleccionado: Boolean, onClick: () -> Unit) {
     FilterChip(
         selected = seleccionado,
         onClick = onClick,
-        label = { Text(texto.uppercase(), style = MaterialTheme.typography.titleSmall) },
-        shape = FormaInclinada(8.dp),
-        border = null,
+        label = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(texto, style = MaterialTheme.typography.titleSmall)
+                Text(
+                    "$cantidad",
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .clip(RoundedCornerShape(50))
+                        .background(if (seleccionado) Noche else NocheClara)
+                        .padding(horizontal = 7.dp, vertical = 1.dp),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = if (seleccionado) Oro else Blanco
+                )
+            }
+        },
+        shape = RoundedCornerShape(50),
+        border = FilterChipDefaults.filterChipBorder(
+            enabled = true,
+            selected = seleccionado,
+            borderColor = Borde,
+            selectedBorderColor = Oro
+        ),
         colors = FilterChipDefaults.filterChipColors(
             containerColor = Noche,
             labelColor = Blanco,

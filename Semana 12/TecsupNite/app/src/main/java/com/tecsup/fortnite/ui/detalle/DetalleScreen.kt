@@ -36,7 +36,6 @@ import com.tecsup.fortnite.ui.components.Cargando
 import com.tecsup.fortnite.ui.components.ErrorView
 import com.tecsup.fortnite.ui.components.PrecioVBucks
 import com.tecsup.fortnite.ui.theme.Blanco
-import com.tecsup.fortnite.ui.theme.FormaInclinada
 import com.tecsup.fortnite.ui.theme.Noche
 import com.tecsup.fortnite.ui.theme.NocheClara
 import com.tecsup.fortnite.ui.theme.Oro
@@ -161,9 +160,9 @@ private fun Etiqueta(texto: String, fondo: Color) {
     Text(
         texto.uppercase(),
         modifier = Modifier
-            .clip(FormaInclinada(8.dp))
+            .clip(RoundedCornerShape(50))
             .background(fondo)
-            .padding(horizontal = 14.dp, vertical = 4.dp),
+            .padding(horizontal = 12.dp, vertical = 4.dp),
         style = MaterialTheme.typography.titleSmall,
         color = Blanco
     )

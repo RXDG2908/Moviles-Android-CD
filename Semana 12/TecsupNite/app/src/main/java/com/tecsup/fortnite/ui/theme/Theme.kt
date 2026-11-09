@@ -12,21 +12,34 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextGeometricTransform
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tecsup.fortnite.R
 
-val CieloClaro = Color(0xFF5CC6FF)
-val Cielo = Color(0xFF35AEF6)
-val CieloFuerte = Color(0xFF0E7BE0)
-val Noche = Color(0xFF0A2A66)
-val NocheClara = Color(0xFF123E91)
-val Oro = Color(0xFFFFC61A)
+val CieloClaro = Color(0xFF2F86FF)
+val Cielo = Color(0xFF1A6EF0)
+val CieloFuerte = Color(0xFF0B4BD0)
+val Noche = Color(0xFF0A2E8F)
+val NocheClara = Color(0xFF1446C4)
+val Oro = Color(0xFFFFE600)
 val Blanco = Color.White
-val CelesteTexto = Color(0xFFD6EEFF)
-val Rojo = Color(0xFFD91E2E)
+val CelesteTexto = Color(0xFFCFE0FF)
+val Rojo = Color(0xFFE5243B)
+val Borde = Color(0xFF3C82FF)
+
+// Inter para todo el texto que no es título
+@OptIn(ExperimentalTextApi::class)
+private fun inter(peso: Int) = Font(
+    R.font.inter,
+    FontWeight(peso),
+    variationSettings = FontVariation.Settings(FontVariation.weight(peso))
+)
+
+val Inter = FontFamily(inter(500), inter(600), inter(700), inter(800), inter(900))
 
 val Burbank = FontFamily(
     Font(R.font.burbank_black, FontWeight.Black),
@@ -43,6 +56,7 @@ private val Colores = darkColorScheme(
     tertiary = Oro,
     onTertiary = Noche,
     background = Cielo,
+    outlineVariant = Borde,
     onBackground = Blanco,
     surface = Noche,
     onSurface = Blanco,
@@ -66,20 +80,12 @@ private fun titulo(tamano: Int) = TextStyle(
     textGeometricTransform = inclinado
 )
 
-private fun negra(tamano: Int) = TextStyle(
-    fontFamily = Burbank,
-    fontWeight = FontWeight.Black,
+// Texto normal en Inter
+private fun texto(tamano: Int, peso: Int) = TextStyle(
+    fontFamily = Inter,
+    fontWeight = FontWeight(peso),
     fontSize = tamano.sp,
-    lineHeight = (tamano + 4).sp,
-    letterSpacing = 0.3.sp
-)
-
-private fun lectura(tamano: Int) = TextStyle(
-    fontFamily = Burbank,
-    fontWeight = FontWeight.Bold,
-    fontSize = tamano.sp,
-    lineHeight = (tamano + 6).sp,
-    letterSpacing = 0.4.sp
+    lineHeight = (tamano + 6).sp
 )
 
 private val Tipos = Typography(
@@ -87,17 +93,17 @@ private val Tipos = Typography(
     displayMedium = titulo(60).copy(shadow = sombra),
     displaySmall = titulo(46).copy(shadow = sombra),
     headlineLarge = titulo(40).copy(shadow = sombra),
-    headlineMedium = titulo(36),
-    headlineSmall = titulo(30),
-    titleLarge = titulo(30),
-    titleMedium = negra(24),
-    titleSmall = negra(21),
-    bodyLarge = lectura(20),
-    bodyMedium = lectura(18),
-    bodySmall = lectura(16),
-    labelLarge = negra(20),
-    labelMedium = lectura(16),
-    labelSmall = lectura(14)
+    headlineMedium = titulo(32),
+    headlineSmall = titulo(26),
+    titleLarge = titulo(26),
+    titleMedium = texto(17, 800),
+    titleSmall = texto(15, 700),
+    bodyLarge = texto(16, 600),
+    bodyMedium = texto(14, 500),
+    bodySmall = texto(13, 500),
+    labelLarge = texto(14, 800),
+    labelMedium = texto(13, 600),
+    labelSmall = texto(12, 700)
 )
 
 private val Formas = Shapes(
