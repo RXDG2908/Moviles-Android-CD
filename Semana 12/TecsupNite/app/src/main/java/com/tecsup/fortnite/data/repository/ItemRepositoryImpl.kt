@@ -8,6 +8,7 @@ import com.tecsup.fortnite.data.remote.ApiService
 import com.tecsup.fortnite.domain.model.Item
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.SerializationException
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -28,17 +29,19 @@ class ItemRepositoryImpl(
             // Solo cosméticos: se descartan pistas musicales, instrumentos y autos
             .filter { !it.brItems.isNullOrEmpty() }
             .filter { it.tracks.isNullOrEmpty() && it.instruments.isNullOrEmpty() && it.cars.isNullOrEmpty() }
-            .map { entrada -> entrada.brItems!![0].aEntity(entrada.finalPrice, entrada.regularPrice, false) }
-            .filter { !it.tipoClave.contains("music") && !it.tipoClave.contains("car") }
+            // Primero los que se venden solos, para que su precio no sea el de un lote
+            .sortedBy { it.brItems!!.size }
+            .map { it.aEntity() }
             .distinctBy { it.id }
             .map { it.copy(esFavorito = it.id in favoritos) }
 
-        dao.borrarNoFavoritos()
-        dao.guardarTodos(nuevos)
+        dao.reemplazarTienda(nuevos)
         Result.success(nuevos.size)
     } catch (e: IOException) { // sin internet
         Result.failure(e)
     } catch (e: HttpException) { // 404, 500...
+        Result.failure(e)
+    } catch (e: SerializationException) { // la API cambió el formato
         Result.failure(e)
     }
 
@@ -50,6 +53,8 @@ class ItemRepositoryImpl(
             // Sin internet se muestra lo que hay guardado
             if (base != null) Result.success(base) else Result.failure(e)
         } catch (e: HttpException) {
+            if (base != null) Result.success(base) else Result.failure(e)
+        } catch (e: SerializationException) {
             if (base != null) Result.success(base) else Result.failure(e)
         }
     }

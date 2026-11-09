@@ -12,6 +12,7 @@ data class Item(
     val rareza: String = "",      // texto en español
     val rarezaClave: String = "", // epic, rare, icon...
     val tipoClave: String = "",   // outfit, pickaxe, emote...
+    val lote: String = "",        // nombre del lote si el precio es de un pack
     val descripcion: String = "",
     val serie: String = "",
     val introduccion: String = ""

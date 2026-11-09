@@ -2,6 +2,7 @@ package com.tecsup.fortnite.data.local
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
@@ -34,6 +35,13 @@ interface ItemDao {
     // Quita lo que ya no está en la tienda, pero deja los favoritos
     @Query("DELETE FROM items WHERE esFavorito = 0")
     suspend fun borrarNoFavoritos()
+
+    // Todo junto, para que la lista no se vea vacía a mitad del cambio
+    @Transaction
+    suspend fun reemplazarTienda(items: List<ItemEntity>) {
+        borrarNoFavoritos()
+        guardarTodos(items)
+    }
 
     @Query("DELETE FROM items")
     suspend fun borrarTodo()

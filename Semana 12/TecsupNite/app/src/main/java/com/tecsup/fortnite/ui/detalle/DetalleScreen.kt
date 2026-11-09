@@ -71,6 +71,13 @@ private fun Contenido(item: Item, onFavorito: () -> Unit, modifier: Modifier) {
                 AssistChip(onClick = {}, label = { Text(item.rareza) })
             }
             if (item.precio > 0) PrecioVBucks(item.precio, item.precioRegular)
+            if (item.lote != "") {
+                Text(
+                    "Se vende dentro del lote «${item.lote}»; el precio es del lote completo.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
             if (item.descripcion != "") {
                 Text(item.descripcion, style = MaterialTheme.typography.bodyLarge)
             }

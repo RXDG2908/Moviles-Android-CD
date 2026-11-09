@@ -15,11 +15,16 @@ data class TiendaDto(val entries: List<EntradaDto> = emptyList())
 data class EntradaDto(
     val finalPrice: Int = 0,
     val regularPrice: Int = 0,
+    val bundle: LoteDto? = null,
     val brItems: List<ItemDto>? = null,
     val tracks: List<JsonElement>? = null,
     val instruments: List<JsonElement>? = null,
     val cars: List<JsonElement>? = null
 )
+
+// Pack de varios cosméticos con un solo precio
+@Serializable
+data class LoteDto(val name: String = "", val image: String? = null)
 
 // Respuesta del detalle: /v2/cosmetics/br/{id}
 @Serializable
