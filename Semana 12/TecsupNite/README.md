@@ -33,6 +33,7 @@ Basado en la tienda de regalitos.shop (proyecto propio, reglas en `WEB.md` de es
 - **Tarjetas** (Plantilla Prime de la web): fondo con los colores oficiales de cada oferta en el 85 % de abajo, la imagen asoma por arriba y se difumina para leer el precio; solo llevan el tipo y el precio (el nombre va en el detalle), placas «X de descuento» y «Termina hoy», y botón amarillo para favoritos.
 - **Barra inferior**: la pestaña activa en amarillo con una raya arriba.
 - **Hoja del producto** (como el `<dialog class="hoja">` de la web, skill `law-of-figure-ground`): se abre encima de la tienda con un velo detrás; borde celeste, imagen arriba con los colores oficiales que se funden abajo, tipo y «Termina hoy», nombre en Burbank, precio grande, descripción, fichas de detalles (rareza, sección, serie, llegada) y los botones «A favoritos» / «Volver» siempre abajo.
+
 ## Capturas
 
 Tomadas en el emulador con la tienda real del 09/11/2026 y la cuenta admin.
@@ -115,6 +116,6 @@ Pendiente
 
 - [x] Las 14 pruebas de aceptación (PA-01 a PA-14) pasan en el emulador con Firebase real; la sesión se mantiene al reabrir
 - [x] Documentos `usuarios/{uid}` creados en Firestore para el admin y el usuario
-- [ ] Capturas de login, lista, detalle, favoritos, panel Admin y notificación
+- [x] Capturas de login, lista, detalle, favoritos, panel Admin y notificación (sección «Capturas»)
 - [x] Fase 2 en la rama `mejora-ia`: 10 pruebas unitarias (`ListaViewModelTest` y `BusquedaTest`), búsqueda sin tildes, deslizar para actualizar y [`PROMPTS.md`](PROMPTS.md)
 - [ ] Pull Request, versión `v1.0` y APK
