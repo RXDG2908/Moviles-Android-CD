@@ -27,14 +27,14 @@ fun FavoritosScreen(
         is UiState.Error -> ErrorView(estado.mensaje, {}, modifier)
         is UiState.Exito -> {
             if (estado.datos.isEmpty()) {
-                Vacio("Aún no tienes favoritos. Toca la estrella de un cosmético para guardarlo.", modifier)
+                Vacio("Sin favoritos", "Toca la estrella de un cosmético para guardarlo aquí", modifier)
             } else {
                 LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
+                    columns = GridCells.Adaptive(160.dp),
                     modifier = modifier,
-                    contentPadding = PaddingValues(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    contentPadding = PaddingValues(14.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     items(estado.datos, key = { it.id }) { item ->
                         ItemCard(

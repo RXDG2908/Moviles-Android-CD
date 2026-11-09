@@ -1,26 +1,31 @@
 package com.tecsup.fortnite.ui.admin
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.tecsup.fortnite.ui.UiState
 import com.tecsup.fortnite.ui.components.Cargando
 import com.tecsup.fortnite.ui.components.ErrorView
+import com.tecsup.fortnite.ui.theme.Blanco
+import com.tecsup.fortnite.ui.theme.FormaInclinada
+import com.tecsup.fortnite.ui.theme.Noche
+import com.tecsup.fortnite.ui.theme.Oro
+import com.tecsup.fortnite.ui.theme.Rojo
 
 @Composable
 fun AdminScreen(
@@ -34,33 +39,51 @@ fun AdminScreen(
         is UiState.Cargando -> Cargando(modifier)
         is UiState.Error -> ErrorView(estado.mensaje, onSincronizar, modifier)
         is UiState.Exito -> Column(
-            modifier.verticalScroll(rememberScrollState()).padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Text("Panel de administración", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Total("Guardados", estado.datos.guardados, Modifier.weight(1f))
-                Total("Favoritos", estado.datos.favoritos, Modifier.weight(1f))
+            Fila("Cosméticos guardados", estado.datos.guardados)
+            Fila("Favoritos", estado.datos.favoritos)
+            Button(
+                onClick = onSincronizar,
+                shape = FormaInclinada(14.dp),
+                modifier = Modifier.fillMaxWidth().padding(top = 10.dp).height(60.dp)
+            ) {
+                Text("SINCRONIZAR", style = MaterialTheme.typography.headlineSmall)
             }
-            Button(onClick = onSincronizar, modifier = Modifier.fillMaxWidth()) { Text("Sincronizar") }
-            OutlinedButton(onClick = onLimpiar, modifier = Modifier.fillMaxWidth()) { Text("Limpiar caché") }
+            Button(
+                onClick = onLimpiar,
+                shape = FormaInclinada(14.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Rojo, contentColor = Blanco),
+                modifier = Modifier.fillMaxWidth().height(60.dp)
+            ) {
+                Text("LIMPIAR CACHÉ", style = MaterialTheme.typography.headlineSmall)
+            }
             if (mensaje != null) {
-                Text(mensaje, color = MaterialTheme.colorScheme.secondary, style = MaterialTheme.typography.bodyLarge)
+                Text(
+                    mensaje.uppercase(),
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = Blanco
+                )
             }
         }
     }
 }
 
 @Composable
-private fun Total(titulo: String, valor: Int, modifier: Modifier) {
-    Card(
-        modifier = modifier,
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+private fun Fila(titulo: String, valor: Int) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clip(FormaInclinada(14.dp))
+            .background(Noche)
+            .padding(horizontal = 26.dp, vertical = 10.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(Modifier.padding(20.dp)) {
-            Text("$valor", style = MaterialTheme.typography.displaySmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
-            Text(titulo, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        }
+        Text(titulo.uppercase(), style = MaterialTheme.typography.titleMedium, color = Blanco)
+        Text("$valor", style = MaterialTheme.typography.displaySmall, color = Oro)
     }
 }

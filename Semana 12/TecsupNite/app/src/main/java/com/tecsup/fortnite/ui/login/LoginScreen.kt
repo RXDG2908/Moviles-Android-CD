@@ -10,16 +10,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,14 +27,19 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.dp
 import com.tecsup.fortnite.domain.model.Sesion
 import com.tecsup.fortnite.ui.UiState
+import com.tecsup.fortnite.ui.theme.Blanco
+import com.tecsup.fortnite.ui.theme.FondoCielo
+import com.tecsup.fortnite.ui.theme.FormaInclinada
+import com.tecsup.fortnite.ui.theme.Noche
+import com.tecsup.fortnite.ui.theme.Oro
+import com.tecsup.fortnite.ui.theme.Rojo
 
 @Composable
 fun LoginScreen(
@@ -46,87 +50,103 @@ fun LoginScreen(
     var clave by rememberSaveable { mutableStateOf("") }
     val cargando = estado is UiState.Cargando
 
-    // El Box centra el formulario; el Column se desplaza si no entra (pantalla girada)
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    listOf(MaterialTheme.colorScheme.primaryContainer, MaterialTheme.colorScheme.background)
+    FondoCielo {
+        // El Box centra el formulario; el Column se desplaza si no entra (pantalla girada)
+        Box(Modifier.fillMaxSize().safeDrawingPadding(), contentAlignment = Alignment.Center) {
+            Column(
+                modifier = Modifier
+                    .widthIn(max = 460.dp)
+                    .verticalScroll(rememberScrollState())
+                    .padding(24.dp)
+            ) {
+                Text(
+                    "TECSUP",
+                    style = MaterialTheme.typography.displayMedium,
+                    color = Blanco
                 )
-            )
-            .safeDrawingPadding(),
-        contentAlignment = Alignment.Center
-    ) {
-    Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .padding(28.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Icon(
-            Icons.Filled.SportsEsports,
-            contentDescription = null,
-            modifier = Modifier.size(72.dp),
-            tint = MaterialTheme.colorScheme.secondary
-        )
-        Text(
-            "TecsupNite",
-            style = MaterialTheme.typography.displaySmall,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary
-        )
-        Text(
-            "La tienda de cosméticos de Fortnite",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Spacer(Modifier.height(32.dp))
+                Text(
+                    "NITE",
+                    style = MaterialTheme.typography.displayLarge,
+                    color = Oro
+                )
+                Text(
+                    "Mira la tienda de hoy y guarda tus favoritos",
+                    modifier = Modifier.padding(top = 4.dp),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Blanco
+                )
+                Spacer(Modifier.height(28.dp))
 
-        OutlinedTextField(
-            value = correo,
-            onValueChange = { correo = it },
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text("Correo") },
-            singleLine = true,
-            enabled = !cargando,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            shape = RoundedCornerShape(16.dp)
-        )
-        Spacer(Modifier.height(12.dp))
-        OutlinedTextField(
-            value = clave,
-            onValueChange = { clave = it },
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text("Contraseña") },
-            singleLine = true,
-            enabled = !cargando,
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            shape = RoundedCornerShape(16.dp)
-        )
+                Campo("Correo", correo, !cargando, KeyboardType.Email, false) { correo = it }
+                Spacer(Modifier.height(10.dp))
+                Campo("Contraseña", clave, !cargando, KeyboardType.Password, true) { clave = it }
 
-        if (estado is UiState.Error) {
-            Text(
-                estado.mensaje,
-                modifier = Modifier.padding(top = 12.dp),
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
+                if (estado is UiState.Error) {
+                    Text(
+                        estado.mensaje,
+                        modifier = Modifier
+                            .padding(top = 10.dp)
+                            .fillMaxWidth()
+                            .clip(FormaInclinada())
+                            .background(Rojo)
+                            .padding(horizontal = 18.dp, vertical = 8.dp),
+                        color = Blanco,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
 
-        Spacer(Modifier.height(24.dp))
-        Button(
-            onClick = { onIngresar(correo, clave) },
-            enabled = !cargando,
-            modifier = Modifier.fillMaxWidth().height(52.dp)
-        ) {
-            if (cargando) {
-                CircularProgressIndicator(Modifier.size(22.dp), strokeWidth = 2.dp)
-            } else {
-                Text("Ingresar")
+                Spacer(Modifier.height(16.dp))
+                Button(
+                    onClick = { onIngresar(correo, clave) },
+                    enabled = !cargando,
+                    shape = FormaInclinada(14.dp),
+                    modifier = Modifier.fillMaxWidth().height(60.dp)
+                ) {
+                    if (cargando) {
+                        CircularProgressIndicator(Modifier.size(26.dp), color = Noche, strokeWidth = 3.dp)
+                    } else {
+                        Text("INGRESAR", style = MaterialTheme.typography.headlineSmall)
+                    }
+                }
             }
         }
     }
-    }
+}
+
+@Composable
+private fun Campo(
+    etiqueta: String,
+    valor: String,
+    activo: Boolean,
+    teclado: KeyboardType,
+    oculto: Boolean,
+    onCambio: (String) -> Unit
+) {
+    OutlinedTextField(
+        value = valor,
+        onValueChange = onCambio,
+        modifier = Modifier.fillMaxWidth(),
+        label = { Text(etiqueta) },
+        singleLine = true,
+        enabled = activo,
+        textStyle = MaterialTheme.typography.bodyLarge,
+        keyboardOptions = KeyboardOptions(keyboardType = teclado),
+        visualTransformation = if (oculto) PasswordVisualTransformation() else androidx.compose.ui.text.input.VisualTransformation.None,
+        shape = FormaInclinada(),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = Noche,
+            unfocusedContainerColor = Noche,
+            disabledContainerColor = Noche,
+            focusedTextColor = Blanco,
+            unfocusedTextColor = Blanco,
+            disabledTextColor = Blanco,
+            cursorColor = Oro,
+            focusedBorderColor = Oro,
+            unfocusedBorderColor = Color.Transparent,
+            disabledBorderColor = Color.Transparent,
+            focusedLabelColor = Oro,
+            unfocusedLabelColor = Blanco,
+            disabledLabelColor = Blanco
+        )
+    )
 }

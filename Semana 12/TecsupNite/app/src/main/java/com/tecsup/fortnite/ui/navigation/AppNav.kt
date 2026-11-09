@@ -12,7 +12,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.ui.graphics.Color
+import com.tecsup.fortnite.ui.theme.Blanco
+import com.tecsup.fortnite.ui.theme.FondoCielo
+import com.tecsup.fortnite.ui.theme.Noche
+import com.tecsup.fortnite.ui.theme.Oro
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -62,7 +68,9 @@ fun AppNav(container: AppContainer) {
     } else if (actual == null) {
         LoginScreen(estado = login, onIngresar = { c, k -> loginVm.ingresar(c, k) })
     } else {
-        Principal(container, actual, onSalir = { loginVm.cerrarSesion() })
+        FondoCielo {
+            Principal(container, actual, onSalir = { loginVm.cerrarSesion() })
+        }
     }
 }
 
@@ -75,9 +83,10 @@ private fun Principal(container: AppContainer, sesion: Sesion, onSalir: () -> Un
     val enDetalle = ruta.startsWith(RUTA_DETALLE)
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             TopAppBar(
-                title = { Text(if (enDetalle) "Detalle" else "TecsupNite") },
+                title = { Text(tituloDe(ruta)) },
                 navigationIcon = {
                     if (enDetalle) {
                         IconButton(onClick = { nav.popBackStack() }) {
@@ -91,8 +100,10 @@ private fun Principal(container: AppContainer, sesion: Sesion, onSalir: () -> Un
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.primary
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+                    actionIconContentColor = MaterialTheme.colorScheme.onSurface
                 )
             )
         },
@@ -103,13 +114,15 @@ private fun Principal(container: AppContainer, sesion: Sesion, onSalir: () -> Un
                         selected = ruta == RUTA_LISTA,
                         onClick = { irA(nav, RUTA_LISTA) },
                         icon = { Icon(Icons.Filled.ShoppingBag, contentDescription = null) },
-                        label = { Text("Tienda") }
+                        label = { Text("TIENDA", style = MaterialTheme.typography.labelLarge) },
+                        colors = coloresBarra()
                     )
                     NavigationBarItem(
                         selected = ruta == RUTA_FAVORITOS,
                         onClick = { irA(nav, RUTA_FAVORITOS) },
                         icon = { Icon(Icons.Filled.Star, contentDescription = null) },
-                        label = { Text("Favoritos") }
+                        label = { Text("FAVORITOS", style = MaterialTheme.typography.labelLarge) },
+                        colors = coloresBarra()
                     )
                     // El panel solo aparece para el administrador
                     if (sesion.rol == Rol.ADMIN) {
@@ -117,7 +130,8 @@ private fun Principal(container: AppContainer, sesion: Sesion, onSalir: () -> Un
                             selected = ruta == RUTA_ADMIN,
                             onClick = { irA(nav, RUTA_ADMIN) },
                             icon = { Icon(Icons.Filled.AdminPanelSettings, contentDescription = null) },
-                            label = { Text("Admin") }
+                            label = { Text("ADMIN", style = MaterialTheme.typography.labelLarge) },
+                            colors = coloresBarra()
                         )
                     }
                 }
@@ -176,6 +190,23 @@ private fun Principal(container: AppContainer, sesion: Sesion, onSalir: () -> Un
         }
     }
 }
+
+// Título de la barra superior según la pantalla
+private fun tituloDe(ruta: String) = when {
+    ruta.startsWith(RUTA_DETALLE) -> "DETALLE"
+    ruta == RUTA_FAVORITOS -> "FAVORITOS"
+    ruta == RUTA_ADMIN -> "PANEL ADMIN"
+    else -> "TIENDA DE HOY"
+}
+
+@Composable
+private fun coloresBarra() = NavigationBarItemDefaults.colors(
+    selectedIconColor = Noche,
+    selectedTextColor = Oro,
+    indicatorColor = Oro,
+    unselectedIconColor = Blanco,
+    unselectedTextColor = Blanco
+)
 
 private fun irA(nav: androidx.navigation.NavController, ruta: String) {
     nav.navigate(ruta) {

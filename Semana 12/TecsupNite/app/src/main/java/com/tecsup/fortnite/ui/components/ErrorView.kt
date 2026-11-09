@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.tecsup.fortnite.ui.theme.FormaInclinada
 
 @Composable
 fun ErrorView(mensaje: String, onReintentar: () -> Unit, modifier: Modifier = Modifier) {
@@ -27,15 +28,18 @@ fun ErrorView(mensaje: String, onReintentar: () -> Unit, modifier: Modifier = Mo
         Icon(
             Icons.Filled.CloudOff,
             contentDescription = null,
-            modifier = Modifier.size(56.dp),
-            tint = MaterialTheme.colorScheme.error
+            modifier = Modifier.size(64.dp),
+            tint = MaterialTheme.colorScheme.onBackground
         )
         Text(
-            mensaje,
-            modifier = Modifier.padding(vertical = 16.dp),
-            style = MaterialTheme.typography.bodyLarge,
+            mensaje.uppercase(),
+            modifier = Modifier.padding(top = 16.dp, bottom = 24.dp),
+            style = MaterialTheme.typography.headlineLarge,
+            color = MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.Center
         )
-        Button(onClick = onReintentar) { Text("Reintentar") }
+        Button(onClick = onReintentar, shape = FormaInclinada()) {
+            Text("REINTENTAR", style = MaterialTheme.typography.labelLarge)
+        }
     }
 }
