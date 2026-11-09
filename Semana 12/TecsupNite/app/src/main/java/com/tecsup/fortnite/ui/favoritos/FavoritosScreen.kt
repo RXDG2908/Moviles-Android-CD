@@ -30,7 +30,7 @@ fun FavoritosScreen(
                 Vacio("Sin favoritos", "Toca la estrella de un cosmético para guardarlo aquí", modifier)
             } else {
                 LazyVerticalGrid(
-                    columns = GridCells.Adaptive(160.dp),
+                    columns = GridCells.Adaptive(150.dp),
                     modifier = modifier,
                     contentPadding = PaddingValues(14.dp),
                     horizontalArrangement = Arrangement.spacedBy(10.dp),

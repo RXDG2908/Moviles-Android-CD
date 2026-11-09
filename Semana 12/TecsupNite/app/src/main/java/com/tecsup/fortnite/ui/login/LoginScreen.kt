@@ -36,7 +36,7 @@ import com.tecsup.fortnite.domain.model.Sesion
 import com.tecsup.fortnite.ui.UiState
 import com.tecsup.fortnite.ui.theme.Blanco
 import com.tecsup.fortnite.ui.theme.FondoCielo
-import com.tecsup.fortnite.ui.theme.FormaInclinada
+import androidx.compose.foundation.shape.RoundedCornerShape
 import com.tecsup.fortnite.ui.theme.Noche
 import com.tecsup.fortnite.ui.theme.Oro
 import com.tecsup.fortnite.ui.theme.Rojo
@@ -87,7 +87,7 @@ fun LoginScreen(
                         modifier = Modifier
                             .padding(top = 10.dp)
                             .fillMaxWidth()
-                            .clip(FormaInclinada())
+                            .clip(RoundedCornerShape(10.dp))
                             .background(Rojo)
                             .padding(horizontal = 18.dp, vertical = 8.dp),
                         color = Blanco,
@@ -99,7 +99,7 @@ fun LoginScreen(
                 Button(
                     onClick = { onIngresar(correo, clave) },
                     enabled = !cargando,
-                    shape = FormaInclinada(14.dp),
+                    shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.fillMaxWidth().height(60.dp)
                 ) {
                     if (cargando) {
@@ -132,7 +132,7 @@ private fun Campo(
         textStyle = MaterialTheme.typography.bodyLarge,
         keyboardOptions = KeyboardOptions(keyboardType = teclado),
         visualTransformation = if (oculto) PasswordVisualTransformation() else androidx.compose.ui.text.input.VisualTransformation.None,
-        shape = FormaInclinada(),
+        shape = RoundedCornerShape(12.dp),
         colors = OutlinedTextFieldDefaults.colors(
             focusedContainerColor = Noche,
             unfocusedContainerColor = Noche,

@@ -15,6 +15,13 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.dp
 import com.tecsup.fortnite.ui.theme.Blanco
 import com.tecsup.fortnite.ui.theme.FondoCielo
 import com.tecsup.fortnite.ui.theme.Noche
@@ -86,21 +93,21 @@ private fun Principal(container: AppContainer, sesion: Sesion, onSalir: () -> Un
         containerColor = Color.Transparent,
         topBar = {
             TopAppBar(
-                title = { Text(tituloDe(ruta)) },
+                title = { Text(tituloDe(ruta), style = MaterialTheme.typography.headlineLarge) },
                 navigationIcon = {
                     if (enDetalle) {
                         IconButton(onClick = { nav.popBackStack() }) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
+                            BotonRedondo { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver") }
                         }
                     }
                 },
                 actions = {
                     IconButton(onClick = onSalir) {
-                        Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "Cerrar sesión")
+                        BotonRedondo { Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "Cerrar sesión") }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
+                    containerColor = Color.Transparent,
                     titleContentColor = MaterialTheme.colorScheme.onSurface,
                     navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
                     actionIconContentColor = MaterialTheme.colorScheme.onSurface
@@ -189,6 +196,15 @@ private fun Principal(container: AppContainer, sesion: Sesion, onSalir: () -> Un
             }
         }
     }
+}
+
+// Fondo oscuro y redondo para los iconos de la barra superior
+@Composable
+private fun BotonRedondo(icono: @Composable () -> Unit) {
+    Box(
+        Modifier.size(40.dp).clip(CircleShape).background(Noche.copy(alpha = 0.8f)),
+        contentAlignment = Alignment.Center
+    ) { icono() }
 }
 
 // Título de la barra superior según la pantalla

@@ -28,8 +28,9 @@ Inspirado en la tienda del juego, sobre Material 3:
 
 - Fondo celeste con rayos, barras y tarjetas en azul noche, acciones en amarillo.
 - Fuente Burbank Big Condensed (la del juego) en todos los textos; títulos inclinados y en mayúsculas.
-- Botones, chips y etiquetas en forma de paralelogramo; tarjetas con el borde inferior en diagonal.
-- Cada tarjeta lleva el color de su rareza. Los cosméticos de 1500 V-Bucks o más se muestran en grande al inicio.
+- La tienda se divide como en el juego: «Destacados» (1500 V-Bucks o más, tarjetas grandes) y «Diarios».
+- Cada tarjeta tiene el fondo y la franja del color de su rareza, con el nombre y el precio encima de la imagen. Los lotes y los descuentos llevan una etiqueta.
+- Chips y etiquetas en forma de paralelogramo; botones y tarjetas con esquinas redondeadas.
 - En horizontal la tienda usa más columnas.
 
 ## Endpoints
@@ -101,8 +102,8 @@ Probado en el emulador con la tienda real: PA-04 a PA-11 y PA-13 (primera apertu
 
 Pendiente
 
-- [x] PA-03 y PA-04 probados con Firebase real (contraseña incorrecta y campos vacíos)
-- [ ] Probar PA-01, PA-02, PA-12 y PA-14 con los usuarios de prueba (login, roles, sesión y permiso)
+- [x] PA-01, PA-03, PA-04, PA-12 y PA-14 probados con Firebase real, y la sesión se mantiene al reabrir
+- [ ] PA-02: el admin entra pero no ve el panel porque en Firestore no existe el documento `usuarios/{UID del admin}` con `rol = admin`
 - [ ] Capturas de login, lista, detalle, favoritos, panel Admin y notificación
 - [ ] Fase 2 en la rama `mejora-ia`: pruebas unitarias del ViewModel, mejoras y `PROMPTS.md`
 - [ ] Pull Request, versión `v1.0` y APK

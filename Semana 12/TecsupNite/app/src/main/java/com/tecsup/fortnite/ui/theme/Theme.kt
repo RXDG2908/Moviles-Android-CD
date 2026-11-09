@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tecsup.fortnite.R
 
+val CieloClaro = Color(0xFF5CC6FF)
 val Cielo = Color(0xFF35AEF6)
 val CieloFuerte = Color(0xFF0E7BE0)
 val Noche = Color(0xFF0A2A66)
@@ -100,11 +101,11 @@ private val Tipos = Typography(
 )
 
 private val Formas = Shapes(
-    extraSmall = RoundedCornerShape(2.dp),
-    small = RoundedCornerShape(2.dp),
-    medium = RoundedCornerShape(2.dp),
-    large = RoundedCornerShape(2.dp),
-    extraLarge = RoundedCornerShape(2.dp)
+    extraSmall = RoundedCornerShape(6.dp),
+    small = RoundedCornerShape(8.dp),
+    medium = RoundedCornerShape(12.dp),
+    large = RoundedCornerShape(16.dp),
+    extraLarge = RoundedCornerShape(24.dp)
 )
 
 @Composable

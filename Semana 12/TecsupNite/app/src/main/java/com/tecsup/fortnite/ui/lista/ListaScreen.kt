@@ -3,16 +3,20 @@ package com.tecsup.fortnite.ui.lista
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
@@ -26,6 +30,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -41,7 +46,7 @@ import com.tecsup.fortnite.ui.theme.FormaInclinada
 import com.tecsup.fortnite.ui.theme.Noche
 import com.tecsup.fortnite.ui.theme.Oro
 
-// Desde este precio el cosmético se muestra en grande, al inicio de la tienda
+// Desde este precio el cosmético va en la sección Destacados
 private const val PRECIO_DESTACADO = 1500
 
 @Composable
@@ -79,33 +84,39 @@ private fun ContenidoLista(
 
     // Un chip por cada tipo que hay en la tienda
     val tipos = remember(datos) { datos.distinctBy { it.tipoClave } }
-    // Lo más caro primero, como la sección destacada de la tienda
     val visibles = remember(datos, busqueda, tipo) {
         datos.filter {
             (tipo == "" || it.tipoClave == tipo) && it.titulo.contains(busqueda, ignoreCase = true)
         }.sortedByDescending { it.precio }
     }
+    val destacados = visibles.filter { it.precio >= PRECIO_DESTACADO }
+    val diarios = visibles.filter { it.precio < PRECIO_DESTACADO }
 
     // Más columnas si la pantalla está girada; el buscador y los chips se desplazan con la lista
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(160.dp),
+        columns = GridCells.Adaptive(150.dp),
         modifier = modifier,
-        contentPadding = PaddingValues(start = 14.dp, end = 14.dp, top = 12.dp, bottom = 20.dp),
+        contentPadding = PaddingValues(start = 14.dp, end = 14.dp, top = 4.dp, bottom = 20.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         if (aviso != null) {
             item(span = { GridItemSpan(maxLineSpan) }) {
-                Text(
-                    aviso.uppercase(),
-                    modifier = Modifier
+                Row(
+                    Modifier
                         .fillMaxWidth()
-                        .clip(FormaInclinada())
+                        .clip(RoundedCornerShape(10.dp))
                         .background(Oro)
-                        .padding(horizontal = 18.dp, vertical = 8.dp),
-                    style = MaterialTheme.typography.titleSmall,
-                    color = Noche
-                )
+                        .padding(horizontal = 14.dp, vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(Icons.Filled.WifiOff, contentDescription = null, tint = Noche)
+                    Text(
+                        "  " + aviso,
+                        style = MaterialTheme.typography.titleSmall,
+                        color = Noche
+                    )
+                }
             }
         }
         item(span = { GridItemSpan(maxLineSpan) }) {
@@ -117,7 +128,7 @@ private fun ContenidoLista(
                 leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null, tint = Noche) },
                 singleLine = true,
                 textStyle = MaterialTheme.typography.bodyLarge,
-                shape = FormaInclinada(),
+                shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = Blanco,
                     unfocusedContainerColor = Blanco,
@@ -142,18 +153,42 @@ private fun ContenidoLista(
                 Vacio("Sin resultados", "Prueba con otro nombre o con otro tipo")
             }
         }
-        items(
-            visibles,
-            key = { it.id },
-            span = { item -> GridItemSpan(if (item.precio >= PRECIO_DESTACADO) minOf(2, maxLineSpan) else 1) }
-        ) { item ->
-            ItemCard(
-                item = item,
-                onClick = { onItemClick(item.id) },
-                onFavorito = { onFavorito(item.id) },
-                destacado = item.precio >= PRECIO_DESTACADO
+        seccion("Destacados", destacados, true, onItemClick, onFavorito)
+        seccion("Diarios", diarios, false, onItemClick, onFavorito)
+    }
+}
+
+// Título de sección y sus tarjetas; los destacados ocupan dos columnas
+private fun LazyGridScope.seccion(
+    titulo: String,
+    lista: List<Item>,
+    grande: Boolean,
+    onItemClick: (String) -> Unit,
+    onFavorito: (String) -> Unit
+) {
+    if (lista.isEmpty()) return
+    item(span = { GridItemSpan(maxLineSpan) }) {
+        Row(Modifier.padding(top = 10.dp), verticalAlignment = Alignment.Bottom) {
+            Text(titulo.uppercase(), style = MaterialTheme.typography.displaySmall, color = Blanco)
+            Text(
+                "  ${lista.size}",
+                modifier = Modifier.padding(bottom = 6.dp),
+                style = MaterialTheme.typography.titleMedium,
+                color = Noche
             )
         }
+    }
+    items(
+        lista,
+        key = { it.id },
+        span = { GridItemSpan(if (grande) minOf(2, maxLineSpan) else 1) }
+    ) { item ->
+        ItemCard(
+            item = item,
+            onClick = { onItemClick(item.id) },
+            onFavorito = { onFavorito(item.id) },
+            destacado = grande
+        )
     }
 }
 
