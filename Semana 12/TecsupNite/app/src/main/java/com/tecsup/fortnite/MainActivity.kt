@@ -1,37 +1,40 @@
 package com.tecsup.fortnite
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.tecsup.fortnite.domain.model.Item
-import com.tecsup.fortnite.ui.UiState
-import com.tecsup.fortnite.ui.lista.ListaScreen
+import androidx.core.content.ContextCompat
+import com.tecsup.fortnite.ui.navigation.AppNav
 import com.tecsup.fortnite.ui.theme.TecsupNiteTheme
 
 class MainActivity : ComponentActivity() {
+
+    // Pide el permiso de notificaciones; si lo niegan, la app sigue normal
+    private val pedirPermiso =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Datos de prueba mientras se conecta la API
-        val prueba = listOf(
-            Item("1", "Katana de Vader", "Pico", null, false, 800, 800, "Saga Star Wars", "starwars", "pickaxe"),
-            Item("2", "Metal Gear Mk. II", "Mochila", null, true, 500, 700, "Épico", "epic", "backpack"),
-            Item("3", "Jonesy", "Traje", null, false, 1500, 1500, "Poco común", "uncommon", "outfit")
-        )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            pedirPermiso.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+
+        val container = (application as TecsupNiteApp).container
         setContent {
             TecsupNiteTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
-                    ListaScreen(
-                        estado = UiState.Exito(prueba),
-                        aviso = null,
-                        onReintentar = {},
-                        onItemClick = {},
-                        onFavorito = {},
-                        modifier = Modifier.padding(padding)
-                    )
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    AppNav(container)
                 }
             }
         }
