@@ -119,4 +119,5 @@ Pendiente
 - [x] Documentos `usuarios/{uid}` creados en Firestore para el admin y el usuario
 - [ ] Capturas de login, lista, detalle, favoritos, panel Admin y notificación
 - [ ] Fase 2 en la rama `mejora-ia`: pruebas unitarias del ViewModel, mejoras y `PROMPTS.md`
-- [ ] Pull Request, versión `v1.0` y APK
+- [x] La Fase 2 se entrega en la rama `mejora-ia` (sin Pull Request: `main` y `mejora-ia` tienen historias separadas desde labs anteriores)
+- [ ] Subir `main` y `mejora-ia` a GitHub y publicar la versión `v1.0` con el APK
