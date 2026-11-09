@@ -45,6 +45,7 @@ Tomadas en el emulador con la tienda real del 09/11/2026 y la cuenta admin.
 | Hoja del producto | Favoritos | Notificación | Panel Admin |
 |---|---|---|---|
 | ![Detalle](capturas/04-detalle.jpg) | ![Favoritos](capturas/05-favoritos.jpg) | ![Notificación](capturas/06-notificacion.jpg) | ![Admin](capturas/07-admin.jpg) |
+
 ## Endpoints
 
 | Uso | Endpoint |
