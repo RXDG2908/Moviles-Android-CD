@@ -18,7 +18,9 @@ App Android en Kotlin con Jetpack Compose y Material 3 que muestra la tienda de 
 - Panel Admin (solo admin): total guardado, total de favoritos, Sincronizar y Limpiar caché.
 - Sesión que se mantiene al reabrir y botón Cerrar sesión.
 
-Se descartan las pistas musicales, los instrumentos y los autos de la tienda; solo se muestran cosméticos de Battle Royale.
+Se descartan las pistas musicales, los instrumentos y los autos de la tienda; solo se muestran cosméticos de Battle Royale. Los packs aparecen como «Lote», con su nombre, su imagen y el precio del pack; el detalle muestra el primer cosmético e indica que el precio es del lote. Si un cosmético también se vende solo, se muestra solo ese y no el lote.
+
+Los favoritos se conservan aunque ya no estén en la tienda de hoy, por eso también pueden aparecer en la lista.
 
 ## Endpoints
 
@@ -85,9 +87,11 @@ Fase 1 (rama `main`, sin IA)
 - [x] H12 a H15: login con roles, panel Admin y notificación local
 - [x] H16: este README
 
+Probado en el emulador con la tienda real: PA-04 a PA-11 y PA-13 (primera apertura con notificación, detalle, favoritos, modo avión con y sin datos, sincronizar, limpiar caché y girar la pantalla).
+
 Pendiente
 
-- [ ] Crear los usuarios y documentos en Firebase y probar los 14 casos de aceptación en el emulador
+- [ ] Crear los usuarios y documentos en Firebase y probar los casos de login, roles, sesión y permiso: PA-01, PA-02, PA-03, PA-12 y PA-14
 - [ ] Capturas de login, lista, detalle, favoritos, panel Admin y notificación
 - [ ] Fase 2 en la rama `mejora-ia`: pruebas unitarias del ViewModel, mejoras y `PROMPTS.md`
 - [ ] Pull Request, versión `v1.0` y APK
