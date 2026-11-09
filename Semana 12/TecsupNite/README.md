@@ -33,6 +33,17 @@ Basado en la tienda de regalitos.shop (proyecto propio, reglas en `WEB.md` de es
 - **Tarjetas** (Plantilla Prime de la web): fondo con los colores oficiales de cada oferta en el 85 % de abajo, la imagen asoma por arriba y se difumina para leer el precio; solo llevan el tipo y el precio (el nombre va en el detalle), placas «X de descuento» y «Termina hoy», y botón amarillo para favoritos.
 - **Barra inferior**: la pestaña activa en amarillo con una raya arriba.
 - **Hoja del producto** (como el `<dialog class="hoja">` de la web, skill `law-of-figure-ground`): se abre encima de la tienda con un velo detrás; borde celeste, imagen arriba con los colores oficiales que se funden abajo, tipo y «Termina hoy», nombre en Burbank, precio grande, descripción, fichas de detalles (rareza, sección, serie, llegada) y los botones «A favoritos» / «Volver» siempre abajo.
+## Capturas
+
+Tomadas en el emulador con la tienda real del 09/11/2026 y la cuenta admin.
+
+| Login | Tienda de hoy | Secciones y favoritos |
+|---|---|---|
+| ![Login](capturas/01-login.jpg) | ![Tienda](capturas/02-tienda.jpg) | ![Secciones](capturas/03-tienda-secciones.jpg) |
+
+| Hoja del producto | Favoritos | Notificación | Panel Admin |
+|---|---|---|---|
+| ![Detalle](capturas/04-detalle.jpg) | ![Favoritos](capturas/05-favoritos.jpg) | ![Notificación](capturas/06-notificacion.jpg) | ![Admin](capturas/07-admin.jpg) |
 ## Endpoints
 
 | Uso | Endpoint |
