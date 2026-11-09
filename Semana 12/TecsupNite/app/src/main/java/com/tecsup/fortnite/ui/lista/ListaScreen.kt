@@ -1,12 +1,11 @@
 package com.tecsup.fortnite.ui.lista
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
@@ -21,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -65,65 +65,70 @@ private fun ContenidoLista(
     var tipo by rememberSaveable { mutableStateOf("") }
 
     // Un chip por cada tipo que hay en la tienda
-    val tipos = datos.distinctBy { it.tipoClave }
-    val visibles = datos.filter {
-        (tipo == "" || it.tipoClave == tipo) && it.titulo.contains(busqueda, ignoreCase = true)
+    val tipos = remember(datos) { datos.distinctBy { it.tipoClave } }
+    val visibles = remember(datos, busqueda, tipo) {
+        datos.filter {
+            (tipo == "" || it.tipoClave == tipo) && it.titulo.contains(busqueda, ignoreCase = true)
+        }
     }
 
-    Column(modifier) {
+    // Más columnas si la pantalla está girada; el buscador y los chips se desplazan con la lista
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(160.dp),
+        modifier = modifier,
+        contentPadding = PaddingValues(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
         if (aviso != null) {
-            Text(
-                aviso,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 6.dp),
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.tertiary
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                Text(
+                    aviso,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+            }
+        }
+        item(span = { GridItemSpan(maxLineSpan) }) {
+            OutlinedTextField(
+                value = busqueda,
+                onValueChange = { busqueda = it },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text("Buscar cosmético") },
+                leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
+                singleLine = true,
+                shape = RoundedCornerShape(28.dp)
             )
         }
-        OutlinedTextField(
-            value = busqueda,
-            onValueChange = { busqueda = it },
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-            placeholder = { Text("Buscar cosmético") },
-            leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
-            singleLine = true,
-            shape = RoundedCornerShape(28.dp)
-        )
-        LazyRow(
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            item {
-                FilterChip(
-                    selected = tipo == "",
-                    onClick = { tipo = "" },
-                    label = { Text("Todos") }
-                )
-            }
-            items(tipos) { t ->
-                FilterChip(
-                    selected = tipo == t.tipoClave,
-                    onClick = { tipo = t.tipoClave },
-                    label = { Text(t.subtitulo) }
-                )
-            }
-        }
-        if (visibles.isEmpty()) {
-            Vacio("No hay resultados para tu búsqueda")
-        } else {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(visibles, key = { it.id }) { item ->
-                    ItemCard(
-                        item = item,
-                        onClick = { onItemClick(item.id) },
-                        onFavorito = { onFavorito(item.id) }
+        item(span = { GridItemSpan(maxLineSpan) }) {
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                item {
+                    FilterChip(
+                        selected = tipo == "",
+                        onClick = { tipo = "" },
+                        label = { Text("Todos") }
+                    )
+                }
+                items(tipos) { t ->
+                    FilterChip(
+                        selected = tipo == t.tipoClave,
+                        onClick = { tipo = t.tipoClave },
+                        label = { Text(t.subtitulo) }
                     )
                 }
             }
+        }
+        if (visibles.isEmpty()) {
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                Vacio("No hay resultados para tu búsqueda")
+            }
+        }
+        items(visibles, key = { it.id }) { item ->
+            ItemCard(
+                item = item,
+                onClick = { onItemClick(item.id) },
+                onFavorito = { onFavorito(item.id) }
+            )
         }
     }
 }

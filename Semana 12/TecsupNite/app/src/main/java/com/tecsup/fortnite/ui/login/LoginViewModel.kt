@@ -44,7 +44,7 @@ class LoginViewModel(private val auth: AuthRepository) : ViewModel() {
                     _sesion.value = it
                     _login.value = null
                 }
-                .onFailure { _login.value = UiState.Error("Correo o contraseña incorrectos") }
+                .onFailure { _login.value = UiState.Error("No se pudo ingresar. Revisa tu correo, tu contraseña y tu conexión.") }
         }
     }
 

@@ -15,6 +15,8 @@ class FirebaseAuthRepository(
         val uid = auth.signInWithEmailAndPassword(correo, clave).await().user!!.uid
         Result.success(leerSesion(uid, correo))
     } catch (e: Exception) {
+        // Si no se pudo leer el rol, no queda una sesión a medias
+        auth.signOut()
         Result.failure(e)
     }
 
@@ -23,7 +25,8 @@ class FirebaseAuthRepository(
         return try {
             leerSesion(u.uid, u.email ?: "")
         } catch (e: Exception) {
-            null
+            // Sin conexión la sesión sigue activa; el panel Admin no se muestra hasta leer el rol
+            Sesion(u.uid, u.email ?: "", Rol.USUARIO)
         }
     }
 

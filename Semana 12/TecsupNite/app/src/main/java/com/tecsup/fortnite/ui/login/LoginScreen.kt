@@ -1,14 +1,17 @@
 package com.tecsup.fortnite.ui.login
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SportsEsports
@@ -43,7 +46,8 @@ fun LoginScreen(
     var clave by rememberSaveable { mutableStateOf("") }
     val cargando = estado is UiState.Cargando
 
-    Column(
+    // El Box centra el formulario; el Column se desplaza si no entra (pantalla girada)
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(
@@ -51,9 +55,14 @@ fun LoginScreen(
                     listOf(MaterialTheme.colorScheme.primaryContainer, MaterialTheme.colorScheme.background)
                 )
             )
+            .safeDrawingPadding(),
+        contentAlignment = Alignment.Center
+    ) {
+    Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
             .padding(28.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
             Icons.Filled.SportsEsports,
@@ -118,5 +127,6 @@ fun LoginScreen(
                 Text("Ingresar")
             }
         }
+    }
     }
 }
