@@ -29,6 +29,8 @@ import androidx.compose.material.icons.filled.Sell
 import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -69,6 +71,7 @@ private const val ORDEN_TIENDA = "Como en Fortnite"
 private const val ORDEN_MENOR = "Menor precio"
 private const val ORDEN_MAYOR = "Mayor precio"
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListaScreen(
     estado: UiState<List<Item>>,
@@ -76,7 +79,9 @@ fun ListaScreen(
     onReintentar: () -> Unit,
     onItemClick: (String) -> Unit,
     onFavorito: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    refrescando: Boolean = false,
+    onActualizar: () -> Unit = {}
 ) {
     when (estado) {
         is UiState.Cargando -> Cargando(modifier)
@@ -85,7 +90,10 @@ fun ListaScreen(
             if (estado.datos.isEmpty()) {
                 Vacio("Tienda vacía", "Sincroniza para traer los cosméticos de hoy", modifier)
             } else {
-                ContenidoLista(estado.datos, aviso, onItemClick, onFavorito, modifier)
+                // Deslizar hacia abajo para sincronizar la tienda
+                PullToRefreshBox(isRefreshing = refrescando, onRefresh = onActualizar, modifier = modifier) {
+                    ContenidoLista(estado.datos, aviso, onItemClick, onFavorito, Modifier)
+                }
             }
         }
     }
@@ -112,7 +120,7 @@ private fun ContenidoLista(
             (tipo == "" || it.tipoClave == tipo) &&
                 (!conDescuento || it.precioRegular > it.precio) &&
                 (!terminaHoy || it.terminaHoy) &&
-                (it.titulo.contains(busqueda, ignoreCase = true) || it.seccion.contains(busqueda, ignoreCase = true))
+                coincide(it, busqueda)
         }
     }
     // Secciones en el orden de la tienda; las que no tienen nombre van al final
@@ -210,8 +218,8 @@ private fun ContenidoLista(
         // Resumen, como .resumen
         item(span = { GridItemSpan(maxLineSpan) }) {
             Text(
-                if (orden == ORDEN_TIENDA) "${visibles.size} objetos en ${secciones.size} secciones"
-                else "${visibles.size} objetos",
+                if (orden == ORDEN_TIENDA) "${cuenta(visibles.size, "objeto", "objetos")} en ${cuenta(secciones.size, "sección", "secciones")}"
+                else cuenta(visibles.size, "objeto", "objetos"),
                 style = MaterialTheme.typography.titleSmall,
                 color = CelesteTexto
             )
@@ -244,7 +252,7 @@ private fun LazyGridScope.seccion(
     item(key = "sec-$titulo", span = { GridItemSpan(maxLineSpan) }) {
         Column(Modifier.padding(top = 14.dp)) {
             Text(titulo.uppercase(), style = MaterialTheme.typography.headlineLarge, color = Blanco)
-            Text("${lista.size} objetos", style = MaterialTheme.typography.titleSmall, color = CelesteTexto)
+            Text(cuenta(lista.size, "objeto", "objetos"), style = MaterialTheme.typography.titleSmall, color = CelesteTexto)
         }
     }
     items(lista, key = { it.id }) { item ->
@@ -344,3 +352,6 @@ private fun Chip(
         )
     }
 }
+
+// "1 objeto" / "5 objetos"
+private fun cuenta(n: Int, singular: String, plural: String) = "$n ${if (n == 1) singular else plural}"

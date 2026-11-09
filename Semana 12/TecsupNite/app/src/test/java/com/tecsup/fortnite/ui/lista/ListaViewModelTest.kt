@@ -92,6 +92,22 @@ class ListaViewModelTest {
     }
 
     @Test
+    fun deslizarParaActualizarSincronizaSinQuitarLaLista() = runTest(despachador) {
+        val repo = RepositorioFalso()
+        repo.resultadoRefrescar = Result.success(listOf(itemDePrueba("1")))
+        val vm = ListaViewModel(repo, NotificadorFalso())
+        advanceUntilIdle()
+
+        repo.resultadoRefrescar = Result.success(listOf(itemDePrueba("1"), itemDePrueba("2")))
+        vm.deslizarParaActualizar()
+        assertTrue(vm.refrescando.value)
+        advanceUntilIdle()
+
+        assertEquals(false, vm.refrescando.value)
+        assertEquals(2, (vm.estado.value as UiState.Exito).datos.size)
+    }
+
+    @Test
     fun reintentarVuelveASincronizar() = runTest(despachador) {
         val repo = RepositorioFalso()
         repo.resultadoRefrescar = Result.failure(IOException("sin red"))

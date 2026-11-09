@@ -154,12 +154,15 @@ private fun Principal(container: AppContainer, sesion: Sesion, onSalir: () -> Un
                 val vm: ListaViewModel = viewModel(factory = ViewModelFactory(container))
                 val estado by vm.estado.collectAsStateWithLifecycle()
                 val aviso by vm.aviso.collectAsStateWithLifecycle()
+                val refrescando by vm.refrescando.collectAsStateWithLifecycle()
                 ListaScreen(
                     estado = estado,
                     aviso = aviso,
                     onReintentar = { vm.reintentar() },
                     onItemClick = { id -> nav.navigate("$RUTA_DETALLE/$id") },
-                    onFavorito = { id -> vm.alternarFavorito(id) }
+                    onFavorito = { id -> vm.alternarFavorito(id) },
+                    refrescando = refrescando,
+                    onActualizar = { vm.deslizarParaActualizar() }
                 )
             }
             // La hoja del producto se abre encima de la tienda, con un velo detrás

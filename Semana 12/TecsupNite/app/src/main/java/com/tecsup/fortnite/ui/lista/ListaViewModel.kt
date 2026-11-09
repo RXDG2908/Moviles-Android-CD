@@ -24,6 +24,10 @@ class ListaViewModel(
     private val _aviso = MutableStateFlow<String?>(null)
     val aviso: StateFlow<String?> = _aviso.asStateFlow()
 
+    // true mientras se sincroniza al deslizar hacia abajo
+    private val _refrescando = MutableStateFlow(false)
+    val refrescando: StateFlow<Boolean> = _refrescando.asStateFlow()
+
     private var refrescoTerminado = false
 
     init {
@@ -50,6 +54,21 @@ class ListaViewModel(
                     if (repo.cantidadGuardada() == 0) _estado.value = UiState.Error(mensajeDe(e))
                     else _aviso.value = "Sin conexión: mostrando datos guardados"
                 }
+        }
+    }
+
+    // Deslizar hacia abajo: sincroniza sin quitar la lista de la pantalla
+    fun deslizarParaActualizar() {
+        if (_refrescando.value) return
+        _refrescando.value = true
+        viewModelScope.launch {
+            repo.refrescar()
+                .onSuccess { n ->
+                    _aviso.value = null
+                    notificador.mostrar("Tienda actualizada", "Se guardaron $n elementos")
+                }
+                .onFailure { _aviso.value = "Sin conexión: mostrando datos guardados" }
+            _refrescando.value = false
         }
     }
 
