@@ -16,6 +16,9 @@ data class EntradaDto(
     val finalPrice: Int = 0,
     val regularPrice: Int = 0,
     val bundle: LoteDto? = null,
+    val layout: SeccionDto? = null,
+    val colors: ColoresDto? = null,
+    val outDate: String = "",
     val brItems: List<ItemDto>? = null,
     val tracks: List<JsonElement>? = null,
     val instruments: List<JsonElement>? = null,
@@ -25,6 +28,14 @@ data class EntradaDto(
 // Pack de varios cosméticos con un solo precio
 @Serializable
 data class LoteDto(val name: String = "", val image: String? = null)
+
+// Sección de la tienda donde aparece la oferta (One Piece, Star Wars...)
+@Serializable
+data class SeccionDto(val name: String = "", val index: Int = 0)
+
+// Colores oficiales de la tarjeta, en formato RRGGBBAA
+@Serializable
+data class ColoresDto(val color1: String = "", val color3: String = "")
 
 // Respuesta del detalle: /v2/cosmetics/br/{id}
 @Serializable
@@ -52,4 +63,8 @@ data class SerieDto(val value: String = "")
 data class IntroduccionDto(val text: String = "")
 
 @Serializable
-data class ImagenesDto(val smallIcon: String? = null, val icon: String? = null)
+data class ImagenesDto(
+    val smallIcon: String? = null,
+    val icon: String? = null,
+    val featured: String? = null // render grande, sin fondo
+)

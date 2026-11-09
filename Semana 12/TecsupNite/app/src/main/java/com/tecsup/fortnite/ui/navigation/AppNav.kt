@@ -93,7 +93,7 @@ private fun Principal(container: AppContainer, sesion: Sesion, onSalir: () -> Un
         containerColor = Color.Transparent,
         topBar = {
             TopAppBar(
-                title = { Text(tituloDe(ruta), style = MaterialTheme.typography.headlineLarge) },
+                title = { Text(tituloDe(ruta), style = MaterialTheme.typography.headlineMedium) },
                 navigationIcon = {
                     if (enDetalle) {
                         IconButton(onClick = { nav.popBackStack() }) {
@@ -116,19 +116,20 @@ private fun Principal(container: AppContainer, sesion: Sesion, onSalir: () -> Un
         },
         bottomBar = {
             if (!enDetalle) {
-                NavigationBar {
+                // Barra inferior como .tabbar de la web: la activa en amarillo con raya arriba
+                NavigationBar(containerColor = Noche) {
                     NavigationBarItem(
                         selected = ruta == RUTA_LISTA,
                         onClick = { irA(nav, RUTA_LISTA) },
-                        icon = { Icon(Icons.Filled.ShoppingBag, contentDescription = null) },
-                        label = { Text("TIENDA", style = MaterialTheme.typography.labelLarge) },
+                        icon = { IconoTab(ruta == RUTA_LISTA) { Icon(Icons.Filled.ShoppingBag, contentDescription = null) } },
+                        label = { Text("Tienda", style = MaterialTheme.typography.labelLarge) },
                         colors = coloresBarra()
                     )
                     NavigationBarItem(
                         selected = ruta == RUTA_FAVORITOS,
                         onClick = { irA(nav, RUTA_FAVORITOS) },
-                        icon = { Icon(Icons.Filled.Star, contentDescription = null) },
-                        label = { Text("FAVORITOS", style = MaterialTheme.typography.labelLarge) },
+                        icon = { IconoTab(ruta == RUTA_FAVORITOS) { Icon(Icons.Filled.Star, contentDescription = null) } },
+                        label = { Text("Favoritos", style = MaterialTheme.typography.labelLarge) },
                         colors = coloresBarra()
                     )
                     // El panel solo aparece para el administrador
@@ -136,8 +137,8 @@ private fun Principal(container: AppContainer, sesion: Sesion, onSalir: () -> Un
                         NavigationBarItem(
                             selected = ruta == RUTA_ADMIN,
                             onClick = { irA(nav, RUTA_ADMIN) },
-                            icon = { Icon(Icons.Filled.AdminPanelSettings, contentDescription = null) },
-                            label = { Text("ADMIN", style = MaterialTheme.typography.labelLarge) },
+                            icon = { IconoTab(ruta == RUTA_ADMIN) { Icon(Icons.Filled.AdminPanelSettings, contentDescription = null) } },
+                            label = { Text("Admin", style = MaterialTheme.typography.labelLarge) },
                             colors = coloresBarra()
                         )
                     }
@@ -207,19 +208,34 @@ private fun BotonRedondo(icono: @Composable () -> Unit) {
     ) { icono() }
 }
 
+// Icono de la barra inferior; el activo lleva una raya amarilla arriba
+@Composable
+private fun IconoTab(activo: Boolean, icono: @Composable () -> Unit) {
+    androidx.compose.foundation.layout.Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Box(
+            Modifier
+                .size(width = 28.dp, height = 3.dp)
+                .clip(CircleShape)
+                .background(if (activo) Oro else Color.Transparent)
+        )
+        androidx.compose.foundation.layout.Spacer(Modifier.size(6.dp))
+        icono()
+    }
+}
+
 // Título de la barra superior según la pantalla
 private fun tituloDe(ruta: String) = when {
     ruta.startsWith(RUTA_DETALLE) -> "DETALLE"
     ruta == RUTA_FAVORITOS -> "FAVORITOS"
     ruta == RUTA_ADMIN -> "PANEL ADMIN"
-    else -> "TIENDA DE HOY"
+    else -> "TECSUPNITE"
 }
 
 @Composable
 private fun coloresBarra() = NavigationBarItemDefaults.colors(
-    selectedIconColor = Noche,
+    selectedIconColor = Oro,
     selectedTextColor = Oro,
-    indicatorColor = Oro,
+    indicatorColor = Color.Transparent,
     unselectedIconColor = Blanco,
     unselectedTextColor = Blanco
 )

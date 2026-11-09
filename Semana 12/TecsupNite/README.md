@@ -24,15 +24,14 @@ Los favoritos se conservan aunque ya no estén en la tienda de hoy, por eso tamb
 
 ## Diseño
 
-Inspirado en la tienda del juego, sobre Material 3:
+Basado en la tienda de regalitos.shop (proyecto propio, reglas en `WEB.md` de ese repo), adaptado a Android con Material 3:
 
-- Colores y formas basados en la tienda de regalitos.shop: fondo azul rey, paneles y buscador azul marino con borde azul, acciones en amarillo eléctrico, chips en forma de píldora con su contador.
-- Burbank Big Condensed (la del juego) solo en los títulos, inclinados y en mayúsculas; el resto del texto en Inter (licencia SIL Open Font License, https://github.com/rsms/inter).
-- La tienda se divide como en el juego: «Destacados» (1500 V-Bucks o más, tarjetas grandes) y «Diarios».
-- Cada tarjeta tiene el fondo y la franja del color de su rareza, con el nombre y el precio encima de la imagen. Los lotes y los descuentos llevan una etiqueta.
-- Chips y etiquetas en forma de paralelogramo; botones y tarjetas con esquinas redondeadas.
-- En horizontal la tienda usa más columnas.
-
+- **Colores** (tokens de la web): azul tienda `#0a63d8` en degradado sólido, sin dibujos de fondo; paneles `rgba(5,22,138,.55)`; chips con borde `#00c3fe`; amarillo `#fdff00` como único acento de acción.
+- **Fuentes**: Burbank (la del juego) solo en títulos, inclinada -6° y en mayúsculas; Inter en el resto (licencia SIL OFL, https://github.com/rsms/inter). Los precios van en Inter negra itálica.
+- **Formas**: botones en paralelogramo sin radio; paneles 20 dp, tarjetas 16 dp, campos 10 dp; chips en píldora con su contador.
+- **Orden de la tienda** (igual que la web): cabecera con «Cambia en» (cuenta regresiva al cambio de tienda), búsqueda y orden (Como en Fortnite / Menor precio / Mayor precio), filtros por tipo y por «Con descuento» / «Termina hoy», resumen «N objetos en M secciones» y las secciones reales de la tienda (One Piece, Star Wars…).
+- **Tarjetas** (Plantilla Prime de la web): fondo con los colores oficiales de cada oferta en el 85 % de abajo, la imagen asoma por arriba y se difumina para leer el precio; solo llevan el tipo y el precio (el nombre va en el detalle), placas «X de descuento» y «Termina hoy», y botón amarillo para favoritos.
+- **Barra inferior**: la pestaña activa en amarillo con una raya arriba.
 ## Endpoints
 
 | Uso | Endpoint |

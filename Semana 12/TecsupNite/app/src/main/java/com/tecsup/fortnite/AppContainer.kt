@@ -18,7 +18,10 @@ class AppContainer(context: Context) {
         context.applicationContext,
         AppDatabase::class.java,
         "tecsupnite.db"
-    ).build()
+    )
+        // Al cambiar la tabla se vuelve a crear; los datos se recuperan al sincronizar
+        .fallbackToDestructiveMigration()
+        .build()
 
     val itemRepository: ItemRepository = ItemRepositoryImpl(RetrofitClient.api, baseDeDatos.itemDao())
     val authRepository: AuthRepository = FirebaseAuthRepository()

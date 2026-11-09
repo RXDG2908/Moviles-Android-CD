@@ -26,6 +26,7 @@ import com.tecsup.fortnite.ui.UiState
 import com.tecsup.fortnite.ui.components.Cargando
 import com.tecsup.fortnite.ui.components.ErrorView
 import com.tecsup.fortnite.ui.theme.Blanco
+import com.tecsup.fortnite.ui.theme.FormaInclinada
 import com.tecsup.fortnite.ui.theme.Noche
 import com.tecsup.fortnite.ui.theme.Oro
 import com.tecsup.fortnite.ui.theme.Rojo
@@ -65,7 +66,7 @@ fun AdminScreen(
             }
             Button(
                 onClick = onSincronizar,
-                shape = RoundedCornerShape(10.dp),
+                shape = FormaInclinada(10.dp),
                 modifier = Modifier.fillMaxWidth().padding(top = 6.dp).height(58.dp)
             ) {
                 Icon(Icons.Filled.Sync, contentDescription = null)
@@ -73,7 +74,7 @@ fun AdminScreen(
             }
             Button(
                 onClick = onLimpiar,
-                shape = RoundedCornerShape(10.dp),
+                shape = FormaInclinada(10.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Rojo, contentColor = Blanco),
                 modifier = Modifier.fillMaxWidth().height(58.dp)
             ) {

@@ -35,6 +35,8 @@ import androidx.compose.ui.unit.dp
 import com.tecsup.fortnite.domain.model.Sesion
 import com.tecsup.fortnite.ui.UiState
 import com.tecsup.fortnite.ui.theme.Blanco
+import com.tecsup.fortnite.ui.theme.FormaInclinada
+import com.tecsup.fortnite.ui.theme.TintaAm
 import com.tecsup.fortnite.ui.theme.FondoCielo
 import androidx.compose.foundation.shape.RoundedCornerShape
 import com.tecsup.fortnite.ui.theme.Noche
@@ -99,13 +101,13 @@ fun LoginScreen(
                 Button(
                     onClick = { onIngresar(correo, clave) },
                     enabled = !cargando,
-                    shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier.fillMaxWidth().height(60.dp)
+                    shape = FormaInclinada(10.dp),
+                    modifier = Modifier.fillMaxWidth().height(56.dp)
                 ) {
                     if (cargando) {
-                        CircularProgressIndicator(Modifier.size(26.dp), color = Noche, strokeWidth = 3.dp)
+                        CircularProgressIndicator(Modifier.size(26.dp), color = TintaAm, strokeWidth = 3.dp)
                     } else {
-                        Text("INGRESAR", style = MaterialTheme.typography.headlineSmall)
+                        Text("INGRESAR", style = MaterialTheme.typography.titleMedium)
                     }
                 }
             }
@@ -132,7 +134,7 @@ private fun Campo(
         textStyle = MaterialTheme.typography.bodyLarge,
         keyboardOptions = KeyboardOptions(keyboardType = teclado),
         visualTransformation = if (oculto) PasswordVisualTransformation() else androidx.compose.ui.text.input.VisualTransformation.None,
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(10.dp),
         colors = OutlinedTextFieldDefaults.colors(
             focusedContainerColor = Noche,
             unfocusedContainerColor = Noche,

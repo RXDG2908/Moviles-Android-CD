@@ -15,5 +15,10 @@ data class ItemEntity(
     val rarezaClave: String,
     val tipoClave: String,
     val lote: String = "", // nombre del lote si el precio es de un pack
+    val seccion: String = "",
+    val seccionOrden: Int = 0,
+    val color1: String = "",
+    val color3: String = "",
+    val terminaHoy: Boolean = false,
     val esFavorito: Boolean = false
 )

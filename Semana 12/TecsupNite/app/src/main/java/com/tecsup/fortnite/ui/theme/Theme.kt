@@ -20,17 +20,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tecsup.fortnite.R
 
-val CieloClaro = Color(0xFF2F86FF)
-val Cielo = Color(0xFF1A6EF0)
-val CieloFuerte = Color(0xFF0B4BD0)
-val Noche = Color(0xFF0A2E8F)
-val NocheClara = Color(0xFF1446C4)
-val Oro = Color(0xFFFFE600)
+// Tokens de regalitos.shop (WEB.md): azul tienda claro, nada de azul marino
+val CieloClaro = Color(0xFF1A7FF0)   // --azul-2
+val Cielo = Color(0xFF0A63D8)        // --azul
+val CieloFuerte = Color(0xFF0752BE)
+val Noche = Color(0xFF0839AD)        // --panel rgba(5,22,138,.55) sobre el azul
+val NocheClara = Color(0xFF0084E6)   // --chip
+val Borde = Color(0xFF00C3FE)        // --chip-borde
+val Oro = Color(0xFFFDFF00)          // --am, acento de acción único
+val TintaAm = Color(0xFF06156B)      // texto sobre amarillo
 val Blanco = Color.White
-val CelesteTexto = Color(0xFFCFE0FF)
-val Rojo = Color(0xFFE5243B)
-val Borde = Color(0xFF3C82FF)
-
+val CelesteTexto = Color(0xFFDCF3FF) // --soft
+val Lima = Color(0xFFB6F400)         // --ok, placa "Termina hoy"
+val Rojo = Color(0xFFF5327D)         // --rosa, solo avisos
+val SombraPanel = Color(0x8C05168A)  // rgba(5,22,138,.55)
 // Inter para todo el texto que no es título
 @OptIn(ExperimentalTextApi::class)
 private fun inter(peso: Int) = Font(
@@ -48,13 +51,13 @@ val Burbank = FontFamily(
 
 private val Colores = darkColorScheme(
     primary = Oro,
-    onPrimary = Noche,
+    onPrimary = TintaAm,
     primaryContainer = Oro,
-    onPrimaryContainer = Noche,
+    onPrimaryContainer = TintaAm,
     secondary = Cielo,
     onSecondary = Noche,
     tertiary = Oro,
-    onTertiary = Noche,
+    onTertiary = TintaAm,
     background = Cielo,
     outlineVariant = Borde,
     onBackground = Blanco,
@@ -68,9 +71,9 @@ private val Colores = darkColorScheme(
     outline = Blanco
 )
 
-// Títulos inclinados y con sombra, como los letreros del juego
-private val inclinado = TextGeometricTransform(skewX = -0.14f)
-private val sombra = Shadow(Noche.copy(alpha = 0.55f), Offset(0f, 5f), 6f)
+// Títulos en Burbank con skew(-6deg), como .bb.sk de la web
+private val inclinado = TextGeometricTransform(skewX = -0.105f)
+private val sombra = Shadow(SombraPanel, Offset(0f, 4f), 0f)
 
 private fun titulo(tamano: Int) = TextStyle(
     fontFamily = Burbank,
@@ -86,6 +89,16 @@ private fun texto(tamano: Int, peso: Int) = TextStyle(
     fontWeight = FontWeight(peso),
     fontSize = tamano.sp,
     lineHeight = (tamano + 6).sp
+)
+
+// Precios en negrita itálica con números del mismo ancho, como .pr de la web
+val EstiloPrecio = TextStyle(
+    fontFamily = Inter,
+    fontWeight = FontWeight(900),
+    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
+    fontSize = 20.sp,
+    lineHeight = 22.sp,
+    fontFeatureSettings = "tnum"
 )
 
 private val Tipos = Typography(
@@ -108,10 +121,10 @@ private val Tipos = Typography(
 
 private val Formas = Shapes(
     extraSmall = RoundedCornerShape(6.dp),
-    small = RoundedCornerShape(8.dp),
-    medium = RoundedCornerShape(12.dp),
-    large = RoundedCornerShape(16.dp),
-    extraLarge = RoundedCornerShape(24.dp)
+    small = RoundedCornerShape(10.dp),   // inputs
+    medium = RoundedCornerShape(16.dp),  // tarjetas
+    large = RoundedCornerShape(20.dp),   // paneles
+    extraLarge = RoundedCornerShape(20.dp)
 )
 
 @Composable

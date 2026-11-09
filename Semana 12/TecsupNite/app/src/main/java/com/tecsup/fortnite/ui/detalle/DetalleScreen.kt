@@ -40,7 +40,9 @@ import com.tecsup.fortnite.ui.theme.Noche
 import com.tecsup.fortnite.ui.theme.NocheClara
 import com.tecsup.fortnite.ui.theme.Oro
 import com.tecsup.fortnite.ui.theme.colorRareza
-import com.tecsup.fortnite.ui.theme.fondoRareza
+import com.tecsup.fortnite.ui.theme.FormaInclinada
+import com.tecsup.fortnite.ui.theme.colorApi
+import com.tecsup.fortnite.ui.theme.degradadoTarjeta
 
 @Composable
 fun DetalleScreen(
@@ -71,7 +73,7 @@ private fun Contenido(item: Item, onFavorito: () -> Unit, modifier: Modifier) {
                 .fillMaxWidth()
                 .height(380.dp)
                 .clip(RoundedCornerShape(16.dp))
-                .fondoRareza(color)
+                .background(degradadoTarjeta(colorApi(item.color1, color), colorApi(item.color3, color)))
         ) {
             AsyncImage(
                 model = item.imagenUrl,
@@ -110,7 +112,7 @@ private fun Contenido(item: Item, onFavorito: () -> Unit, modifier: Modifier) {
                 )
             }
             if (item.precio > 0) {
-                PrecioVBucks(item.precio, item.precioRegular, Modifier.padding(top = 14.dp))
+                PrecioVBucks(item.precio, item.precioRegular, Modifier.padding(top = 14.dp), grande = true)
             }
             if (item.lote != "") {
                 Text(
@@ -128,7 +130,7 @@ private fun Contenido(item: Item, onFavorito: () -> Unit, modifier: Modifier) {
             Spacer(Modifier.height(18.dp))
             Button(
                 onClick = onFavorito,
-                shape = RoundedCornerShape(10.dp),
+                shape = FormaInclinada(10.dp),
                 modifier = Modifier.fillMaxWidth().height(56.dp),
                 colors = if (item.esFavorito) {
                     ButtonDefaults.buttonColors(containerColor = NocheClara, contentColor = Blanco)

@@ -13,6 +13,11 @@ data class Item(
     val rarezaClave: String = "", // epic, rare, icon...
     val tipoClave: String = "",   // outfit, pickaxe, emote...
     val lote: String = "",        // nombre del lote si el precio es de un pack
+    val seccion: String = "",     // sección de la tienda
+    val seccionOrden: Int = 0,
+    val color1: String = "",      // colores oficiales de la tarjeta (RRGGBBAA)
+    val color3: String = "",
+    val terminaHoy: Boolean = false,
     val descripcion: String = "",
     val serie: String = "",
     val introduccion: String = ""
