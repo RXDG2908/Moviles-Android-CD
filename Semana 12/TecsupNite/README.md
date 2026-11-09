@@ -102,8 +102,8 @@ Probado en el emulador con la tienda real: PA-04 a PA-11 y PA-13 (primera apertu
 
 Pendiente
 
-- [x] PA-01, PA-03, PA-04, PA-12 y PA-14 probados con Firebase real, y la sesión se mantiene al reabrir
-- [ ] PA-02: el admin entra pero no ve el panel porque en Firestore no existe el documento `usuarios/{UID del admin}` con `rol = admin`
+- [x] Las 14 pruebas de aceptación (PA-01 a PA-14) pasan en el emulador con Firebase real; la sesión se mantiene al reabrir
+- [x] Documentos `usuarios/{uid}` creados en Firestore para el admin y el usuario
 - [ ] Capturas de login, lista, detalle, favoritos, panel Admin y notificación
 - [ ] Fase 2 en la rama `mejora-ia`: pruebas unitarias del ViewModel, mejoras y `PROMPTS.md`
 - [ ] Pull Request, versión `v1.0` y APK
