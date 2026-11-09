@@ -22,6 +22,16 @@ Se descartan las pistas musicales, los instrumentos y los autos de la tienda; so
 
 Los favoritos se conservan aunque ya no estén en la tienda de hoy, por eso también pueden aparecer en la lista.
 
+## Diseño
+
+Inspirado en la tienda del juego, sobre Material 3:
+
+- Fondo celeste con rayos, barras y tarjetas en azul noche, acciones en amarillo.
+- Fuente Burbank Big Condensed (la del juego) en todos los textos; títulos inclinados y en mayúsculas.
+- Botones, chips y etiquetas en forma de paralelogramo; tarjetas con el borde inferior en diagonal.
+- Cada tarjeta lleva el color de su rareza. Los cosméticos de 1500 V-Bucks o más se muestran en grande al inicio.
+- En horizontal la tienda usa más columnas.
+
 ## Endpoints
 
 | Uso | Endpoint |
@@ -91,7 +101,8 @@ Probado en el emulador con la tienda real: PA-04 a PA-11 y PA-13 (primera apertu
 
 Pendiente
 
-- [ ] Crear los usuarios y documentos en Firebase y probar los casos de login, roles, sesión y permiso: PA-01, PA-02, PA-03, PA-12 y PA-14
+- [x] PA-03 y PA-04 probados con Firebase real (contraseña incorrecta y campos vacíos)
+- [ ] Probar PA-01, PA-02, PA-12 y PA-14 con los usuarios de prueba (login, roles, sesión y permiso)
 - [ ] Capturas de login, lista, detalle, favoritos, panel Admin y notificación
 - [ ] Fase 2 en la rama `mejora-ia`: pruebas unitarias del ViewModel, mejoras y `PROMPTS.md`
 - [ ] Pull Request, versión `v1.0` y APK
