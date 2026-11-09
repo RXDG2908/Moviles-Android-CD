@@ -105,5 +105,5 @@ Pendiente
 - [x] Las 14 pruebas de aceptación (PA-01 a PA-14) pasan en el emulador con Firebase real; la sesión se mantiene al reabrir
 - [x] Documentos `usuarios/{uid}` creados en Firestore para el admin y el usuario
 - [ ] Capturas de login, lista, detalle, favoritos, panel Admin y notificación
-- [ ] Fase 2 en la rama `mejora-ia`: pruebas unitarias del ViewModel, mejoras y `PROMPTS.md`
+- [x] Fase 2 en la rama `mejora-ia`: 10 pruebas unitarias (`ListaViewModelTest` y `BusquedaTest`), búsqueda sin tildes, deslizar para actualizar y [`PROMPTS.md`](PROMPTS.md)
 - [ ] Pull Request, versión `v1.0` y APK
