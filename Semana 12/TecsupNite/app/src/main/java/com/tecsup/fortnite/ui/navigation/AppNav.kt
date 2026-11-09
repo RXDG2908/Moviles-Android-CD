@@ -38,6 +38,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
@@ -86,7 +88,8 @@ fun AppNav(container: AppContainer) {
 private fun Principal(container: AppContainer, sesion: Sesion, onSalir: () -> Unit) {
     val nav = rememberNavController()
     val entrada by nav.currentBackStackEntryAsState()
-    val ruta = entrada?.destination?.route ?: RUTA_LISTA
+    val rutaActual = entrada?.destination?.route ?: RUTA_LISTA
+    val ruta = if (rutaActual.startsWith(RUTA_DETALLE)) nav.previousBackStackEntry?.destination?.route ?: RUTA_LISTA else rutaActual
     val enDetalle = ruta.startsWith(RUTA_DETALLE)
 
     Scaffold(
@@ -159,9 +162,11 @@ private fun Principal(container: AppContainer, sesion: Sesion, onSalir: () -> Un
                     onFavorito = { id -> vm.alternarFavorito(id) }
                 )
             }
-            composable(
+            // La hoja del producto se abre encima de la tienda, con un velo detrás
+            dialog(
                 "$RUTA_DETALLE/{id}",
-                arguments = listOf(navArgument("id") { type = NavType.StringType })
+                arguments = listOf(navArgument("id") { type = NavType.StringType }),
+                dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
             ) { backStack ->
                 val id = backStack.arguments?.getString("id") ?: ""
                 val vm: DetalleViewModel = viewModel(factory = ViewModelFactory(container, id))
@@ -169,7 +174,8 @@ private fun Principal(container: AppContainer, sesion: Sesion, onSalir: () -> Un
                 DetalleScreen(
                     estado = estado,
                     onReintentar = { vm.cargar() },
-                    onFavorito = { vm.alternarFavorito() }
+                    onFavorito = { vm.alternarFavorito() },
+                    onCerrar = { nav.popBackStack() }
                 )
             }
             composable(RUTA_FAVORITOS) {
