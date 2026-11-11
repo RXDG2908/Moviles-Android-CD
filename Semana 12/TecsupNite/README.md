@@ -42,6 +42,10 @@ Tomadas en el emulador con la tienda real del 09/11/2026 y la cuenta admin.
 |---|---|---|
 | ![Login](capturas/01-login.jpg) | ![Tienda](capturas/02-tienda.jpg) | ![Secciones](capturas/03-tienda-secciones.jpg) |
 
+| Login con error |
+|---|
+| ![Error de login](capturas/08-login-error.jpg) |
+
 | Hoja del producto | Favoritos | Notificación | Panel Admin |
 |---|---|---|---|
 | ![Detalle](capturas/04-detalle.jpg) | ![Favoritos](capturas/05-favoritos.jpg) | ![Notificación](capturas/06-notificacion.jpg) | ![Admin](capturas/07-admin.jpg) |
