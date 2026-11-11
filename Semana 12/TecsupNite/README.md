@@ -6,8 +6,8 @@ App Android en Kotlin con Jetpack Compose y Material 3 que muestra la tienda de 
 - **Alumno:** Renzo León
 - **Tema:** Fortnite (API pública de https://fortnite-api.com, sin clave)
 - **Paquete:** `com.tecsup.fortnite`
-- **Variante:** tienda de hoy (`/v2/shop`) con detalle por cosmÃ©tico; sin pistas musicales, instrumentos ni autos.
-- **Reparto de tareas:** trabajo individual; todo el proyecto (cÃ³digo, Firebase, pruebas, README y capturas) lo hizo Renzo LeÃ³n.
+- **Variante:** tienda de hoy (`/v2/shop`) con detalle por cosmético; sin pistas musicales, instrumentos ni autos.
+- **Reparto de tareas:** trabajo individual; todo el proyecto (código, Firebase, pruebas, README y capturas) lo hizo Renzo León.
 
 ## Qué hace
 
@@ -117,24 +117,23 @@ Fase 1 (rama `main`, sin IA)
 - [x] H12 a H15: login con roles, panel Admin y notificación local
 - [x] H16: este README
 
-Pruebas de aceptaciÃ³n de la guÃ­a, hechas en el emulador `Lab03` con la tienda real y Firebase real:
+Pruebas de aceptación de la guía, hechas en el emulador `Lab03` con la tienda real y Firebase real:
 
-| CÃ³digo | Caso | Resultado |
+| Código | Caso | Resultado |
 |---|---|---|
-| PA-01 | Ingresar con el usuario `usuario` | Entra a la tienda; no ve la pestaÃ±a Admin |
-| PA-02 | Ingresar con el usuario `admin` | Entra y ve la pestaÃ±a Admin con el panel |
-| PA-03 | ContraseÃ±a incorrecta | Mensaje claro; no entra |
-| PA-04 | Correo o clave vacÃ­os | ValidaciÃ³n en pantalla; no llama a Firebase |
-| PA-05 | Primera apertura con inte
-et | Cargando, luego la lista y la notificaciÃ³n Â«Se guardaron N elementosÂ» |
+| PA-01 | Ingresar con el usuario `usuario` | Entra a la tienda; no ve la pestaña Admin |
+| PA-02 | Ingresar con el usuario `admin` | Entra y ve la pestaña Admin con el panel |
+| PA-03 | Contraseña incorrecta | Mensaje claro; no entra |
+| PA-04 | Correo o clave vacíos | Validación en pantalla; no llama a Firebase |
+| PA-05 | Primera apertura con internet | Cargando, luego la lista y la notificación «Se guardaron N elementos» |
 | PA-06 | Tocar un elemento | Detalle con datos del segundo endpoint |
 | PA-07 | Marcar favorito y cerrar la app | Al reabrir sigue en Favoritos |
-| PA-08 | Modo aviÃ³n con datos guardados | Se ve la lista con el aviso de sin conexiÃ³n |
-| PA-09 | Modo aviÃ³n sin datos | Pantalla de error con Reintentar |
-| PA-10 | Sincronizar despuÃ©s de marcar un favorito | El favorito no se pierde |
-| PA-11 | Admin pulsa Limpiar cachÃ© | Totales en 0; al sincronizar vuelven los datos |
-| PA-12 | Cerrar sesiÃ³n y reabrir | Vuelve al login |
-| PA-13 | Girar la pantalla | Se mantiene el estado; la tienda usa mÃ¡s columnas |
+| PA-08 | Modo avión con datos guardados | Se ve la lista con el aviso de sin conexión |
+| PA-09 | Modo avión sin datos | Pantalla de error con Reintentar |
+| PA-10 | Sincronizar después de marcar un favorito | El favorito no se pierde |
+| PA-11 | Admin pulsa Limpiar caché | Totales en 0; al sincronizar vuelven los datos |
+| PA-12 | Cerrar sesión y reabrir | Vuelve al login |
+| PA-13 | Girar la pantalla | Se mantiene el estado; la tienda usa más columnas |
 | PA-14 | Negar el permiso de notificaciones | La app funciona normal, sin avisos |
 
 ## Fase 2 (rama `mejora-ia`, con IA)
@@ -148,9 +147,9 @@ et | Cargando, luego la lista y la notificaciÃ³n Â«Se guardaron N elementos�
 
 Estado de la entrega
 
-- [x] Las 14 pruebas de aceptaciÃ³n pasan (tabla de arriba)
+- [x] Las 14 pruebas de aceptación pasan (tabla de arriba)
 - [x] Documentos `usuarios/{uid}` creados en Firestore para el admin y el usuario
-- [x] Capturas de login, lista, detalle, favoritos, panel Admin y notificaciÃ³n (secciÃ³n Â«CapturasÂ»)
-- [x] Fase 2 en la rama `mejora-ia`: 15 pruebas unitarias (`ListaViewModelTest`, `BusquedaTest` y `LoginViewModelTest`), bÃºsqueda sin tildes, deslizar para actualizar, login mÃ¡s claro y [`PROMPTS.md`](PROMPTS.md); se entrega en esta rama, sin Pull Request porque `main` y `mejora-ia` tienen historias separadas desde labs anteriores
+- [x] Capturas de login, lista, detalle, favoritos, panel Admin y notificación (sección «Capturas»)
+- [x] Fase 2 en la rama `mejora-ia`: 15 pruebas unitarias (`ListaViewModelTest`, `BusquedaTest` y `LoginViewModelTest`), búsqueda sin tildes, deslizar para actualizar, login más claro y [`PROMPTS.md`](PROMPTS.md); se entrega en esta rama, sin Pull Request porque `main` y `mejora-ia` tienen historias separadas desde labs anteriores
 - [x] `main` y `mejora-ia` subidas a GitHub
-- [ ] Publicar la versiÃ³n `v1.0` en GitHub (Releases) con el APK de depuraciÃ³n adjunto
+- [ ] Publicar la versión `v1.0` en GitHub (Releases) con el APK de depuración adjunto
