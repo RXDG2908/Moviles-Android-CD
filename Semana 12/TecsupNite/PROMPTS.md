@@ -9,6 +9,7 @@
 1. Pruebas unitarias del `ListaViewModel` con un repositorio falso (requisito R12).
 2. Búsqueda sin tildes ni mayúsculas, por nombre, sección y tipo.
 3. Deslizar hacia abajo para actualizar la tienda.
+4. Login más claro: errores por campo, mostrar la contraseña y mensajes según el error de Firebase.
 
 **Condición que se mantuvo:** las pantallas no usan Retrofit, Room ni Firebase; el ViewModel solo conoce la interface `ItemRepository` y no recibe `Context`; los nombres de los métodos del contrato no cambiaron.
 
@@ -64,3 +65,25 @@
   - `PullToRefreshBox` todavía es experimental en Material 3, por eso lleva `@OptIn(ExperimentalMaterial3Api::class)`.
 - **Qué aprendí:** que el estado de «cargando» de un gesto también es estado de la UI y va en el ViewModel como `StateFlow`, igual que la lista; la pantalla solo lo dibuja.
 - **Resultado:** probado en el emulador: aparece el indicador, se sincroniza y llega la notificación «Se guardaron N elementos».
+
+---
+
+## Consulta 4 · Login más claro
+
+- **Fecha:** 10/11/2026
+- **Herramienta:** Claude Code (Claude Opus 5.5), siguiendo las skills `form-design`, `ux-writing` y `login-flow` (su checklist)
+- **Prompt:**
+
+  > Mejora el login de la app. Hoy muestra un solo mensaje para todo ("No se pudo ingresar…"). Quiero etiquetas encima de los campos, botón para ver la contraseña, errores debajo de cada campo que digan cómo arreglarlo, y mensajes distintos si la contraseña está mal, si no hay internet o si hubo muchos intentos. El ViewModel no debe importar clases de Firebase. Agrega pruebas.
+
+- **Qué respondió (resumen):**
+  - `FalloIngreso` con un `MotivoFallo` (credenciales, sin conexión, demasiados intentos, otro). `FirebaseAuthRepository` traduce las excepciones de Firebase a ese motivo, así el ViewModel elige el mensaje sin conocer Firebase.
+  - `LoginViewModel` valida antes de llamar a Firebase (correo vacío, correo sin @ o sin dominio, contraseña vacía) y expone los errores de cada campo en un `StateFlow<ErroresCampos>`; al escribir en un campo, su error se borra.
+  - `LoginScreen` con etiqueta arriba de cada campo, iconos, botón de ver/ocultar contraseña, error debajo del campo con icono, teclado con «Siguiente» y «Listo» (Listo envía), botón «INGRESANDO…» con indicador mientras espera, y una cinta amarilla como la de la web.
+  - `LoginViewModelTest` con 5 pruebas usando un `AuthRepository` falso.
+- **Qué usé / qué cambié y por qué:**
+  - La primera versión escribía la frase de la cinta dos veces; con `basicMarquee` el texto se encimaba. Se dejó una sola vez y el espacio lo pone `MarqueeSpacing`.
+  - El error de Firebase no es de un campo en particular (no dice si falló el correo o la contraseña, a propósito), por eso va en un aviso sobre el botón y no debajo de un campo.
+  - No se agregó «¿Olvidaste tu contraseña?»: las cuentas las crea el administrador y los correos de prueba no existen. En su lugar se indica a quién pedir la cuenta.
+- **Qué aprendí:** que un buen mensaje de error dice qué pasó y qué hacer, y que separar el motivo del error (repositorio) del texto que ve el usuario (ViewModel) permite probar los mensajes sin Firebase.
+- **Resultado:** `LoginViewModelTest` 5 pruebas, 0 fallas (15 en total). En el emulador: campos vacíos, correo sin @, contraseña incorrecta (mensaje de Firebase), ver contraseña e ingreso correcto.

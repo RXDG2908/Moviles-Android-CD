@@ -118,6 +118,6 @@ Pendiente
 - [x] Las 14 pruebas de aceptación (PA-01 a PA-14) pasan en el emulador con Firebase real; la sesión se mantiene al reabrir
 - [x] Documentos `usuarios/{uid}` creados en Firestore para el admin y el usuario
 - [x] Capturas de login, lista, detalle, favoritos, panel Admin y notificación (sección «Capturas»)
-- [x] Fase 2 en la rama `mejora-ia`: 10 pruebas unitarias (`ListaViewModelTest` y `BusquedaTest`), búsqueda sin tildes, deslizar para actualizar y [`PROMPTS.md`](PROMPTS.md)
+- [x] Fase 2 en la rama `mejora-ia`: 15 pruebas unitarias (`ListaViewModelTest`, `BusquedaTest` y `LoginViewModelTest`), búsqueda sin tildes, deslizar para actualizar y [`PROMPTS.md`](PROMPTS.md)
 - [x] La Fase 2 se entrega en la rama `mejora-ia` (sin Pull Request: `main` y `mejora-ia` tienen historias separadas desde labs anteriores)
 - [ ] Subir `main` y `mejora-ia` a GitHub y publicar la versión `v1.0` con el APK
