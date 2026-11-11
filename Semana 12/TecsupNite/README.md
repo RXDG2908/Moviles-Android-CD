@@ -117,6 +117,15 @@ Fase 1 (rama `main`, sin IA)
 
 Probado en el emulador con la tienda real: PA-04 a PA-11 y PA-13 (primera apertura con notificación, detalle, favoritos, modo avión con y sin datos, sincronizar, limpiar caché y girar la pantalla).
 
+## Fase 2 (rama `mejora-ia`, con IA)
+
+- **Pruebas unitarias** del `ListaViewModel` con `RepositorioFalso` y `NotificadorFalso` (sin Mockito): sincronizar, error sin datos, sin conexión con datos, favoritos, deslizar y reintentar.
+- **Búsqueda sin tildes ni mayúsculas**, con varias palabras, por nombre, sección y tipo (`Busqueda.kt`, con sus pruebas).
+- **Deslizar hacia abajo** para sincronizar la tienda sin quitar la lista.
+- **Login más claro**: etiquetas arriba, ver contraseña, error debajo de cada campo y mensajes según el error de Firebase (contraseña incorrecta, sin internet, muchos intentos), con 5 pruebas en `LoginViewModelTest`.
+- Las 15 pruebas se corren con `gradlew testDebugUnitTest`.
+- Detalle de cada consulta a la IA en [`PROMPTS.md`](PROMPTS.md).
+
 Pendiente
 
 - [x] Las 14 pruebas de aceptación (PA-01 a PA-14) pasan en el emulador con Firebase real; la sesión se mantiene al reabrir
