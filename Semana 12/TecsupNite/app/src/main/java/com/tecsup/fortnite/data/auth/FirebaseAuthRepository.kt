@@ -1,7 +1,12 @@
 package com.tecsup.fortnite.data.auth
 
+import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.tecsup.fortnite.domain.model.Rol
 import com.tecsup.fortnite.domain.model.Sesion
 import kotlinx.coroutines.tasks.await
@@ -17,7 +22,17 @@ class FirebaseAuthRepository(
     } catch (e: Exception) {
         // Si no se pudo leer el rol, no queda una sesión a medias
         auth.signOut()
-        Result.failure(e)
+        Result.failure(FalloIngreso(motivoDe(e), e))
+    }
+
+    // Traduce los errores de Firebase a un motivo que entiende el ViewModel
+    private fun motivoDe(e: Exception): MotivoFallo = when (e) {
+        is FirebaseAuthInvalidCredentialsException, is FirebaseAuthInvalidUserException -> MotivoFallo.CREDENCIALES
+        is FirebaseNetworkException -> MotivoFallo.SIN_CONEXION
+        is FirebaseTooManyRequestsException -> MotivoFallo.DEMASIADOS_INTENTOS
+        is FirebaseFirestoreException ->
+            if (e.code == FirebaseFirestoreException.Code.UNAVAILABLE) MotivoFallo.SIN_CONEXION else MotivoFallo.OTRO
+        else -> MotivoFallo.OTRO
     }
 
     override suspend fun sesionActual(): Sesion? {

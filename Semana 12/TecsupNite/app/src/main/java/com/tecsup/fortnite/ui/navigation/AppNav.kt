@@ -70,12 +70,19 @@ fun AppNav(container: AppContainer) {
     val sesion by loginVm.sesion.collectAsStateWithLifecycle()
     val revisando by loginVm.revisando.collectAsStateWithLifecycle()
     val login by loginVm.login.collectAsStateWithLifecycle()
+    val errores by loginVm.errores.collectAsStateWithLifecycle()
 
     val actual = sesion
     if (revisando) {
-        Cargando()
+        FondoCielo { Cargando() }
     } else if (actual == null) {
-        LoginScreen(estado = login, onIngresar = { c, k -> loginVm.ingresar(c, k) })
+        LoginScreen(
+            estado = login,
+            errores = errores,
+            onIngresar = { c, k -> loginVm.ingresar(c, k) },
+            onEditarCorreo = { loginVm.alEditarCorreo() },
+            onEditarClave = { loginVm.alEditarClave() }
+        )
     } else {
         FondoCielo {
             Principal(container, actual, onSalir = { loginVm.cerrarSesion() })
