@@ -150,7 +150,7 @@ fun ItemCard(
             Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = 10.dp, bottom = 12.dp)
-                .size(44.dp)
+                .size(48.dp) // área táctil mínima de Android
                 .clip(CircleShape)
                 .background(Oro)
                 .clickable(onClickLabel = if (item.esFavorito) "Quitar de favoritos" else "Agregar a favoritos") { onFavorito() },
