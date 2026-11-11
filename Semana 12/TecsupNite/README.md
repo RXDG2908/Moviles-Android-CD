@@ -113,7 +113,25 @@ Fase 1 (rama `main`, sin IA)
 - [x] H12 a H15: login con roles, panel Admin y notificación local
 - [x] H16: este README
 
-Pruebas de aceptaciÃ³n de la guÃ­a, hechas en el emulador `Lab03` con la tienda real y Firebase real:rnrn| CÃ³digo | Caso | Resultado |rn|---|---|---|rn| PA-01 | Ingresar con el usuario `usuario` | Entra a la tienda; no ve la pestaÃ±a Admin |rn| PA-02 | Ingresar con el usuario `admin` | Entra y ve la pestaÃ±a Admin con el panel |rn| PA-03 | ContraseÃ±a incorrecta | Mensaje claro; no entra |rn| PA-04 | Correo o clave vacÃ­os | ValidaciÃ³n en pantalla; no llama a Firebase |rn| PA-05 | Primera apertura con internet | Cargando, luego la lista y la notificaciÃ³n Â«Se guardaron N elementosÂ» |rn| PA-06 | Tocar un elemento | Detalle con datos del segundo endpoint |rn| PA-07 | Marcar favorito y cerrar la app | Al reabrir sigue en Favoritos |rn| PA-08 | Modo aviÃ³n con datos guardados | Se ve la lista con el aviso de sin conexiÃ³n |rn| PA-09 | Modo aviÃ³n sin datos | Pantalla de error con Reintentar |rn| PA-10 | Sincronizar despuÃ©s de marcar un favorito | El favorito no se pierde |rn| PA-11 | Admin pulsa Limpiar cachÃ© | Totales en 0; al sincronizar vuelven los datos |rn| PA-12 | Cerrar sesiÃ³n y reabrir | Vuelve al login |rn| PA-13 | Girar la pantalla | Se mantiene el estado; la tienda usa mÃ¡s columnas |rn| PA-14 | Negar el permiso de notificaciones | La app funciona normal, sin avisos |
+Pruebas de aceptaciÃ³n de la guÃ­a, hechas en el emulador `Lab03` con la tienda real y Firebase real:
+
+| CÃ³digo | Caso | Resultado |
+|---|---|---|
+| PA-01 | Ingresar con el usuario `usuario` | Entra a la tienda; no ve la pestaÃ±a Admin |
+| PA-02 | Ingresar con el usuario `admin` | Entra y ve la pestaÃ±a Admin con el panel |
+| PA-03 | ContraseÃ±a incorrecta | Mensaje claro; no entra |
+| PA-04 | Correo o clave vacÃ­os | ValidaciÃ³n en pantalla; no llama a Firebase |
+| PA-05 | Primera apertura con inte
+et | Cargando, luego la lista y la notificaciÃ³n Â«Se guardaron N elementosÂ» |
+| PA-06 | Tocar un elemento | Detalle con datos del segundo endpoint |
+| PA-07 | Marcar favorito y cerrar la app | Al reabrir sigue en Favoritos |
+| PA-08 | Modo aviÃ³n con datos guardados | Se ve la lista con el aviso de sin conexiÃ³n |
+| PA-09 | Modo aviÃ³n sin datos | Pantalla de error con Reintentar |
+| PA-10 | Sincronizar despuÃ©s de marcar un favorito | El favorito no se pierde |
+| PA-11 | Admin pulsa Limpiar cachÃ© | Totales en 0; al sincronizar vuelven los datos |
+| PA-12 | Cerrar sesiÃ³n y reabrir | Vuelve al login |
+| PA-13 | Girar la pantalla | Se mantiene el estado; la tienda usa mÃ¡s columnas |
+| PA-14 | Negar el permiso de notificaciones | La app funciona normal, sin avisos |
 
 Estado de la entrega
 
