@@ -10,6 +10,8 @@ App Android en Kotlin con Jetpack Compose y Material 3 que muestra la tienda de 
 - **Reparto de tareas:** trabajo individual; todo el proyecto (código, Firebase, pruebas, README y capturas) lo hizo Renzo León.
 - **Guía para presentar:** [GUIA-PRESENTACION.md](GUIA-PRESENTACION.md) dice dónde está cada archivo y cada requisito.
 - **APK:** [release v1.0](https://github.com/RXDG2908/Moviles-Android-CD/releases/tag/v1.0)
+- **Credenciales:** [CREDENCIALES.md](CREDENCIALES.md) (usuarios de prueba y Firebase)
+- **Instalar en otra PC:** [CLAUDE.md](CLAUDE.md), con los pasos para Android Studio del instituto
 
 ## Qué hace
 
@@ -75,14 +77,14 @@ Room es la fuente de verdad: la lista que ve el usuario sale siempre de Room y R
 ## Cómo compilar
 
 1. Abrir la carpeta `TecsupNite` en Android Studio.
-2. Crear un proyecto en Firebase con el paquete `com.tecsup.fortnite` y descargar `google-services.json` dentro de `app/` (no se sube a Git).
+2. Crear un proyecto en Firebase con el paquete `com.tecsup.fortnite` y descargar `google-services.json` dentro de `app/` (el de este proyecto ya está en el repo).
 3. En Firebase activar Authentication con correo y contraseña, y crear Firestore.
 4. Crear los usuarios de prueba (ver abajo) y pegar las reglas de seguridad.
 5. Ejecutar en un emulador con Google Play.
 
 ## Usuarios de prueba
 
-Se crean en Authentication → Usuarios. La contraseña la define quien los crea.
+Se crean en Authentication → Usuarios. La contraseña está en [`CREDENCIALES.md`](CREDENCIALES.md).
 
 | Rol | Correo |
 | --- | --- |

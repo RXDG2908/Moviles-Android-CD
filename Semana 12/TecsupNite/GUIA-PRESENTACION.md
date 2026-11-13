@@ -35,7 +35,7 @@ Cada pieza de la entrega tiene un solo lugar. Esta tabla sirve para abrirla ráp
 | Reglas de Firestore | `Semana 12/TecsupNite/firestore.rules` | Quién puede leer los roles |
 | Entrega en Canvas | Curso Programación en Móviles, tarea «Laboratorio 12» | Intento 2 del 11/11/2026 con el PDF de 13 páginas |
 
-El archivo `google-services.json` **no** está en GitHub a propósito: tiene la clave del proyecto de Firebase. Va dentro de `app/` en la computadora donde se compila.
+El repositorio trae `app/google-services.json` y el `gradle-wrapper.jar`, así que compila en cualquier computadora. Los usuarios y la contraseña están en `CREDENCIALES.md`, y los pasos para instalar en el Android Studio del instituto, en `CLAUDE.md`.
 
 ## 2. Las dos ramas: main y mejora-ia
 
@@ -196,7 +196,7 @@ El proyecto de Firebase se llama `tecsupnite`. Las capturas de la consola están
 4. Firestore con la colección `usuarios`: un documento por usuario, con su UID como nombre y los campos `rol` y `nombre`
 5. Reglas publicadas (`firestore.rules`): cada usuario solo lee su propio documento y nadie escribe desde la app
 
-La contraseña de los usuarios de prueba no está en el repositorio. Tenla a mano antes de la demostración.
+La contraseña de los usuarios de prueba está en `CREDENCIALES.md`.
 
 ## 7. Guion de la demostración
 
