@@ -8,6 +8,8 @@ App Android en Kotlin con Jetpack Compose y Material 3 que muestra la tienda de 
 - **Paquete:** `com.tecsup.fortnite`
 - **Variante:** tienda de hoy (`/v2/shop`) con detalle por cosmético; sin pistas musicales, instrumentos ni autos.
 - **Reparto de tareas:** trabajo individual; todo el proyecto (código, Firebase, pruebas, README y capturas) lo hizo Renzo León.
+- **Guía para presentar:** [GUIA-PRESENTACION.md](GUIA-PRESENTACION.md) dice dónde está cada archivo y cada requisito.
+- **APK:** [release v1.0](https://github.com/RXDG2908/Moviles-Android-CD/releases/tag/v1.0)
 
 ## Qué hace
 
@@ -152,4 +154,5 @@ Estado de la entrega
 - [x] Capturas de login, lista, detalle, favoritos, panel Admin y notificación (sección «Capturas»)
 - [x] Fase 2 en la rama `mejora-ia`: 15 pruebas unitarias (`ListaViewModelTest`, `BusquedaTest` y `LoginViewModelTest`), búsqueda sin tildes, deslizar para actualizar, login más claro y [`PROMPTS.md`](PROMPTS.md); se entrega en esta rama, sin Pull Request porque `main` y `mejora-ia` tienen historias separadas desde labs anteriores
 - [x] `main` y `mejora-ia` subidas a GitHub
-- [ ] Publicar la versión `v1.0` en GitHub (Releases) con el APK de depuración adjunto
+- [x] Versión `v1.0` publicada en GitHub (Releases) con el APK de depuración adjunto
+- [x] Guía de presentación en [`GUIA-PRESENTACION.md`](GUIA-PRESENTACION.md)
