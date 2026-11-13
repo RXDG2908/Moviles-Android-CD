@@ -1,3 +1,4 @@
+// Clase Application: crea el contenedor al abrir la app.
 package com.tecsup.fortnite
 
 import android.app.Application

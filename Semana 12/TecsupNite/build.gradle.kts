@@ -1,3 +1,4 @@
+// Gradle raiz: versiones de los plugins del proyecto.
 // Archivo de build de nivel superior
 plugins {
     id("com.android.application") version "8.13.2" apply false

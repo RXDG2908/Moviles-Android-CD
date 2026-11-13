@@ -1,3 +1,4 @@
+// Logica de la pantalla de favoritos.
 package com.tecsup.fortnite.ui.favoritos
 
 import androidx.lifecycle.ViewModel

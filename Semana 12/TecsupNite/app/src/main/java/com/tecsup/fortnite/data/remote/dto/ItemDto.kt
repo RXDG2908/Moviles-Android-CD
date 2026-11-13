@@ -1,3 +1,4 @@
+// Clases que reflejan el JSON que devuelve la API.
 package com.tecsup.fortnite.data.remote.dto
 
 import kotlinx.serialization.Serializable

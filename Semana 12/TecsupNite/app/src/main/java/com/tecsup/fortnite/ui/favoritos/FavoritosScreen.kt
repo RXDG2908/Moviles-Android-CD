@@ -1,3 +1,4 @@
+// Pantalla con los items favoritos.
 package com.tecsup.fortnite.ui.favoritos
 
 import androidx.compose.foundation.layout.Arrangement

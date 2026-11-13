@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Tema base de Android para la ventana de la app. -->
 <resources>
 
     <style name="Theme.TecsupNite" parent="android:Theme.Material.NoActionBar">

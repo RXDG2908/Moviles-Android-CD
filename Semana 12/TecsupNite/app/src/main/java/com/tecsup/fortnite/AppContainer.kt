@@ -1,3 +1,4 @@
+// Crea y guarda los objetos compartidos (API, base de datos, repositorios).
 package com.tecsup.fortnite
 
 import android.content.Context

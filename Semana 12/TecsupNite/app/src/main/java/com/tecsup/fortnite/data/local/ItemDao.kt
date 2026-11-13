@@ -1,3 +1,4 @@
+// Consultas SQL de la tabla de items guardados.
 package com.tecsup.fortnite.data.local
 
 import androidx.room.Dao

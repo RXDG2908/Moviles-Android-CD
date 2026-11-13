@@ -1,3 +1,4 @@
+// Muestra un precio en V-Bucks.
 package com.tecsup.fortnite.ui.components
 
 import androidx.compose.foundation.layout.Row

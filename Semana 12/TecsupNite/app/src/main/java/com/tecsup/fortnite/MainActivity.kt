@@ -1,3 +1,4 @@
+// Actividad unica: arranca la app y muestra la navegacion.
 package com.tecsup.fortnite
 
 import android.Manifest

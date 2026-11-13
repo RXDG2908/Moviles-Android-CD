@@ -1,3 +1,4 @@
+// Logica de la pantalla de detalle.
 package com.tecsup.fortnite.ui.detalle
 
 import androidx.lifecycle.ViewModel

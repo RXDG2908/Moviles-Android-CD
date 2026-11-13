@@ -1,3 +1,4 @@
+// Login real con Firebase Authentication y rol desde Firestore.
 package com.tecsup.fortnite.data.auth
 
 import com.google.firebase.auth.FirebaseAuth

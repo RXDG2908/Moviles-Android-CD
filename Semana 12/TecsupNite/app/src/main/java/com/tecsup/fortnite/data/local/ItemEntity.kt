@@ -1,3 +1,4 @@
+// Tabla de Room: un item guardado en el celular.
 package com.tecsup.fortnite.data.local
 
 import androidx.room.Entity

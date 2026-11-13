@@ -1,3 +1,4 @@
+// Indicador de carga reutilizable.
 package com.tecsup.fortnite.ui.components
 
 import androidx.compose.foundation.layout.Box

@@ -1,3 +1,4 @@
+// Rutas y navegacion entre pantallas.
 package com.tecsup.fortnite.ui.navigation
 
 import androidx.compose.foundation.layout.padding

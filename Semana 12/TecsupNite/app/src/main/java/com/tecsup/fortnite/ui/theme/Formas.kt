@@ -1,3 +1,4 @@
+// Formas (esquinas) usadas en la interfaz.
 package com.tecsup.fortnite.ui.theme
 
 import androidx.compose.foundation.background

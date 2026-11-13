@@ -1,3 +1,4 @@
+// Reglas de seguridad de Firestore: quien puede leer y escribir.
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {

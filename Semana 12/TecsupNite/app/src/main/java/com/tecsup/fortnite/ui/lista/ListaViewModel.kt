@@ -1,3 +1,4 @@
+// Logica de la lista: carga, busqueda y filtros.
 package com.tecsup.fortnite.ui.lista
 
 import androidx.lifecycle.ViewModel

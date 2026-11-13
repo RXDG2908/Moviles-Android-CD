@@ -1,3 +1,4 @@
+// Define el nombre del proyecto y sus repositorios.
 pluginManagement {
     repositories {
         google {

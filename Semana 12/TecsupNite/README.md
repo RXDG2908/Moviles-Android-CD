@@ -145,3 +145,4 @@ Estado de la entrega
 - [x] `main` y `mejora-ia` subidas a GitHub
 - [x] Versión `v1.0` publicada en GitHub (Releases) con el APK de depuración adjunto
 - [x] Guía de presentación en [`GUIA-PRESENTACION.md`](GUIA-PRESENTACION.md)
+- [x] Una línea de comentario al inicio de cada archivo (código, Gradle, XML y reglas)

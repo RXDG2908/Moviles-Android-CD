@@ -1,3 +1,4 @@
+// Contrato para obtener y guardar items.
 package com.tecsup.fortnite.data.repository
 
 import com.tecsup.fortnite.domain.model.Item

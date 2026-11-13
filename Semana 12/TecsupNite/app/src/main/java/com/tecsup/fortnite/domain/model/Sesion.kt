@@ -1,3 +1,4 @@
+// Modelo de la sesion del usuario (correo y rol).
 package com.tecsup.fortnite.domain.model
 
 enum class Rol { ADMIN, USUARIO }

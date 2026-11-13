@@ -1,3 +1,4 @@
+// Endpoints de la API de Fortnite (tienda y detalle).
 package com.tecsup.fortnite.data.remote
 
 import com.tecsup.fortnite.data.remote.dto.DetalleResponse

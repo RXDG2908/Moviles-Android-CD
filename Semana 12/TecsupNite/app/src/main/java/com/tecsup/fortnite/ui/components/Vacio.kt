@@ -1,3 +1,4 @@
+// Vista para cuando no hay resultados.
 package com.tecsup.fortnite.ui.components
 
 import androidx.compose.foundation.layout.Arrangement

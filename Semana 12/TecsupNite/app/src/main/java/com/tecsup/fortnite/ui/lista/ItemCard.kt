@@ -1,3 +1,4 @@
+// Tarjeta de un item en la lista.
 package com.tecsup.fortnite.ui.lista
 
 import androidx.compose.foundation.background

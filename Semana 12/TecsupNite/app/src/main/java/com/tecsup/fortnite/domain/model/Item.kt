@@ -1,3 +1,4 @@
+// Modelo de un cosmetico que usa la interfaz.
 package com.tecsup.fortnite.domain.model
 
 // Cosmético de la tienda tal como lo usa la pantalla

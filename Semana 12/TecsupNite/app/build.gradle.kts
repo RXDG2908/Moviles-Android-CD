@@ -1,3 +1,4 @@
+// Configuracion de Gradle del modulo app: plugins, SDK y dependencias.
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")

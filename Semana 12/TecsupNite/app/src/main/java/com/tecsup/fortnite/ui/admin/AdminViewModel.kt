@@ -1,3 +1,4 @@
+// Logica de la pantalla Admin.
 package com.tecsup.fortnite.ui.admin
 
 import androidx.lifecycle.ViewModel

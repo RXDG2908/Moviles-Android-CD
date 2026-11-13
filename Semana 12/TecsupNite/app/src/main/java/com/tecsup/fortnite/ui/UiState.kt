@@ -1,3 +1,4 @@
+// Estados posibles de una pantalla: cargando, exito o error.
 package com.tecsup.fortnite.ui
 
 sealed interface UiState<out T> {

@@ -1,3 +1,4 @@
+// Logica del login: valida y entra con Firebase.
 package com.tecsup.fortnite.ui.login
 
 import androidx.lifecycle.ViewModel

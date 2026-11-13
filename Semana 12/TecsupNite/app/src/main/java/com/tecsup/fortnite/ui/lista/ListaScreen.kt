@@ -1,3 +1,4 @@
+// Pantalla principal: lista de la tienda con buscador y filtros.
 package com.tecsup.fortnite.ui.lista
 
 import androidx.compose.foundation.background

@@ -1,3 +1,4 @@
+// Obtiene items de la API y los guarda en Room (modo sin conexion).
 package com.tecsup.fortnite.data.repository
 
 import com.tecsup.fortnite.data.local.ItemDao

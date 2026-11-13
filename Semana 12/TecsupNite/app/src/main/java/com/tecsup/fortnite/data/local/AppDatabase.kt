@@ -1,3 +1,4 @@
+// Base de datos Room de la app.
 package com.tecsup.fortnite.data.local
 
 import androidx.room.Database

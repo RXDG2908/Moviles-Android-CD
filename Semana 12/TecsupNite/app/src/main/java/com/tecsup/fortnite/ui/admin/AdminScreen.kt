@@ -1,3 +1,4 @@
+// Pantalla del admin: totales, sincronizar y limpiar cache.
 package com.tecsup.fortnite.ui.admin
 
 import androidx.compose.foundation.background

@@ -1,3 +1,4 @@
+// Colores, tipografia y tema de la app.
 package com.tecsup.fortnite.ui.theme
 
 import androidx.compose.material3.MaterialTheme

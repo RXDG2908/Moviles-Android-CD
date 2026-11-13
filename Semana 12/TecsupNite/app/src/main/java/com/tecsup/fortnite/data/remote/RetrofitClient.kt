@@ -1,3 +1,4 @@
+// Configura Retrofit para llamar a fortnite-api.com.
 package com.tecsup.fortnite.data.remote
 
 import retrofit2.converter.kotlinx.serialization.asConverterFactory

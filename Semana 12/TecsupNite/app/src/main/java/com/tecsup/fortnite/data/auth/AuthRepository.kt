@@ -1,3 +1,4 @@
+// Contrato del login: iniciar sesion, cerrar sesion y obtener el rol.
 package com.tecsup.fortnite.data.auth
 
 import com.tecsup.fortnite.domain.model.Sesion

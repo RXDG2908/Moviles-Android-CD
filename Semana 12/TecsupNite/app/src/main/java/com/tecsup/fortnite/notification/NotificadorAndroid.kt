@@ -1,3 +1,4 @@
+// Muestra la notificacion local con el total sincronizado.
 package com.tecsup.fortnite.notification
 
 import android.Manifest

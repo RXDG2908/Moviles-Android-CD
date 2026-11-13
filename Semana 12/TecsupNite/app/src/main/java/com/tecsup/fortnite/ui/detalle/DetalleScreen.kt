@@ -1,3 +1,4 @@
+// Pantalla de detalle de un cosmetico.
 package com.tecsup.fortnite.ui.detalle
 
 import androidx.compose.foundation.background

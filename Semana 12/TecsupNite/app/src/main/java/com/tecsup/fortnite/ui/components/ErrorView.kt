@@ -1,3 +1,4 @@
+// Vista de error con boton para reintentar.
 package com.tecsup.fortnite.ui.components
 
 import androidx.compose.foundation.layout.Arrangement

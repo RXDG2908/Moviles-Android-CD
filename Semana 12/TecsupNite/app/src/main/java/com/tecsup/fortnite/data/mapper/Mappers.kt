@@ -1,3 +1,4 @@
+// Convierte entre DTO, entidad de Room y modelo de dominio.
 package com.tecsup.fortnite.data.mapper
 
 import com.tecsup.fortnite.data.local.ItemEntity

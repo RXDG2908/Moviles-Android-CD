@@ -1,3 +1,4 @@
+// Pantalla de inicio de sesion.
 package com.tecsup.fortnite.ui.login
 
 import androidx.compose.foundation.background
