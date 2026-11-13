@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "535857559782",
+    "project_id": "tecsupnite",
+    "storage_bucket": "tecsupnite.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:535857559782:android:d3a01e17ae6b7955d92327",
+        "android_client_info": {
+          "package_name": "com.tecsup.fortnite"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJkmkhVCxVNQ4tQ7zWC5nr5xbkuwZf5N8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
