@@ -37,7 +37,7 @@ com.tecsup.campusgps/
 |---|---|---|
 | 1 | Proyecto base | Hecho |
 | 2 | Permisos y clave de Maps | Hecho |
-| 3 | Permiso en tiempo de ejecución | Pendiente |
+| 3 | Permiso en tiempo de ejecución | Hecho |
 | 4 | Mapa con la ubicación actual | Pendiente |
 | 5 | Marcadores de los lugares | Pendiente |
 | 6 | Distancias y orden | Pendiente |
@@ -71,7 +71,9 @@ Restricción de la clave en Google Cloud (Maps SDK for Android):
 - Crear la clave de Maps SDK for Android en Google Cloud con esa restricción y
   guardarla en `local.properties`.
 - Probar en un emulador con Google Play. El emulador `Lab03` no trae Google Play
-  Services, así que ahí la ubicación falla con un mensaje.
+  Services: ahí el cuadro de permiso aparece y, si se niega, sale el mensaje en
+  rojo sin cerrar la app; pero al aceptar, la ubicación falla con un mensaje en
+  vez de mostrar la latitud y la longitud.
 - Fase 2 en la rama `mejora-ia` (3 mejoras con Gemini y `PROMPTS.md`).
 
 ## Notas

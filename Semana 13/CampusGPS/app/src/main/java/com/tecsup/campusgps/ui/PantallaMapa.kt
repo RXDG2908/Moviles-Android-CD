@@ -1,6 +1,10 @@
 // Pantalla principal: botón para buscar la ubicación y el resultado.
 package com.tecsup.campusgps.ui
 
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,23 +21,38 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tecsup.campusgps.model.UbicacionUi
 import com.tecsup.campusgps.viewmodel.MapaViewModel
+
+private const val FINE = Manifest.permission.ACCESS_FINE_LOCATION
+private const val COARSE = Manifest.permission.ACCESS_COARSE_LOCATION
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PantallaMapa(vm: MapaViewModel) {
     val estado by vm.estado.collectAsStateWithLifecycle()
 
-    // TODO Paso 2: lanzador de permisos con
-    // rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions())
+    val contexto = LocalContext.current
+    val lanzador = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { resultado ->
+        // Basta con que acepte uno de los dos (precisa o aproximada)
+        if (resultado.values.any { it }) vm.buscar() else vm.permisoDenegado()
+    }
 
     fun alPulsar() {
-        // TODO Paso 2: ¿ya tienes FINE o COARSE? -> vm.buscar()
-        // TODO Paso 2: si no -> lanzador.launch(arrayOf(FINE, COARSE))
-        vm.buscar()
+        val tienePermiso = listOf(FINE, COARSE).any {
+            ContextCompat.checkSelfPermission(contexto, it) == PackageManager.PERMISSION_GRANTED
+        }
+        if (tienePermiso) {
+            vm.buscar()
+        } else {
+            lanzador.launch(arrayOf(FINE, COARSE))
+        }
     }
 
     Scaffold(
