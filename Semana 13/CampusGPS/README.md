@@ -39,6 +39,8 @@ com.tecsup.campusgps/
     ├── MapaUbicacion.kt
     ├── ListaLugares.kt
     ├── MensajeError.kt
+    ├── FiltroCategorias.kt           chips de categoría (Fase 2)
+    ├── SelectorRadio.kt              chips de 100, 200 y 500 m (Fase 2)
     └── theme/
 ```
 
@@ -181,6 +183,40 @@ active la ubicación a mano.
 - En horizontal la pantalla conserva los datos, pero el mapa queda sin espacio
   porque el botón, el texto y la lista ocupan todo el alto.
 
-## Pendiente
+## Fase 2 (rama mejora-ia)
 
-- Fase 2 en la rama `mejora-ia`: mínimo 3 mejoras con Gemini y `PROMPTS.md`.
+Tres mejoras hechas con ayuda de IA. Los prompts, lo que respondió y lo que se
+corrigió están en [PROMPTS.md](PROMPTS.md).
+
+| Mejora | Qué hace | Capas que cambian |
+|---|---|---|
+| Filtrar por categoría | Chips Todas, Estudio, Comida, Eventos y Servicios; el mapa, la lista y el más cercano muestran solo esa categoría | ViewModel + View |
+| Radio de cercanía | Chips de 100, 200 y 500 m; dibuja un círculo alrededor de mi posición y marca «Dentro del radio» en la lista | ViewModel + View |
+| Seguimiento en vivo | «Seguir en vivo» actualiza la posición, las distancias y el lugar verde mientras me muevo; «Detener» lo apaga | Repository + ViewModel + View |
+
+El seguimiento cambia el Repository: `UbicacionRepository` tiene ahora
+`seguirPosicion(): Flow<Posicion>`, y `UbicacionRepositoryGoogle` la implementa con
+`requestLocationUpdates` dentro de un `callbackFlow`. El ViewModel sigue sin recibir
+`Context`.
+
+| Filtro: Estudio | Radio de 100 m | Seguimiento en vivo |
+|---|---|---|
+| ![Filtro](capturas/fase2/01-filtro.jpg) | ![Radio](capturas/fase2/02-radio.jpg) | ![Seguimiento](capturas/fase2/03-seguimiento.jpg) |
+
+### Pruebas de la Fase 2
+
+| Prueba | Resultado |
+|---|---|
+| Elegir Estudio | El mapa y la lista muestran solo la Biblioteca y el Laboratorio; el más cercano es la Biblioteca (88 m) |
+| Elegir Comida | Solo la Cafetería Campus (109 m), que pasa a ser la más cercana |
+| Tocar el chip elegido otra vez | Vuelven a verse todos los lugares |
+| Radio de 100 m en el punto base | Círculo en el mapa; solo la Biblioteca (88 m) queda «Dentro del radio» |
+| Radio de 500 m | Todos los lugares visibles quedan dentro |
+| Seguir en vivo y mover el emulador | Sin pulsar nada, la posición, el orden y el lugar verde cambian (Auditorio 22 m, luego Estacionamiento 32 m) |
+| Detener y mover el emulador | La posición ya no cambia |
+
+### Pendiente o mejorable
+
+- Durante el seguimiento la cámara vuelve a acercarse a mi posición con cada
+  actualización, así que si se aleja el mapa a mano, regresa solo.
+- Con los chips nuevos el mapa queda más bajo; en horizontal sigue sin espacio.
