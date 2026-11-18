@@ -22,6 +22,9 @@ com.tecsup.campusgps/
 │   ├── UbicacionRepositoryGoogle.kt  implementación con Fused
 │   ├── LugaresRepository.kt          interface
 │   └── LugaresRepositoryLocal.kt     los 5 lugares
+├── util/
+│   ├── Distancia.kt                  distanciaMetros con Location.distanceBetween
+│   └── Formato.kt                    formatearDistancia: 350 m o 1.5 km
 ├── viewmodel/
 │   ├── MapaViewModel.kt
 │   └── CampusViewModelFactory.kt
@@ -40,7 +43,7 @@ com.tecsup.campusgps/
 | 3 | Permiso en tiempo de ejecución | Hecho |
 | 4 | Mapa con la ubicación actual | Hecho |
 | 5 | Marcadores de los lugares | Hecho |
-| 6 | Distancias y orden | Pendiente |
+| 6 | Distancias y orden | Hecho |
 | 7 | Lista de lugares y selección | Pendiente |
 | 8 | Lugar más cercano | Pendiente |
 | 9 | Estados de error | Pendiente |
@@ -68,7 +71,7 @@ Restricción de la clave en Google Cloud (Maps SDK for Android):
 
 ## Pendiente
 
-- Commits 6 a 10 de la Fase 1.
+- Commits 7 a 10 de la Fase 1.
 - Fase 2 en la rama `mejora-ia` (3 mejoras con Gemini y `PROMPTS.md`).
 
 ## Notas
