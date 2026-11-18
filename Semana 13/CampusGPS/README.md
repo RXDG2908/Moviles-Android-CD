@@ -32,6 +32,7 @@ com.tecsup.campusgps/
     ├── PantallaMapa.kt
     ├── MapaUbicacion.kt
     ├── ListaLugares.kt
+    ├── MensajeError.kt
     └── theme/
 ```
 
@@ -47,7 +48,7 @@ com.tecsup.campusgps/
 | 6 | Distancias y orden | Hecho |
 | 7 | Lista de lugares y selección | Hecho |
 | 8 | Lugar más cercano | Hecho |
-| 9 | Estados de error | Pendiente |
+| 9 | Estados de error | Hecho |
 | 10 | README con capturas y respuestas | Pendiente |
 
 ## Clave de Google Maps
@@ -72,14 +73,15 @@ Restricción de la clave en Google Cloud (Maps SDK for Android):
 
 ## Pendiente
 
-- Commits 9 y 10 de la Fase 1.
+- Commit 10 de la Fase 1: README con las 5 capturas y las respuestas de Para pensar.
 - Fase 2 en la rama `mejora-ia` (3 mejoras con Gemini y `PROMPTS.md`).
 
 ## Notas
 
 - Se prueba en el emulador `CampusGPS_Play` (Pixel 7, API 35 con Google Play),
   con la ubicación en el punto base `-12.0464, -77.0428`. El emulador `Lab03` no
-  sirve: no trae Google Play Services.
+  sirve para el mapa, pero sí para probar el mensaje «Este dispositivo no tiene
+  Google Play Services».
 - `maps-compose` va en la versión 6.4.1: la 8.4.0 de la guía exige Android Gradle
   Plugin 9.1 y compileSdk 37, y no compila con este proyecto. Por eso los
   marcadores usan `rememberMarkerState(position = ...)`: `rememberUpdatedMarkerState`,

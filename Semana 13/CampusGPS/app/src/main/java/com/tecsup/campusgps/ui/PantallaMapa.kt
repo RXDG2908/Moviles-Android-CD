@@ -2,7 +2,10 @@
 package com.tecsup.campusgps.ui
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -53,6 +56,15 @@ fun PantallaMapa(vm: MapaViewModel) {
         if (resultado.values.any { it }) vm.buscar() else vm.permisoDenegado()
     }
 
+    // Abre la pantalla de permisos de la app en los Ajustes de Android
+    fun abrirAjustes() {
+        val intent = Intent(
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts("package", contexto.packageName, null)
+        )
+        contexto.startActivity(intent)
+    }
+
     fun alPulsar() {
         val tienePermiso = listOf(FINE, COARSE).any {
             ContextCompat.checkSelfPermission(contexto, it) == PackageManager.PERMISSION_GRANTED
@@ -96,9 +108,10 @@ fun PantallaMapa(vm: MapaViewModel) {
                 is UbicacionUi.Lista -> Text(
                     "Lat: ${e.posicion.latitud}  ·  Lon: ${e.posicion.longitud}"
                 )
-                is UbicacionUi.Error -> Text(
-                    text = e.mensaje,
-                    color = MaterialTheme.colorScheme.error
+                is UbicacionUi.Error -> MensajeError(
+                    error = e,
+                    onAbrirAjustes = { abrirAjustes() },
+                    onReintentar = { alPulsar() }
                 )
             }
 
