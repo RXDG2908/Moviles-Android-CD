@@ -3,11 +3,18 @@ package com.tecsup.campusgps.data
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Looper
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.tecsup.campusgps.model.Posicion
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 class UbicacionRepositoryGoogle(private val context: Context) : UbicacionRepository {
@@ -22,6 +29,23 @@ class UbicacionRepositoryGoogle(private val context: Context) : UbicacionReposit
             .await()
             ?: throw UbicacionNoDisponibleException() // null: GPS apagado o sin señal
         Posicion(ubicacion.latitude, ubicacion.longitude)
+    }
+
+    // requestLocationUpdates trabaja con callbacks; callbackFlow los convierte en un Flow
+    @SuppressLint("MissingPermission")
+    override fun seguirPosicion(): Flow<Posicion> = callbackFlow {
+        val pedido = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 3000L).build()
+        val callback = object : LocationCallback() {
+            override fun onLocationResult(resultado: LocationResult) {
+                resultado.lastLocation?.let {
+                    trySend(Posicion(it.latitude, it.longitude))
+                }
+            }
+        }
+        cliente.requestLocationUpdates(pedido, callback, Looper.getMainLooper())
+            .addOnFailureListener { close(it) }
+        // Al cancelar el Flow (botón Detener o salir de la app) se dejan de pedir posiciones
+        awaitClose { cliente.removeLocationUpdates(callback) }
     }
 
     override fun playServicesDisponible(): Boolean =

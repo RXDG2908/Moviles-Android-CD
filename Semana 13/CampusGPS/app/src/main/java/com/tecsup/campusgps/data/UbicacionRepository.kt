@@ -2,9 +2,13 @@
 package com.tecsup.campusgps.data
 
 import com.tecsup.campusgps.model.Posicion
+import kotlinx.coroutines.flow.Flow
 
 interface UbicacionRepository {
     suspend fun obtenerPosicion(): Result<Posicion>
+
+    // Emite una posición nueva cada vez que el celular se mueve; se detiene al cancelar
+    fun seguirPosicion(): Flow<Posicion>
     fun playServicesDisponible(): Boolean
 }
 

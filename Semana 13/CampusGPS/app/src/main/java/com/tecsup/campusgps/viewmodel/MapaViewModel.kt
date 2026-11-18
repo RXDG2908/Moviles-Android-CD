@@ -12,10 +12,12 @@ import com.tecsup.campusgps.model.Posicion
 import com.tecsup.campusgps.model.TipoError
 import com.tecsup.campusgps.model.UbicacionUi
 import com.tecsup.campusgps.util.distanciaMetros
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -66,6 +68,44 @@ class MapaViewModel(
                 }
                 .onFailure { _estado.value = errorDe(it) }
         }
+    }
+
+    // Seguimiento en vivo: el trabajo que escucha las posiciones mientras está activo
+    private var seguimiento: Job? = null
+    private val _siguiendo = MutableStateFlow(false)
+    val siguiendo: StateFlow<Boolean> = _siguiendo.asStateFlow()
+
+    fun iniciarSeguimiento() {
+        if (!ubicacionRepo.playServicesDisponible()) {
+            _estado.value = UbicacionUi.Error(
+                "Este dispositivo no tiene Google Play Services",
+                TipoError.SIN_PLAY_SERVICES
+            )
+            return
+        }
+        seguimiento?.cancel()
+        _siguiendo.value = true
+        _estado.value = UbicacionUi.Buscando
+        seguimiento = viewModelScope.launch {
+            ubicacionRepo.seguirPosicion()
+                .catch {
+                    _estado.value = errorDe(it)
+                    _siguiendo.value = false
+                }
+                .collect {
+                    // Cada posición nueva actualiza el mapa, las distancias y el orden
+                    _estado.value = UbicacionUi.Lista(it)
+                    actualizarDistancias(it)
+                }
+        }
+    }
+
+    fun detenerSeguimiento() {
+        seguimiento?.cancel()
+        seguimiento = null
+        _siguiendo.value = false
+        // Si se detiene antes de la primera posición, se vuelve al estado inicial
+        if (_estado.value is UbicacionUi.Buscando) _estado.value = UbicacionUi.Inicial
     }
 
     fun permisoDenegado() {
