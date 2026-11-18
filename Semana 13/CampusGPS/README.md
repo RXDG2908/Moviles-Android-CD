@@ -41,6 +41,7 @@ com.tecsup.campusgps/
     ├── MensajeError.kt
     ├── FiltroCategorias.kt           chips de categoría (Fase 2)
     ├── SelectorRadio.kt              chips de 100, 200 y 500 m (Fase 2)
+    ├── Iconos.kt                     iconos por categoría, punto en vivo y efecto al presionar (Fase 2)
     └── theme/
 ```
 
@@ -215,8 +216,27 @@ El seguimiento cambia el Repository: `UbicacionRepository` tiene ahora
 | Seguir en vivo y mover el emulador | Sin pulsar nada, la posición, el orden y el lugar verde cambian (Auditorio 22 m, luego Estacionamiento 32 m) |
 | Detener y mover el emulador | La posición ya no cambia |
 
+### Pulido de la interfaz
+
+Después de las tres mejoras se pulió el diseño, siguiendo reglas de movimiento para
+apps móviles: respuesta al toque en menos de 100 ms, transiciones de 250 a 350 ms y
+curvas suaves en vez de lineales.
+
+| Parte | Qué cambió |
+|---|---|
+| Iconos | Cada categoría tiene su icono (libro, cubiertos, calendario, estacionamiento) en chips, tarjetas y lista; cada error tiene el suyo (ubicación tachada, GPS apagado, celular) |
+| Panel de ubicación | Los botones «Mi ubicación» y «Seguir en vivo» van en una tarjeta con el estado debajo; el estado entra con un fundido y una barra de progreso mientras busca |
+| Más cercano | Tarjeta verde con el nombre y la distancia, que se desliza cuando cambia el lugar, y un botón para ir hasta él |
+| Lista | Las tarjetas se reordenan deslizándose, la distancia cambia con una animación, el borde y el color de la seleccionada se animan, y la tarjeta se achica un poco al presionarla |
+| Mapa | Bordes redondeados con sombra, etiqueta «En vivo» con un punto que late, y sin la barra de Google Maps al tocar un marcador |
+| Seguimiento | La cámara sigue la posición sin volver a cambiar el zoom que eligió el usuario |
+| Errores | El recuadro entra con una pequeña sacudida y una vibración |
+| Vibración | Los chips y las tarjetas vibran un poco al tocarlos |
+
+| Inicio | Con ubicación | Radio y selección | En vivo | Error |
+|---|---|---|---|---|
+| ![Inicio](capturas/fase2/04-diseno-inicio.jpg) | ![Ubicación](capturas/fase2/05-diseno-ubicacion.jpg) | ![Radio](capturas/fase2/06-diseno-radio-seleccion.jpg) | ![En vivo](capturas/fase2/07-diseno-en-vivo.jpg) | ![Error](capturas/fase2/08-diseno-error.jpg) |
+
 ### Pendiente o mejorable
 
-- Durante el seguimiento la cámara vuelve a acercarse a mi posición con cada
-  actualización, así que si se aleja el mapa a mano, regresa solo.
-- Con los chips nuevos el mapa queda más bajo; en horizontal sigue sin espacio.
+- En horizontal el mapa sigue sin espacio.

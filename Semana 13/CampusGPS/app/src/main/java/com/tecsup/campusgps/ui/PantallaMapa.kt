@@ -8,19 +8,48 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Explore
+import androidx.compose.material.icons.filled.GpsFixed
+import androidx.compose.material.icons.filled.MyLocation
+import androidx.compose.material.icons.filled.Navigation
+import androidx.compose.material.icons.filled.NearMe
+import androidx.compose.material.icons.filled.Sensors
+import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material.icons.filled.TouchApp
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -32,16 +61,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.tecsup.campusgps.model.Lugar
 import com.tecsup.campusgps.model.UbicacionUi
 import com.tecsup.campusgps.util.formatearDistancia
 import com.tecsup.campusgps.viewmodel.MapaViewModel
+import java.util.Locale
 
 private const val FINE = Manifest.permission.ACCESS_FINE_LOCATION
 private const val COARSE = Manifest.permission.ACCESS_COARSE_LOCATION
+private val VerdeCercano = Color(0xFF2E7D32)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -101,7 +138,20 @@ fun PantallaMapa(vm: MapaViewModel) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("CampusGPS") },
+                title = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Filled.Explore, contentDescription = null)
+                        Spacer(Modifier.width(10.dp))
+                        Column {
+                            Text("CampusGPS", fontWeight = FontWeight.Bold)
+                            Text(
+                                "Lugares del campus cerca de ti",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
+                            )
+                        }
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
@@ -113,37 +163,17 @@ fun PantallaMapa(vm: MapaViewModel) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(16.dp),
+                .padding(horizontal = 16.dp, vertical = 10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(
-                    onClick = { alPulsar() },
-                    // Mientras sigue en vivo no hace falta pedir la ubicación a mano
-                    enabled = estado !is UbicacionUi.Buscando && !siguiendo
-                ) {
-                    Text("Obtener mi ubicación")
-                }
-                // Iniciar/Detener el seguimiento en vivo
-                FilledTonalButton(onClick = { alPulsarSeguir() }) {
-                    Text(if (siguiendo) "Detener" else "Seguir en vivo")
-                }
-            }
-
-            when (val e = estado) {
-                UbicacionUi.Inicial -> Text("Pulsa el botón para ver dónde estás")
-                UbicacionUi.Buscando -> CircularProgressIndicator()
-                is UbicacionUi.Lista -> Text(
-                    (if (siguiendo) "En vivo · " else "") +
-                        "Lat: ${e.posicion.latitud}  ·  Lon: ${e.posicion.longitud}"
-                )
-                is UbicacionUi.Error -> MensajeError(
-                    error = e,
-                    onAbrirAjustes = { abrirAjustes() },
-                    onReintentar = { alPulsar() }
-                )
-            }
+            PanelUbicacion(
+                estado = estado,
+                siguiendo = siguiendo,
+                onBuscar = { alPulsar() },
+                onSeguir = { alPulsarSeguir() },
+                onAbrirAjustes = { abrirAjustes() }
+            )
 
             // Chips para ver solo una categoría en el mapa y en la lista
             FiltroCategorias(
@@ -159,17 +189,12 @@ fun PantallaMapa(vm: MapaViewModel) {
                 onElegir = { vm.elegirRadio(it) }
             )
 
-            // Lleva la cámara al lugar más cercano; deshabilitado sin ubicación
-            OutlinedButton(
-                onClick = { masCercano?.let { vm.seleccionar(it.id) } },
-                enabled = masCercano != null
-            ) {
-                Text("Ir al más cercano")
-            }
-            val cercano = masCercano
-            if (cercano != null && metrosCercano != null) {
-                Text("Más cercano: ${cercano.nombre} (${formatearDistancia(metrosCercano)})")
-            }
+            // Tarjeta con el lugar más cercano y el botón para ir hasta él
+            TarjetaMasCercano(
+                lugar = masCercano,
+                metros = metrosCercano,
+                onIr = { masCercano?.let { vm.seleccionar(it.id) } }
+            )
 
             // El mapa ocupa todo el espacio que queda libre
             MapaUbicacion(
@@ -178,6 +203,7 @@ fun PantallaMapa(vm: MapaViewModel) {
                 seleccionado = seleccionado,
                 masCercano = masCercano,
                 radio = radio,
+                siguiendo = siguiendo,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
@@ -188,11 +214,217 @@ fun PantallaMapa(vm: MapaViewModel) {
                 lugares = lugares,
                 seleccionado = seleccionado,
                 dentroDelRadio = dentroDelRadio,
+                masCercanoId = masCercano?.id,
                 onClick = { vm.seleccionar(it) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(220.dp)
+                    .height(200.dp)
             )
+        }
+    }
+}
+
+// Botones para buscar o seguir la ubicación, y el estado actual debajo
+@Composable
+private fun PanelUbicacion(
+    estado: UbicacionUi,
+    siguiendo: Boolean,
+    onBuscar: () -> Unit,
+    onSeguir: () -> Unit,
+    onAbrirAjustes: () -> Unit
+) {
+    ElevatedCard(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                val interaccionBuscar = remember { MutableInteractionSource() }
+                Button(
+                    onClick = onBuscar,
+                    // Mientras sigue en vivo no hace falta pedir la ubicación a mano
+                    enabled = estado !is UbicacionUi.Buscando && !siguiendo,
+                    interactionSource = interaccionBuscar,
+                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
+                    modifier = Modifier
+                        .weight(1f)
+                        .scale(escalaAlPresionar(interaccionBuscar))
+                ) {
+                    Icon(Icons.Filled.MyLocation, null, Modifier.size(ButtonDefaults.IconSize))
+                    Spacer(Modifier.width(ButtonDefaults.IconSpacing))
+                    Text("Mi ubicación", maxLines = 1)
+                }
+                // Iniciar/Detener el seguimiento en vivo
+                val interaccionSeguir = remember { MutableInteractionSource() }
+                FilledTonalButton(
+                    onClick = onSeguir,
+                    interactionSource = interaccionSeguir,
+                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
+                    colors = if (siguiendo) {
+                        ButtonDefaults.filledTonalButtonColors(
+                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                            contentColor = MaterialTheme.colorScheme.onErrorContainer
+                        )
+                    } else {
+                        ButtonDefaults.filledTonalButtonColors()
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .scale(escalaAlPresionar(interaccionSeguir))
+                ) {
+                    // El icono y el texto cambian con un fundido al iniciar o detener
+                    AnimatedContent(targetState = siguiendo, label = "seguir") { activo ->
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                if (activo) Icons.Filled.Stop else Icons.Filled.Sensors,
+                                null,
+                                Modifier.size(ButtonDefaults.IconSize)
+                            )
+                            Spacer(Modifier.width(ButtonDefaults.IconSpacing))
+                            Text(if (activo) "Detener" else "Seguir en vivo", maxLines = 1)
+                        }
+                    }
+                }
+            }
+
+            // Se anima solo al cambiar de tipo de estado, no con cada posición nueva
+            AnimatedContent(
+                targetState = estado,
+                contentKey = { it::class },
+                transitionSpec = {
+                    (fadeIn(tween(250)) + slideInVertically(tween(250)) { it / 3 }) togetherWith
+                        fadeOut(tween(150))
+                },
+                label = "estado"
+            ) { e ->
+                when (e) {
+                    UbicacionUi.Inicial -> LineaEstado(
+                        Icons.Filled.TouchApp,
+                        "Pulsa un botón para ver dónde estás"
+                    )
+                    UbicacionUi.Buscando -> Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        LineaEstado(Icons.Filled.GpsFixed, "Buscando señal GPS…")
+                        LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                    }
+                    is UbicacionUi.Lista -> LineaPosicion(e, siguiendo)
+                    is UbicacionUi.Error -> MensajeError(
+                        error = e,
+                        onAbrirAjustes = onAbrirAjustes,
+                        onReintentar = onBuscar
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun LineaEstado(icono: ImageVector, texto: String) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Icon(icono, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+        Spacer(Modifier.width(8.dp))
+        Text(texto, style = MaterialTheme.typography.bodyMedium)
+    }
+}
+
+@Composable
+private fun LineaPosicion(e: UbicacionUi.Lista, siguiendo: Boolean) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        if (siguiendo) {
+            PuntoEnVivo(Color(0xFFE53935), tamano = 8.dp)
+        } else {
+            Icon(Icons.Filled.GpsFixed, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+        }
+        Spacer(Modifier.width(8.dp))
+        // Coordenadas con 5 decimales (más o menos 1 m de precisión)
+        Text(
+            text = String.format(
+                Locale.US,
+                "%.5f, %.5f",
+                e.posicion.latitud,
+                e.posicion.longitud
+            ),
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium
+        )
+        if (siguiendo) {
+            Spacer(Modifier.width(6.dp))
+            Text("· en vivo", style = MaterialTheme.typography.bodySmall, color = Color(0xFFE53935))
+        }
+    }
+}
+
+@Composable
+private fun TarjetaMasCercano(lugar: Lugar?, metros: Float?, onIr: () -> Unit) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (lugar != null) {
+                VerdeCercano.copy(alpha = 0.12f)
+            } else {
+                MaterialTheme.colorScheme.surfaceContainerHigh
+            }
+        )
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .background(
+                        if (lugar != null) VerdeCercano else MaterialTheme.colorScheme.outline,
+                        CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(Icons.Filled.NearMe, null, tint = Color.White, modifier = Modifier.size(20.dp))
+            }
+            Spacer(Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    "Más cercano",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                // El nombre cambia deslizando hacia arriba cuando otro lugar pasa a ser el más cercano
+                AnimatedContent(
+                    targetState = if (lugar != null && metros != null) {
+                        "${lugar.nombre} · ${formatearDistancia(metros)}"
+                    } else {
+                        "Busca tu ubicación primero"
+                    },
+                    transitionSpec = {
+                        (slideInVertically { it } + fadeIn()) togetherWith
+                            (slideOutVertically { -it } + fadeOut())
+                    },
+                    label = "cercano"
+                ) { texto ->
+                    Text(
+                        texto,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        color = if (lugar != null) VerdeCercano else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+            // Lleva la cámara al lugar más cercano; deshabilitado sin ubicación
+            FilledIconButton(
+                onClick = onIr,
+                enabled = lugar != null,
+                colors = androidx.compose.material3.IconButtonDefaults.filledIconButtonColors(
+                    containerColor = VerdeCercano,
+                    contentColor = Color.White
+                )
+            ) {
+                Icon(Icons.Filled.Navigation, contentDescription = "Ir al más cercano")
+            }
         }
     }
 }

@@ -12,6 +12,7 @@
    de mi posición y marca en la lista los lugares que quedan dentro.
 3. Seguimiento en vivo: `requestLocationUpdates` convertido en un `Flow` con
    `callbackFlow`, con un botón para iniciar y detener.
+4. Pulido de la interfaz: iconos, animaciones y efectos (sin cambiar la lógica).
 
 **Condición que se mantuvo:** la pantalla solo habla con su ViewModel; el ViewModel
 solo conoce las interfaces `UbicacionRepository` y `LugaresRepository` y no recibe
@@ -114,6 +115,39 @@ solo conoce las interfaces `UbicacionRepository` y `LugaresRepository` y no reci
   un `Flow`, y que cancelar el `Job` del ViewModel es lo que dispara `awaitClose`.
   Por eso la interface del Repository cambia, pero el ViewModel sigue sin conocer
   a Google Play Services.
+
+## Consulta 4 · Pulir la interfaz
+
+- **Fecha:** 18/11/2026
+- **Herramienta:** Claude Code (Claude Opus 5.5)
+- **Prompt:**
+
+  > Mejora el diseño de CampusGPS con mejores iconos, animaciones y efectos, usando
+  > Material 3 y Jetpack Compose. No cambies la lógica del ViewModel ni del
+  > Repository. Las animaciones deben ser cortas y no lineales.
+
+- **Qué respondió (resumen):** agregar `material-icons-extended` y un icono por
+  categoría; juntar los botones y el estado en una tarjeta; usar `AnimatedContent`
+  para el estado, la distancia y el lugar más cercano; `Modifier.animateItem()` para
+  que la lista se reordene animada; `animateColorAsState` para la tarjeta elegida;
+  un punto que late con `rememberInfiniteTransition` para el modo en vivo; una
+  sacudida con `keyframes` para el error; y vibración al tocar chips y tarjetas.
+- **Qué usé / qué cambié y por qué:**
+  - Usé casi todo lo que propuso. El elegir icono por categoría quedó en una función
+    de la carpeta `ui/`, porque solo decide qué dibujar y no filtra ni calcula.
+  - El estado se anima solo cuando cambia de tipo (inicial, buscando, lista, error),
+    con `contentKey`. Sin eso, en el modo en vivo el texto se volvía a animar con
+    cada posición nueva y parpadeaba.
+  - Aproveché para corregir algo que había quedado pendiente: durante el
+    seguimiento la cámara volvía a acercarse a mi posición con cada actualización.
+    Ahora, después de la primera, solo se desplaza y respeta el zoom.
+  - El primer intento del efecto de presión era una extensión de `Modifier` que no
+    funcionaba; lo cambié por una función `escalaAlPresionar` que devuelve la escala.
+  - El icono `SmartphoneOutlined` que sugirió no existe en la librería; usé
+    `PhonelinkErase` para el error sin Play Services.
+- **Qué aprendí:** que las animaciones de Compose dependen del estado: basta con
+  cambiar el valor y `animate*AsState` o `AnimatedContent` hacen la transición. Y que
+  hay que decidir qué cambios merecen animación, porque animar todo distrae.
 
 ---
 
