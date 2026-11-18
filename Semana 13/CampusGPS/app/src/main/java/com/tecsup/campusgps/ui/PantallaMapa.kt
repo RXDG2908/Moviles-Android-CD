@@ -45,6 +45,7 @@ fun PantallaMapa(vm: MapaViewModel) {
     val lugares by vm.lugares.collectAsStateWithLifecycle()
     val seleccionado by vm.seleccionado.collectAsStateWithLifecycle()
     val masCercano by vm.masCercano.collectAsStateWithLifecycle()
+    val categoria by vm.categoria.collectAsStateWithLifecycle()
     // Solo se busca la distancia ya calculada para mostrarla, no se calcula aquí
     val metrosCercano = lugares.firstOrNull { it.lugar.id == masCercano?.id }?.metros
 
@@ -114,6 +115,13 @@ fun PantallaMapa(vm: MapaViewModel) {
                     onReintentar = { alPulsar() }
                 )
             }
+
+            // Chips para ver solo una categoría en el mapa y en la lista
+            FiltroCategorias(
+                categorias = vm.categorias,
+                elegida = categoria,
+                onElegir = { vm.filtrar(it) }
+            )
 
             // Lleva la cámara al lugar más cercano; deshabilitado sin ubicación
             OutlinedButton(
