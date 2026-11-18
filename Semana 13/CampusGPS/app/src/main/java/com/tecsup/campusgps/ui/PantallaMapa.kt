@@ -15,6 +15,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tecsup.campusgps.model.UbicacionUi
+import com.tecsup.campusgps.util.formatearDistancia
 import com.tecsup.campusgps.viewmodel.MapaViewModel
 
 private const val FINE = Manifest.permission.ACCESS_FINE_LOCATION
@@ -39,6 +41,9 @@ fun PantallaMapa(vm: MapaViewModel) {
     val estado by vm.estado.collectAsStateWithLifecycle()
     val lugares by vm.lugares.collectAsStateWithLifecycle()
     val seleccionado by vm.seleccionado.collectAsStateWithLifecycle()
+    val masCercano by vm.masCercano.collectAsStateWithLifecycle()
+    // Solo se busca la distancia ya calculada para mostrarla, no se calcula aquí
+    val metrosCercano = lugares.firstOrNull { it.lugar.id == masCercano?.id }?.metros
 
     val contexto = LocalContext.current
     val lanzador = rememberLauncherForActivityResult(
@@ -88,14 +93,25 @@ fun PantallaMapa(vm: MapaViewModel) {
             when (val e = estado) {
                 UbicacionUi.Inicial -> Text("Pulsa el botón para ver dónde estás")
                 UbicacionUi.Buscando -> CircularProgressIndicator()
-                is UbicacionUi.Lista -> {
-                    Text("Latitud: ${e.posicion.latitud}")
-                    Text("Longitud: ${e.posicion.longitud}")
-                }
+                is UbicacionUi.Lista -> Text(
+                    "Lat: ${e.posicion.latitud}  ·  Lon: ${e.posicion.longitud}"
+                )
                 is UbicacionUi.Error -> Text(
                     text = e.mensaje,
                     color = MaterialTheme.colorScheme.error
                 )
+            }
+
+            // Lleva la cámara al lugar más cercano; deshabilitado sin ubicación
+            OutlinedButton(
+                onClick = { masCercano?.let { vm.seleccionar(it.id) } },
+                enabled = masCercano != null
+            ) {
+                Text("Ir al más cercano")
+            }
+            val cercano = masCercano
+            if (cercano != null && metrosCercano != null) {
+                Text("Más cercano: ${cercano.nombre} (${formatearDistancia(metrosCercano)})")
             }
 
             // El mapa ocupa todo el espacio que queda libre
@@ -103,6 +119,7 @@ fun PantallaMapa(vm: MapaViewModel) {
                 estado = estado,
                 lugares = lugares,
                 seleccionado = seleccionado,
+                masCercano = masCercano,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
