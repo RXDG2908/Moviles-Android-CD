@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -35,6 +36,8 @@ private const val COARSE = Manifest.permission.ACCESS_COARSE_LOCATION
 @Composable
 fun PantallaMapa(vm: MapaViewModel) {
     val estado by vm.estado.collectAsStateWithLifecycle()
+    val lugares by vm.lugares.collectAsStateWithLifecycle()
+    val seleccionado by vm.seleccionado.collectAsStateWithLifecycle()
 
     val contexto = LocalContext.current
     val lanzador = rememberLauncherForActivityResult(
@@ -81,8 +84,6 @@ fun PantallaMapa(vm: MapaViewModel) {
                 Text("Obtener mi ubicación")
             }
 
-            // TODO Paso 3: MapaUbicacion(..., modifier = Modifier.weight(1f))
-
             when (val e = estado) {
                 UbicacionUi.Inicial -> Text("Pulsa el botón para ver dónde estás")
                 UbicacionUi.Buscando -> CircularProgressIndicator()
@@ -95,6 +96,16 @@ fun PantallaMapa(vm: MapaViewModel) {
                     color = MaterialTheme.colorScheme.error
                 )
             }
+
+            // El mapa ocupa todo el espacio que queda libre
+            MapaUbicacion(
+                estado = estado,
+                lugares = lugares,
+                seleccionado = seleccionado,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            )
         }
     }
 }
