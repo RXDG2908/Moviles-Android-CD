@@ -36,7 +36,7 @@ com.tecsup.campusgps/
 | Commit | Paso | Estado |
 |---|---|---|
 | 1 | Proyecto base | Hecho |
-| 2 | Permisos y clave de Maps | Pendiente |
+| 2 | Permisos y clave de Maps | Hecho |
 | 3 | Permiso en tiempo de ejecución | Pendiente |
 | 4 | Mapa con la ubicación actual | Pendiente |
 | 5 | Marcadores de los lugares | Pendiente |
@@ -46,10 +46,30 @@ com.tecsup.campusgps/
 | 9 | Estados de error | Pendiente |
 | 10 | README con capturas y respuestas | Pendiente |
 
+## Clave de Google Maps
+
+La clave no está en el código ni en el Manifest. Se guarda en `local.properties`
+(que no se sube a GitHub):
+
+```
+MAPS_API_KEY=tu_clave
+```
+
+`app/build.gradle.kts` lee ese archivo y la pasa al Manifest con
+`manifestPlaceholders["MAPS_API_KEY"]`, que la pone en el `meta-data`
+`com.google.android.geo.API_KEY`. Si no hay clave, la app compila igual, pero el
+mapa sale gris.
+
+Restricción de la clave en Google Cloud (Maps SDK for Android):
+
+- Paquete: `com.tecsup.campusgps`
+- SHA-1 de depuración (`./gradlew signingReport`):
+  `1E:D0:35:9B:C2:34:82:EF:E5:22:60:B5:E8:4F:99:9B:E4:6E:75:A3`
+
 ## Pendiente
 
-- Crear la clave de Maps SDK for Android en Google Cloud y guardarla en
-  `local.properties` como `MAPS_API_KEY=...` (ese archivo no se sube).
+- Crear la clave de Maps SDK for Android en Google Cloud con esa restricción y
+  guardarla en `local.properties`.
 - Probar en un emulador con Google Play. El emulador `Lab03` no trae Google Play
   Services, así que ahí la ubicación falla con un mensaje.
 - Fase 2 en la rama `mejora-ia` (3 mejoras con Gemini y `PROMPTS.md`).

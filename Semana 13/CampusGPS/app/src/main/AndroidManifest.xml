@@ -2,7 +2,8 @@
 <!-- Manifiesto: permisos, actividad principal y datos de la app. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- TODO Paso 1: permisos de ubicación (COARSE y FINE) -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -12,7 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CampusGPS">
 
-        <!-- TODO Paso 1: meta-data con la clave de Maps -->
+        <!-- La clave llega desde local.properties por manifestPlaceholders -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
 
         <activity
             android:name=".MainActivity"
