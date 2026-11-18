@@ -31,6 +31,7 @@ com.tecsup.campusgps/
 └── ui/
     ├── PantallaMapa.kt
     ├── MapaUbicacion.kt
+    ├── ListaLugares.kt
     └── theme/
 ```
 
@@ -44,7 +45,7 @@ com.tecsup.campusgps/
 | 4 | Mapa con la ubicación actual | Hecho |
 | 5 | Marcadores de los lugares | Hecho |
 | 6 | Distancias y orden | Hecho |
-| 7 | Lista de lugares y selección | Pendiente |
+| 7 | Lista de lugares y selección | Hecho |
 | 8 | Lugar más cercano | Pendiente |
 | 9 | Estados de error | Pendiente |
 | 10 | README con capturas y respuestas | Pendiente |
@@ -71,7 +72,7 @@ Restricción de la clave en Google Cloud (Maps SDK for Android):
 
 ## Pendiente
 
-- Commits 7 a 10 de la Fase 1.
+- Commits 8 a 10 de la Fase 1.
 - Fase 2 en la rama `mejora-ia` (3 mejoras con Gemini y `PROMPTS.md`).
 
 ## Notas
