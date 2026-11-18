@@ -3,8 +3,10 @@ package com.tecsup.campusgps.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -39,6 +41,18 @@ fun MapaUbicacion(
             marcador.position = LatLng(estado.posicion.latitud, estado.posicion.longitud)
             Marker(state = marcador, title = "Estás aquí")
         }
-        // TODO 3 (Paso 4): un Marker por cada lugar
+        // Un marcador azul por cada lugar; key(id) identifica a cada uno
+        lugares.forEach { item ->
+            key(item.lugar.id) {
+                Marker(
+                    state = rememberMarkerState(
+                        position = LatLng(item.lugar.latitud, item.lugar.longitud)
+                    ),
+                    title = item.lugar.nombre,
+                    snippet = item.lugar.categoria,
+                    icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)
+                )
+            }
+        }
     }
 }

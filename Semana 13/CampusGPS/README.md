@@ -39,7 +39,7 @@ com.tecsup.campusgps/
 | 2 | Permisos y clave de Maps | Hecho |
 | 3 | Permiso en tiempo de ejecución | Hecho |
 | 4 | Mapa con la ubicación actual | Hecho |
-| 5 | Marcadores de los lugares | Pendiente |
+| 5 | Marcadores de los lugares | Hecho |
 | 6 | Distancias y orden | Pendiente |
 | 7 | Lista de lugares y selección | Pendiente |
 | 8 | Lugar más cercano | Pendiente |
@@ -68,7 +68,7 @@ Restricción de la clave en Google Cloud (Maps SDK for Android):
 
 ## Pendiente
 
-- Commits 5 a 10 de la Fase 1.
+- Commits 6 a 10 de la Fase 1.
 - Fase 2 en la rama `mejora-ia` (3 mejoras con Gemini y `PROMPTS.md`).
 
 ## Notas
@@ -77,4 +77,6 @@ Restricción de la clave en Google Cloud (Maps SDK for Android):
   con la ubicación en el punto base `-12.0464, -77.0428`. El emulador `Lab03` no
   sirve: no trae Google Play Services.
 - `maps-compose` va en la versión 6.4.1: la 8.4.0 de la guía exige Android Gradle
-  Plugin 9.1 y compileSdk 37, y no compila con este proyecto.
+  Plugin 9.1 y compileSdk 37, y no compila con este proyecto. Por eso los
+  marcadores usan `rememberMarkerState(position = ...)`: `rememberUpdatedMarkerState`,
+  que sugiere la guía, no existe en la 6.4.1.
