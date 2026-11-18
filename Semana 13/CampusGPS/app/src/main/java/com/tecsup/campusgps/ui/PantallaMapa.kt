@@ -46,6 +46,8 @@ fun PantallaMapa(vm: MapaViewModel) {
     val seleccionado by vm.seleccionado.collectAsStateWithLifecycle()
     val masCercano by vm.masCercano.collectAsStateWithLifecycle()
     val categoria by vm.categoria.collectAsStateWithLifecycle()
+    val radio by vm.radio.collectAsStateWithLifecycle()
+    val dentroDelRadio by vm.dentroDelRadio.collectAsStateWithLifecycle()
     // Solo se busca la distancia ya calculada para mostrarla, no se calcula aquí
     val metrosCercano = lugares.firstOrNull { it.lugar.id == masCercano?.id }?.metros
 
@@ -123,6 +125,13 @@ fun PantallaMapa(vm: MapaViewModel) {
                 onElegir = { vm.filtrar(it) }
             )
 
+            // Chips para elegir el radio de cercanía
+            SelectorRadio(
+                radios = vm.radios,
+                elegido = radio,
+                onElegir = { vm.elegirRadio(it) }
+            )
+
             // Lleva la cámara al lugar más cercano; deshabilitado sin ubicación
             OutlinedButton(
                 onClick = { masCercano?.let { vm.seleccionar(it.id) } },
@@ -141,6 +150,7 @@ fun PantallaMapa(vm: MapaViewModel) {
                 lugares = lugares,
                 seleccionado = seleccionado,
                 masCercano = masCercano,
+                radio = radio,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
@@ -150,6 +160,7 @@ fun PantallaMapa(vm: MapaViewModel) {
             ListaLugares(
                 lugares = lugares,
                 seleccionado = seleccionado,
+                dentroDelRadio = dentroDelRadio,
                 onClick = { vm.seleccionar(it) },
                 modifier = Modifier
                     .fillMaxWidth()

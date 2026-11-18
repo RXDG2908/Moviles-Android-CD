@@ -38,6 +38,7 @@ private val AzulMarcador = Color(0xFF1E88E5)
 fun ListaLugares(
     lugares: List<LugarConDistancia>,
     seleccionado: Int?,
+    dentroDelRadio: Set<Int>,
     onClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -58,6 +59,7 @@ fun ListaLugares(
             TarjetaLugar(
                 item = item,
                 elegida = item.lugar.id == seleccionado,
+                dentro = item.lugar.id in dentroDelRadio,
                 onClick = { onClick(item.lugar.id) }
             )
         }
@@ -68,6 +70,7 @@ fun ListaLugares(
 private fun TarjetaLugar(
     item: LugarConDistancia,
     elegida: Boolean,
+    dentro: Boolean,
     onClick: () -> Unit
 ) {
     Card(
@@ -95,8 +98,8 @@ private fun TarjetaLugar(
             Column(modifier = Modifier.weight(1f)) {
                 Text(item.lugar.nombre, fontWeight = FontWeight.Bold)
                 Text(
-                    text = item.lugar.categoria,
-                    color = Color.Gray,
+                    text = if (dentro) "${item.lugar.categoria} · Dentro del radio" else item.lugar.categoria,
+                    color = if (dentro) MaterialTheme.colorScheme.primary else Color.Gray,
                     style = MaterialTheme.typography.bodySmall
                 )
             }
