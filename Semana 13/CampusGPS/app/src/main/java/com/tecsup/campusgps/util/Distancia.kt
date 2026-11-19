@@ -5,7 +5,10 @@ import android.location.Location
 import com.tecsup.campusgps.model.Lugar
 import com.tecsup.campusgps.model.Posicion
 
-fun distanciaMetros(desde: Posicion, hasta: Lugar): Float {
+fun distanciaMetros(desde: Posicion, hasta: Lugar): Float =
+    distanciaMetros(desde, Posicion(hasta.latitud, hasta.longitud))
+
+fun distanciaMetros(desde: Posicion, hasta: Posicion): Float {
     // distanceBetween guarda el resultado en la primera casilla del arreglo
     val resultado = FloatArray(1)
     Location.distanceBetween(

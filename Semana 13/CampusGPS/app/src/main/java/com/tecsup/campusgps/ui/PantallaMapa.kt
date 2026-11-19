@@ -6,12 +6,17 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
@@ -58,6 +63,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -91,10 +97,20 @@ fun PantallaMapa(vm: MapaViewModel) {
     val radio by vm.radio.collectAsStateWithLifecycle()
     val dentroDelRadio by vm.dentroDelRadio.collectAsStateWithLifecycle()
     val siguiendo by vm.siguiendo.collectAsStateWithLifecycle()
+    val ruta by vm.ruta.collectAsStateWithLifecycle()
     // Recuerda qué pidió el usuario mientras Android muestra el cuadro de permiso
     var quiereSeguir by remember { mutableStateOf(false) }
     // Solo se busca la distancia ya calculada para mostrarla, no se calcula aquí
     val metrosCercano = lugares.firstOrNull { it.lugar.id == masCercano?.id }?.metros
+
+    // Mapa en pantalla completa: se oculta todo lo demás (se conserva al rotar)
+    var pantallaCompleta by rememberSaveable { mutableStateOf(false) }
+    // El botón Atrás primero sale de pantalla completa
+    BackHandler(enabled = pantallaCompleta) { pantallaCompleta = false }
+    val margenH by animateDpAsState(if (pantallaCompleta) 0.dp else 16.dp, tween(400), label = "margenH")
+    val margenV by animateDpAsState(if (pantallaCompleta) 0.dp else 10.dp, tween(400), label = "margenV")
+    val entrar = expandVertically(tween(400)) + fadeIn(tween(300))
+    val salir = shrinkVertically(tween(400)) + fadeOut(tween(200))
 
     val contexto = LocalContext.current
     val lanzador = rememberLauncherForActivityResult(
@@ -137,6 +153,7 @@ fun PantallaMapa(vm: MapaViewModel) {
 
     Scaffold(
         topBar = {
+            AnimatedVisibility(visible = !pantallaCompleta, enter = entrar, exit = salir) {
             TopAppBar(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -157,46 +174,55 @@ fun PantallaMapa(vm: MapaViewModel) {
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
+            }
         }
     ) { padding ->
+        // Sin spacedBy: cada bloque lleva su propio espacio para que, al ocultarse
+        // en pantalla completa, no quede ningún hueco alrededor del mapa
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(horizontal = 16.dp, vertical = 10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+                .padding(horizontal = margenH, vertical = margenV),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            PanelUbicacion(
-                estado = estado,
-                siguiendo = siguiendo,
-                onBuscar = { alPulsar() },
-                onSeguir = { alPulsarSeguir() },
-                onAbrirAjustes = { abrirAjustes() }
-            )
+            AnimatedVisibility(visible = !pantallaCompleta, enter = entrar, exit = salir) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    modifier = Modifier.padding(bottom = 10.dp)
+                ) {
+                    PanelUbicacion(
+                        estado = estado,
+                        siguiendo = siguiendo,
+                        onBuscar = { alPulsar() },
+                        onSeguir = { alPulsarSeguir() },
+                        onAbrirAjustes = { abrirAjustes() }
+                    )
 
-            // Chips para ver solo una categoría en el mapa y en la lista
-            FiltroCategorias(
-                categorias = vm.categorias,
-                elegida = categoria,
-                onElegir = { vm.filtrar(it) }
-            )
+                    // Chips para ver solo una categoría en el mapa y en la lista
+                    FiltroCategorias(
+                        categorias = vm.categorias,
+                        elegida = categoria,
+                        onElegir = { vm.filtrar(it) }
+                    )
 
-            // Chips para elegir el radio de cercanía
-            SelectorRadio(
-                radios = vm.radios,
-                elegido = radio,
-                onElegir = { vm.elegirRadio(it) }
-            )
+                    // Chips para elegir el radio de cercanía
+                    SelectorRadio(
+                        radios = vm.radios,
+                        elegido = radio,
+                        onElegir = { vm.elegirRadio(it) }
+                    )
 
-            // Tarjeta con el lugar más cercano y el botón para ir hasta él
-            TarjetaMasCercano(
-                lugar = masCercano,
-                metros = metrosCercano,
-                onIr = { masCercano?.let { vm.seleccionar(it.id) } }
-            )
+                    // Tarjeta con el lugar más cercano y el botón para ir hasta él
+                    TarjetaMasCercano(
+                        lugar = masCercano,
+                        metros = metrosCercano,
+                        onIr = { masCercano?.let { vm.seleccionar(it.id) } }
+                    )
+                }
+            }
 
-            // El mapa ocupa todo el espacio que queda libre
+            // El mapa ocupa todo el espacio que queda libre (toda la pantalla en modo completo)
             MapaUbicacion(
                 estado = estado,
                 lugares = lugares,
@@ -204,22 +230,29 @@ fun PantallaMapa(vm: MapaViewModel) {
                 masCercano = masCercano,
                 radio = radio,
                 siguiendo = siguiendo,
+                pantallaCompleta = pantallaCompleta,
+                onPantallaCompleta = { pantallaCompleta = !pantallaCompleta },
+                onSeleccionar = { vm.seleccionar(it) },
+                ruta = ruta,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
             )
 
             // La lista va debajo del mapa con altura fija
-            ListaLugares(
-                lugares = lugares,
-                seleccionado = seleccionado,
-                dentroDelRadio = dentroDelRadio,
-                masCercanoId = masCercano?.id,
-                onClick = { vm.seleccionar(it) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-            )
+            AnimatedVisibility(visible = !pantallaCompleta, enter = entrar, exit = salir) {
+                ListaLugares(
+                    lugares = lugares,
+                    seleccionado = seleccionado,
+                    dentroDelRadio = dentroDelRadio,
+                    masCercanoId = masCercano?.id,
+                    onClick = { vm.seleccionar(it) },
+                    modifier = Modifier
+                        .padding(top = 10.dp)
+                        .fillMaxWidth()
+                        .height(200.dp)
+                )
+            }
         }
     }
 }

@@ -2,6 +2,8 @@
 <!-- Manifiesto: permisos, actividad principal y datos de la app. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Para pedir la ruta a pie a la Routes API de Google -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 

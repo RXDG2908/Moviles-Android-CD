@@ -4,11 +4,13 @@ package com.tecsup.campusgps.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tecsup.campusgps.data.LugaresRepository
+import com.tecsup.campusgps.data.RutasRepository
 import com.tecsup.campusgps.data.UbicacionNoDisponibleException
 import com.tecsup.campusgps.data.UbicacionRepository
 import com.tecsup.campusgps.model.Lugar
 import com.tecsup.campusgps.model.LugarConDistancia
 import com.tecsup.campusgps.model.Posicion
+import com.tecsup.campusgps.model.RutaUi
 import com.tecsup.campusgps.model.TipoError
 import com.tecsup.campusgps.model.UbicacionUi
 import com.tecsup.campusgps.util.distanciaMetros
@@ -25,7 +27,8 @@ import kotlinx.coroutines.launch
 
 class MapaViewModel(
     private val ubicacionRepo: UbicacionRepository,
-    private val lugaresRepo: LugaresRepository
+    private val lugaresRepo: LugaresRepository,
+    private val rutasRepo: RutasRepository
 ) : ViewModel() {
 
     private val _estado = MutableStateFlow<UbicacionUi>(UbicacionUi.Inicial)
@@ -65,6 +68,7 @@ class MapaViewModel(
                 .onSuccess {
                     _estado.value = UbicacionUi.Lista(it)
                     actualizarDistancias(it)
+                    actualizarRuta(forzar = true)
                 }
                 .onFailure { _estado.value = errorDe(it) }
         }
@@ -96,6 +100,7 @@ class MapaViewModel(
                     // Cada posición nueva actualiza el mapa, las distancias y el orden
                     _estado.value = UbicacionUi.Lista(it)
                     actualizarDistancias(it)
+                    actualizarRuta(forzar = false)
                 }
         }
     }
@@ -125,6 +130,40 @@ class MapaViewModel(
 
     fun seleccionar(id: Int?) {
         _seleccionado.value = id
+        actualizarRuta(forzar = true)
+    }
+
+    // ---- Ruta a pie hasta el lugar elegido ----
+    private val _ruta = MutableStateFlow<RutaUi>(RutaUi.Ninguna)
+    val ruta: StateFlow<RutaUi> = _ruta.asStateFlow()
+    private var trabajoRuta: Job? = null
+    // Desde dónde se pidió la última ruta (para no pedirla con cada paso en vivo)
+    private var origenRuta: Posicion? = null
+
+    private fun actualizarRuta(forzar: Boolean) {
+        val id = _seleccionado.value
+        val pos = (_estado.value as? UbicacionUi.Lista)?.posicion
+        val lugar = lugaresRepo.obtenerLugares().firstOrNull { it.id == id }
+        if (id == null || pos == null || lugar == null) {
+            trabajoRuta?.cancel()
+            origenRuta = null
+            _ruta.value = RutaUi.Ninguna
+            return
+        }
+        // En vivo solo se vuelve a pedir si te alejaste más de 25 m de donde empezó la ruta
+        val previo = origenRuta
+        if (!forzar && previo != null && distanciaMetros(previo, pos) < METROS_PARA_RECALCULAR) return
+        origenRuta = pos
+        trabajoRuta?.cancel()
+        // Al recalcular en vivo se deja la ruta anterior en pantalla hasta que llegue la nueva
+        val mismaRuta = (_ruta.value as? RutaUi.Lista)?.destinoId == id
+        if (forzar || !mismaRuta) _ruta.value = RutaUi.Cargando(id)
+        trabajoRuta = viewModelScope.launch {
+            rutasRepo.rutaAPie(pos, Posicion(lugar.latitud, lugar.longitud))
+                .onSuccess { _ruta.value = RutaUi.Lista(it, id) }
+                // Sin internet o sin servicio se muestra la línea recta como respaldo
+                .onFailure { _ruta.value = RutaUi.Recta(id) }
+        }
     }
 
     // Radio de cercanía en metros; null = sin radio
@@ -151,13 +190,17 @@ class MapaViewModel(
         val sigueVisible = _lugares.value.any {
             it.lugar.id == _seleccionado.value && (cat == null || it.lugar.categoria == cat)
         }
-        if (!sigueVisible) _seleccionado.value = null
+        if (!sigueVisible) seleccionar(null)
     }
 
     // El más cercano es el primero de la lista visible que ya tiene distancia; null sin ubicación
     val masCercano: StateFlow<Lugar?> = lugares
         .map { lista -> lista.firstOrNull { it.metros != null }?.lugar }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
+    private companion object {
+        const val METROS_PARA_RECALCULAR = 25f
+    }
 
     private fun errorDe(e: Throwable): UbicacionUi.Error = when (e) {
         is SecurityException -> UbicacionUi.Error("Falta el permiso de ubicación", TipoError.SIN_PERMISO)
