@@ -23,16 +23,31 @@ android {
         applicationId = "com.tecsup.campusgps"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
 
         // El Manifest usa ${MAPS_API_KEY}; si no hay clave queda vacía
         manifestPlaceholders["MAPS_API_KEY"] = localProps.getProperty("MAPS_API_KEY", "")
     }
 
+    // Firma del APK release: los datos del keystore van en local.properties (no se suben)
+    val archivoFirma = localProps.getProperty("RELEASE_STORE_FILE")
+    signingConfigs {
+        if (archivoFirma != null) {
+            create("release") {
+                storeFile = file(archivoFirma)
+                storePassword = localProps.getProperty("RELEASE_STORE_PASSWORD")
+                keyAlias = localProps.getProperty("RELEASE_KEY_ALIAS")
+                keyPassword = localProps.getProperty("RELEASE_KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
+            // Sin keystore configurado el APK release sale sin firmar
+            if (archivoFirma != null) signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
