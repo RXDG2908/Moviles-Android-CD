@@ -3,6 +3,7 @@ package com.leon.centrotareas.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,6 +13,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -33,6 +35,7 @@ import com.leon.centrotareas.viewmodel.TareasViewModel
 fun PantallaTareas(vm: TareasViewModel) {
     val mensaje by vm.mensaje.collectAsStateWithLifecycle()
     val progreso by vm.progreso.collectAsStateWithLifecycle()
+    val corriendo by vm.corriendo.collectAsStateWithLifecycle()
     var toques by rememberSaveable { mutableIntStateOf(0) }
 
     Scaffold(
@@ -59,8 +62,21 @@ fun PantallaTareas(vm: TareasViewModel) {
                 Button(onClick = { toques++ }, modifier = Modifier.fillMaxWidth()) {
                     Text("Tócame: $toques")
                 }
-                Button(onClick = { vm.tareaLarga() }, modifier = Modifier.fillMaxWidth()) {
-                    Text("Iniciar")
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(
+                        onClick = { vm.tareaLarga() },
+                        enabled = !corriendo,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Iniciar")
+                    }
+                    OutlinedButton(
+                        onClick = { vm.cancelar() },
+                        enabled = corriendo,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Cancelar")
+                    }
                 }
                 LinearProgressIndicator(
                     progress = { progreso },
