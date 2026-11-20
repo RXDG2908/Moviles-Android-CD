@@ -11,6 +11,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedButton
@@ -32,6 +33,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
+import com.leon.centrotareas.model.CargaUi
 import com.leon.centrotareas.model.PrimosUi
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -44,6 +46,7 @@ fun PantallaTareas(vm: TareasViewModel) {
     val progreso by vm.progreso.collectAsStateWithLifecycle()
     val corriendo by vm.corriendo.collectAsStateWithLifecycle()
     val primos by vm.primos.collectAsStateWithLifecycle()
+    val carga by vm.carga.collectAsStateWithLifecycle()
     var textoN by rememberSaveable { mutableStateOf("5000000") }
     var toques by rememberSaveable { mutableIntStateOf(0) }
 
@@ -135,7 +138,33 @@ fun PantallaTareas(vm: TareasViewModel) {
                 }
             }
             TarjetaTarea("Dos cargas") {
-                // TODO Pasos 6 y 7: Una por una, A la vez, Simular error y resultado
+                val cargando = carga == CargaUi.Cargando
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedButton(
+                        onClick = { vm.cargarUnaPorUna() },
+                        enabled = !cargando,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Una por una")
+                    }
+                    Button(
+                        onClick = { vm.cargarALaVez() },
+                        enabled = !cargando,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("A la vez")
+                    }
+                }
+                when (val estado = carga) {
+                    CargaUi.Inicial -> {}
+                    CargaUi.Cargando -> CircularProgressIndicator()
+                    is CargaUi.Exito -> Recuadro(
+                        "Modo: ${estado.modo}\nPerfil: ${estado.perfil}\n" +
+                            "Pedidos: ${estado.pedidos}\nTiempo: ${estado.milisegundos} ms",
+                        Exito
+                    )
+                    is CargaUi.Error -> {}
+                }
             }
         }
     }

@@ -27,4 +27,5 @@ cuando el hilo principal no atiende un toque durante unos 5 segundos.
 | 3. Mostrar el progreso | Hecho |
 | 4. Cancelar la tarea | Hecho |
 | 5. Contar números primos | Hecho |
-| 6 a 9 | Pendiente |
+| 6. Dos cargas a la vez con async | Hecho |
+| 7 a 9 | Pendiente |
