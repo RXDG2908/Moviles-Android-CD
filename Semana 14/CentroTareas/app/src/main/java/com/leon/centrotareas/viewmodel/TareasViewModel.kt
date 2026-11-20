@@ -8,16 +8,13 @@ import com.leon.centrotareas.data.TareasRepository
 import com.leon.centrotareas.model.CargaUi
 import com.leon.centrotareas.model.PrimosUi
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class TareasViewModel(private val repo: TareasRepository) : ViewModel() {
 
@@ -46,13 +43,10 @@ class TareasViewModel(private val repo: TareasRepository) : ViewModel() {
             _mensaje.value = "Trabajando..."
             try {
                 Log.d("HILO", "Antes: ${Thread.currentThread().name}")
-                withContext(Dispatchers.Default) {
-                    Log.d("HILO", "Dentro: ${Thread.currentThread().name}")
-                    // 100 vueltas de 40 ms, unos 4 segundos en total
-                    for (i in 1..100) {
-                        delay(40)
-                        _progreso.value = i / 100f
-                    }
+                // El Repository hace el trabajo en Default y emite el avance;
+                // collect recibe cada valor de vuelta en el hilo principal
+                repo.tareaConProgreso().collect { avance ->
+                    _progreso.value = avance
                 }
                 Log.d("HILO", "Despues: ${Thread.currentThread().name}")
                 _mensaje.value = "Terminó"
