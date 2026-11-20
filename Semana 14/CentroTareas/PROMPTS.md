@@ -12,6 +12,7 @@
    tarjeta muestra una barra y el texto «Calculando... 39 %».
 3. Comparación de tiempos: una tarjeta nueva con una tabla que acumula cada carga
    medida y el promedio de Una por una y de A la vez.
+4. Pulido de la interfaz: iconos, animaciones y efectos (sin cambiar la lógica).
 
 **Condición que se mantuvo:** la pantalla solo habla con su ViewModel, el ViewModel
 solo conoce la interface `TareasRepository`, y el código final no usa GlobalScope,
@@ -24,6 +25,7 @@ runBlocking ni Thread.sleep. Toda captura de error vuelve a lanzar la
 |---|---|---|---|
 | «Mueve la tarea con progreso al Repository y que entregue el avance como un Flow con flowOn(Dispatchers.Default)» | Función `tareaConProgreso(): Flow<Float>` en la interface y en `TareasRepositoryLocal`; el ViewModel hace `collect` y actualiza `progreso` | Dejé el `Log.d("HILO", "Dentro…")` dentro del `flow` y quité el `withContext` del ViewModel | Así Logcat sigue mostrando `main` antes y después y `DefaultDispatcher-worker` dentro, igual que en la Fase 1, y el ViewModel ya no hace el trabajo pesado |
 | «Haz que contar primos muestre el porcentaje mientras avanza, sin romper la cancelación» | Propuso emitir el avance en cada número | Cambié a emitir solo cada 1 % (`hasta / 100`) y usé `currentCoroutineContext().ensureActive()` dentro del `flow` | Emitir 5 millones de veces llenaba la pantalla de recomposiciones y hacía el cálculo mucho más lento; con 100 avisos basta para la barra |
+| «Mejora el diseño con iconos, animaciones y efectos, como en el Lab 13, sin tocar la lógica» | Archivo `Efectos.kt` (punto que late, icono que gira, sacudida, tarjeta animada) y la pantalla dividida en una función por tarjeta | Agregué `statusBarsPadding()` a la cabecera y cambié el color de Tócame | Con targetSdk 35 Android dibuja de borde a borde y la cabecera quedaba debajo de la barra de estado; el color por defecto se veía marrón |
 | «Agrega una tabla que acumule los tiempos de Una por una y A la vez para ver la diferencia» | Lista de tiempos en el ViewModel y una tarjeta con filas | Agregué el promedio por modo y un botón Limpiar; el tiempo solo se guarda cuando la carga sale bien | Con el promedio se ve de un vistazo la diferencia de 5 s contra 3 s, y un error no tiene un tiempo útil que comparar |
 
 ---
@@ -78,3 +80,25 @@ función privada `mostrarExito` que pone el resultado y guarda el tiempo, y una 
 
 **Prueba:** después de una carga Una por una y dos A la vez, la tabla muestra 5005,
 3007 y 3002 ms, con promedios de 5005 ms y 3004 ms.
+
+## Prompt 4 - Iconos, animaciones y efectos
+
+**Lo que pedí:** mejorar el diseño de la pantalla con iconos, animaciones y efectos,
+como en el Lab 13, sin cambiar la lógica ni la arquitectura.
+
+**Lo que respondió la IA:** agregó `material-icons-extended`, creó `ui/Efectos.kt` con
+piezas reutilizables (`PuntoLatiendo`, `IconoGirando`, `Sacudida`, `TarjetaTarea` con
+entrada animada y `FilaIcono`) y dividió `PantallaTareas` en una función por tarjeta.
+Usó `AnimatedContent`, `AnimatedVisibility`, `animateFloatAsState`,
+`animateColorAsState`, `animateIntAsState` y `Animatable`.
+
+**Lo que revisé y adapté:**
+- La cabecera quedaba debajo de la barra de estado; se agregó `statusBarsPadding()`.
+- En los primos, `AnimatedContent` usa `contentKey = { it::class }` para animar solo al
+  cambiar de estado y no en cada porcentaje.
+- Los textos de los botones no cambiaron, así las pruebas de la Fase 1 siguen igual.
+- La pantalla sigue sin lanzar corrutinas de trabajo: las animaciones usan
+  `LaunchedEffect`, que es propio de Compose.
+
+**Prueba:** en el emulador se vio la cabecera cambiar a amarillo mientras hay trabajo,
+la barra pasar a verde al terminar, el error sacudirse y las barras de tiempo crecer.

@@ -163,6 +163,28 @@ cambió están en [PROMPTS.md](PROMPTS.md).
 |---|---|
 | ![Primos con progreso](capturas/07-primos-progreso.jpg) | ![Comparación de tiempos](capturas/08-comparacion.jpg) |
 
+### Diseño: iconos, animaciones y efectos
+
+Cambio solo visual: la lógica, el ViewModel y el Repository no se tocaron. Se agregó la
+dependencia `material-icons-extended` y el archivo `ui/Efectos.kt`.
+
+- Cabecera con degradado azul y un aviso con un punto que late: verde con «Hilo
+  principal libre» y amarillo con «Trabajando en segundo plano · la UI responde».
+- Cada tarjeta tiene su icono en un círculo de color y entra desde abajo, una tras otra.
+- Botones con icono: Tócame rebota y su número sube en cada toque; Iniciar, Cancelar,
+  Contar, Una por una, A la vez, Reintentar y Limpiar llevan su icono.
+- La barra de progreso avanza suave y cambia de color: azul trabajando, verde al
+  terminar y gris al cancelar. El mensaje cambia con un fundido y un icono (reloj de
+  arena que gira, check o cancelado).
+- El resultado de los primos cuenta desde cero hasta la cantidad final.
+- El interruptor Simular error muestra un icono de wifi o sin wifi; el recuadro de
+  error se sacude al aparecer.
+- La comparación de tiempos pasó a barras que crecen, con los promedios en tarjetas.
+
+| Trabajando | Comparación | Error |
+|---|---|---|
+| ![Trabajando](capturas/09-diseno-trabajando.jpg) | ![Comparación](capturas/10-diseno-tabla.jpg) | ![Error](capturas/11-diseno-error.jpg) |
+
 Sigue sin usarse GlobalScope, runBlocking ni Thread.sleep, y cada `catch` vuelve a
 lanzar la `CancellationException`.
 

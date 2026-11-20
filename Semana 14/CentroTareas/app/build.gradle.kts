@@ -45,6 +45,8 @@ dependencies {
     // ViewModel para Compose; trae viewModelScope y las corrutinas
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
+    // Iconos de Material (acciones, estados y tarjetas)
+    implementation("androidx.compose.material:material-icons-extended")
 
     debugImplementation("androidx.compose.ui:ui-tooling")
 }
