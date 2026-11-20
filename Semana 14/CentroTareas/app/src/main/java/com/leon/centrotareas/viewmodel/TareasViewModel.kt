@@ -71,13 +71,19 @@ class TareasViewModel(private val repo: TareasRepository) : ViewModel() {
 
     // Cuenta los primos con el Repository y mide cuánto tarda
     fun contar(hasta: Int) {
-        if (_primos.value == PrimosUi.Calculando) return
+        if (_primos.value is PrimosUi.Calculando) return
         trabajoPrimos = viewModelScope.launch {
-            _primos.value = PrimosUi.Calculando
+            _primos.value = PrimosUi.Calculando()
             val inicio = System.currentTimeMillis()
             try {
-                val cantidad = repo.contarPrimos(hasta)
-                _primos.value = PrimosUi.Listo(cantidad, System.currentTimeMillis() - inicio)
+                repo.contarPrimosConProgreso(hasta).collect { avance ->
+                    val cantidad = avance.cantidad
+                    _primos.value = if (cantidad == null) {
+                        PrimosUi.Calculando(avance.porcentaje)
+                    } else {
+                        PrimosUi.Listo(cantidad, System.currentTimeMillis() - inicio)
+                    }
+                }
             } catch (e: CancellationException) {
                 _primos.value = PrimosUi.Cancelado
                 // Se vuelve a lanzar para no romper la cancelación

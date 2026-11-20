@@ -3,10 +3,14 @@ package com.leon.centrotareas.model
 
 sealed interface PrimosUi {
     data object Inicial : PrimosUi
-    data object Calculando : PrimosUi
+    // porcentaje de 0f a 1f mientras avanza el cálculo
+    data class Calculando(val porcentaje: Float = 0f) : PrimosUi
     data class Listo(val cantidad: Int, val milisegundos: Long) : PrimosUi
     data object Cancelado : PrimosUi
 }
+
+// Avance del conteo de primos: cantidad es null hasta que termina
+data class AvancePrimos(val porcentaje: Float, val cantidad: Int? = null)
 
 sealed interface CargaUi {
     data object Inicial : CargaUi

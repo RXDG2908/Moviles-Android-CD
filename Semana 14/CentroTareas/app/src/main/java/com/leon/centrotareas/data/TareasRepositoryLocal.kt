@@ -2,7 +2,9 @@
 package com.leon.centrotareas.data
 
 import android.util.Log
+import com.leon.centrotareas.model.AvancePrimos
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
@@ -43,6 +45,18 @@ class TareasRepositoryLocal : TareasRepository {
         }
         cantidad
     }
+
+    // Emite el avance cada 1 % y al final la cantidad de primos
+    override fun contarPrimosConProgreso(hasta: Int): Flow<AvancePrimos> = flow {
+        var cantidad = 0
+        val paso = maxOf(1, hasta / 100)
+        for (n in 2..hasta) {
+            currentCoroutineContext().ensureActive()
+            if (esPrimo(n)) cantidad++
+            if (n % paso == 0) emit(AvancePrimos(n.toFloat() / hasta))
+        }
+        emit(AvancePrimos(1f, cantidad))
+    }.flowOn(Dispatchers.Default)
 
     // Prueba dividir entre 2 y la raíz de n
     private fun esPrimo(n: Int): Boolean {

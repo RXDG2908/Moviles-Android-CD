@@ -101,7 +101,7 @@ fun PantallaTareas(vm: TareasViewModel) {
                 Text(mensaje)
             }
             TarjetaTarea("Contar números primos") {
-                val calculando = primos == PrimosUi.Calculando
+                val calculando = primos is PrimosUi.Calculando
                 OutlinedTextField(
                     value = textoN,
                     onValueChange = { textoN = it },
@@ -132,7 +132,14 @@ fun PantallaTareas(vm: TareasViewModel) {
                 }
                 when (val estado = primos) {
                     PrimosUi.Inicial -> {}
-                    PrimosUi.Calculando -> Text("Calculando...")
+                    is PrimosUi.Calculando -> {
+                        // Barra con el avance real del cálculo
+                        LinearProgressIndicator(
+                            progress = { estado.porcentaje },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Text("Calculando... ${(estado.porcentaje * 100).toInt()} %")
+                    }
                     is PrimosUi.Listo -> Recuadro(
                         "${estado.cantidad} primos en ${estado.milisegundos} ms",
                         Exito
