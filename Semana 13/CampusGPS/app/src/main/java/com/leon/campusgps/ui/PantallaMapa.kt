@@ -1,5 +1,5 @@
 // Pantalla principal: botón para buscar la ubicación y el resultado.
-package com.tecsup.campusgps.ui
+package com.leon.campusgps.ui
 
 import android.Manifest
 import android.content.Intent
@@ -31,9 +31,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.tecsup.campusgps.model.UbicacionUi
-import com.tecsup.campusgps.util.formatearDistancia
-import com.tecsup.campusgps.viewmodel.MapaViewModel
+import com.leon.campusgps.model.UbicacionUi
+import com.leon.campusgps.util.formatearDistancia
+import com.leon.campusgps.viewmodel.MapaViewModel
 
 private const val FINE = Manifest.permission.ACCESS_FINE_LOCATION
 private const val COARSE = Manifest.permission.ACCESS_COARSE_LOCATION

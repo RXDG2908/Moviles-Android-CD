@@ -1,7 +1,7 @@
 // Los 5 lugares ficticios del campus, cerca de -12.0464, -77.0428 (Lima).
-package com.tecsup.campusgps.data
+package com.leon.campusgps.data
 
-import com.tecsup.campusgps.model.Lugar
+import com.leon.campusgps.model.Lugar
 
 class LugaresRepositoryLocal : LugaresRepository {
 

@@ -1,5 +1,5 @@
 // Modelos de datos: posición, lugares y estado de la ubicación.
-package com.tecsup.campusgps.model
+package com.leon.campusgps.model
 
 data class Posicion(val latitud: Double, val longitud: Double)
 

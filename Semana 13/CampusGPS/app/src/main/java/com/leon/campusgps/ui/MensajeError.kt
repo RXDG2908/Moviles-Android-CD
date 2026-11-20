@@ -1,5 +1,5 @@
 // Recuadro de error con el mensaje y el botón que corresponde a cada caso.
-package com.tecsup.campusgps.ui
+package com.leon.campusgps.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,8 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.tecsup.campusgps.model.TipoError
-import com.tecsup.campusgps.model.UbicacionUi
+import com.leon.campusgps.model.TipoError
+import com.leon.campusgps.model.UbicacionUi
 
 @Composable
 fun MensajeError(

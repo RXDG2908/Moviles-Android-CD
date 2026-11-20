@@ -1,5 +1,5 @@
 // Colores y tema Material 3 de la app.
-package com.tecsup.campusgps.ui.theme
+package com.leon.campusgps.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

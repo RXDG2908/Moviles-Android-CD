@@ -16,11 +16,11 @@ val localProps = Properties().apply {
 }
 
 android {
-    namespace = "com.tecsup.campusgps"
+    namespace = "com.leon.campusgps"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.tecsup.campusgps"
+        applicationId = "com.leon.campusgps"
         minSdk = 26
         targetSdk = 35
         versionCode = 1

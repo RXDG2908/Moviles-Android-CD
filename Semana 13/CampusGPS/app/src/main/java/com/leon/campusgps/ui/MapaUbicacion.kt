@@ -1,5 +1,5 @@
 // Mapa de Google con la posición del usuario y los lugares del campus.
-package com.tecsup.campusgps.ui
+package com.leon.campusgps.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -13,9 +13,9 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
-import com.tecsup.campusgps.model.Lugar
-import com.tecsup.campusgps.model.LugarConDistancia
-import com.tecsup.campusgps.model.UbicacionUi
+import com.leon.campusgps.model.Lugar
+import com.leon.campusgps.model.LugarConDistancia
+import com.leon.campusgps.model.UbicacionUi
 
 @Composable
 fun MapaUbicacion(

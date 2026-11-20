@@ -1,11 +1,11 @@
 // Crea el MapaViewModel entregándole sus repositorios.
-package com.tecsup.campusgps.viewmodel
+package com.leon.campusgps.viewmodel
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.tecsup.campusgps.data.LugaresRepositoryLocal
-import com.tecsup.campusgps.data.UbicacionRepositoryGoogle
+import com.leon.campusgps.data.LugaresRepositoryLocal
+import com.leon.campusgps.data.UbicacionRepositoryGoogle
 
 class CampusViewModelFactory(context: Context) : ViewModelProvider.Factory {
 

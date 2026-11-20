@@ -1,5 +1,5 @@
 // Convierte una distancia en metros a un texto como "350 m" o "1.5 km".
-package com.tecsup.campusgps.util
+package com.leon.campusgps.util
 
 import java.util.Locale
 

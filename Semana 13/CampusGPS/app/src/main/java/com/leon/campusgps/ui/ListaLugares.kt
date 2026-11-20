@@ -1,5 +1,5 @@
 // Lista de lugares con su distancia; la tarjeta seleccionada se resalta.
-package com.tecsup.campusgps.ui
+package com.leon.campusgps.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -28,8 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.tecsup.campusgps.model.LugarConDistancia
-import com.tecsup.campusgps.util.formatearDistancia
+import com.leon.campusgps.model.LugarConDistancia
+import com.leon.campusgps.util.formatearDistancia
 
 // Mismo azul que los marcadores del mapa (HUE_AZURE)
 private val AzulMarcador = Color(0xFF1E88E5)

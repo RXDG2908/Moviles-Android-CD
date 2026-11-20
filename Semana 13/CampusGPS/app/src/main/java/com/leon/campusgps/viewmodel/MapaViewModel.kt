@@ -1,17 +1,17 @@
 // ViewModel de la pantalla: busca la ubicación y publica el estado.
-package com.tecsup.campusgps.viewmodel
+package com.leon.campusgps.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tecsup.campusgps.data.LugaresRepository
-import com.tecsup.campusgps.data.UbicacionNoDisponibleException
-import com.tecsup.campusgps.data.UbicacionRepository
-import com.tecsup.campusgps.model.Lugar
-import com.tecsup.campusgps.model.LugarConDistancia
-import com.tecsup.campusgps.model.Posicion
-import com.tecsup.campusgps.model.TipoError
-import com.tecsup.campusgps.model.UbicacionUi
-import com.tecsup.campusgps.util.distanciaMetros
+import com.leon.campusgps.data.LugaresRepository
+import com.leon.campusgps.data.UbicacionNoDisponibleException
+import com.leon.campusgps.data.UbicacionRepository
+import com.leon.campusgps.model.Lugar
+import com.leon.campusgps.model.LugarConDistancia
+import com.leon.campusgps.model.Posicion
+import com.leon.campusgps.model.TipoError
+import com.leon.campusgps.model.UbicacionUi
+import com.leon.campusgps.util.distanciaMetros
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

@@ -1,14 +1,14 @@
 // Actividad principal: crea el ViewModel y muestra la pantalla del mapa.
-package com.tecsup.campusgps
+package com.leon.campusgps
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import com.tecsup.campusgps.ui.PantallaMapa
-import com.tecsup.campusgps.ui.theme.CampusGPSTheme
-import com.tecsup.campusgps.viewmodel.CampusViewModelFactory
-import com.tecsup.campusgps.viewmodel.MapaViewModel
+import com.leon.campusgps.ui.PantallaMapa
+import com.leon.campusgps.ui.theme.CampusGPSTheme
+import com.leon.campusgps.viewmodel.CampusViewModelFactory
+import com.leon.campusgps.viewmodel.MapaViewModel
 
 class MainActivity : ComponentActivity() {
 

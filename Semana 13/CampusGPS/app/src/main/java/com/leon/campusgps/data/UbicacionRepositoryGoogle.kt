@@ -1,5 +1,5 @@
 // Obtiene la ubicación con FusedLocationProviderClient de Google Play Services.
-package com.tecsup.campusgps.data
+package com.leon.campusgps.data
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -7,7 +7,7 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import com.tecsup.campusgps.model.Posicion
+import com.leon.campusgps.model.Posicion
 import kotlinx.coroutines.tasks.await
 
 class UbicacionRepositoryGoogle(private val context: Context) : UbicacionRepository {
