@@ -17,6 +17,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,6 +31,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
@@ -47,6 +49,7 @@ fun PantallaTareas(vm: TareasViewModel) {
     val corriendo by vm.corriendo.collectAsStateWithLifecycle()
     val primos by vm.primos.collectAsStateWithLifecycle()
     val carga by vm.carga.collectAsStateWithLifecycle()
+    val simularError by vm.simularError.collectAsStateWithLifecycle()
     var textoN by rememberSaveable { mutableStateOf("5000000") }
     var toques by rememberSaveable { mutableIntStateOf(0) }
 
@@ -155,6 +158,13 @@ fun PantallaTareas(vm: TareasViewModel) {
                         Text("A la vez")
                     }
                 }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Switch(
+                        checked = simularError,
+                        onCheckedChange = { vm.cambiarSimularError(it) }
+                    )
+                    Text("Simular error", modifier = Modifier.padding(start = 8.dp))
+                }
                 when (val estado = carga) {
                     CargaUi.Inicial -> {}
                     CargaUi.Cargando -> CircularProgressIndicator()
@@ -163,7 +173,22 @@ fun PantallaTareas(vm: TareasViewModel) {
                             "Pedidos: ${estado.pedidos}\nTiempo: ${estado.milisegundos} ms",
                         Exito
                     )
-                    is CargaUi.Error -> {}
+                    is CargaUi.Error -> Surface(
+                        color = MaterialTheme.colorScheme.errorContainer,
+                        shape = MaterialTheme.shapes.small,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(modifier = Modifier.padding(12.dp)) {
+                            Text(
+                                estado.mensaje,
+                                color = MaterialTheme.colorScheme.onErrorContainer
+                            )
+                            // Vuelve a intentar la carga A la vez
+                            Button(onClick = { vm.cargarALaVez() }) {
+                                Text("Reintentar")
+                            }
+                        }
+                    }
                 }
             }
         }
