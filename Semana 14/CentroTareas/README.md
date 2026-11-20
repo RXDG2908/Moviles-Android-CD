@@ -24,4 +24,5 @@ cuando el hilo principal no atiende un toque durante unos 5 segundos.
 | 0. Proyecto base | Hecho |
 | 1. Provocar el congelamiento | Hecho |
 | 2. Arreglarlo con una corrutina | Hecho |
-| 3 a 9 | Pendiente |
+| 3. Mostrar el progreso | Hecho |
+| 4 a 9 | Pendiente |

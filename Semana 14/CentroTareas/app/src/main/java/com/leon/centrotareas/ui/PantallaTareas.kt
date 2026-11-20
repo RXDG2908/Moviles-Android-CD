@@ -11,6 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -31,6 +32,7 @@ import com.leon.centrotareas.viewmodel.TareasViewModel
 @Composable
 fun PantallaTareas(vm: TareasViewModel) {
     val mensaje by vm.mensaje.collectAsStateWithLifecycle()
+    val progreso by vm.progreso.collectAsStateWithLifecycle()
     var toques by rememberSaveable { mutableIntStateOf(0) }
 
     Scaffold(
@@ -58,8 +60,13 @@ fun PantallaTareas(vm: TareasViewModel) {
                     Text("Tócame: $toques")
                 }
                 Button(onClick = { vm.tareaLarga() }, modifier = Modifier.fillMaxWidth()) {
-                    Text("Tarea larga")
+                    Text("Iniciar")
                 }
+                LinearProgressIndicator(
+                    progress = { progreso },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Text("${(progreso * 100).toInt()} %")
                 Text(mensaje)
             }
             TarjetaTarea("Contar números primos") {
