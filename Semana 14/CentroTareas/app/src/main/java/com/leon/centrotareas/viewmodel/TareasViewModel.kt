@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.leon.centrotareas.data.TareasRepository
 import com.leon.centrotareas.model.CargaUi
 import com.leon.centrotareas.model.PrimosUi
+import com.leon.centrotareas.model.RegistroTiempo
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -108,6 +109,20 @@ class TareasViewModel(private val repo: TareasRepository) : ViewModel() {
         _simularError.value = valor
     }
 
+    // Todos los tiempos medidos, para comparar los dos modos
+    private val _tiempos = MutableStateFlow<List<RegistroTiempo>>(emptyList())
+    val tiempos: StateFlow<List<RegistroTiempo>> = _tiempos.asStateFlow()
+
+    // Muestra el resultado y guarda su tiempo en la tabla
+    private fun mostrarExito(exito: CargaUi.Exito) {
+        _carga.value = exito
+        _tiempos.value = _tiempos.value + RegistroTiempo(exito.modo, exito.milisegundos)
+    }
+
+    fun limpiarTiempos() {
+        _tiempos.value = emptyList()
+    }
+
     // Primero el perfil y después los pedidos: unos 5 s
     fun cargarUnaPorUna() {
         if (_carga.value == CargaUi.Cargando) return
@@ -117,8 +132,10 @@ class TareasViewModel(private val repo: TareasRepository) : ViewModel() {
             try {
                 val perfil = repo.cargarPerfil()
                 val pedidos = repo.cargarPedidos(_simularError.value)
-                _carga.value = CargaUi.Exito(
-                    "Una por una", perfil, pedidos.size, System.currentTimeMillis() - inicio
+                mostrarExito(
+                    CargaUi.Exito(
+                        "Una por una", perfil, pedidos.size, System.currentTimeMillis() - inicio
+                    )
                 )
             } catch (e: Exception) {
                 // La cancelación no es un error: se deja pasar
@@ -140,8 +157,10 @@ class TareasViewModel(private val repo: TareasRepository) : ViewModel() {
                     val b = async { repo.cargarPedidos(_simularError.value) }
                     Pair(a.await(), b.await())
                 }
-                _carga.value = CargaUi.Exito(
-                    "A la vez", perfil, pedidos.size, System.currentTimeMillis() - inicio
+                mostrarExito(
+                    CargaUi.Exito(
+                        "A la vez", perfil, pedidos.size, System.currentTimeMillis() - inicio
+                    )
                 )
             } catch (e: Exception) {
                 if (e is CancellationException) throw e

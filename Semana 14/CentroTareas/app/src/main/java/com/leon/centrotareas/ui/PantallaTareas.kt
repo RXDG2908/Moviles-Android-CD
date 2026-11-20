@@ -13,6 +13,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -37,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import com.leon.centrotareas.model.CargaUi
 import com.leon.centrotareas.model.PrimosUi
+import com.leon.centrotareas.model.RegistroTiempo
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.leon.centrotareas.viewmodel.TareasViewModel
@@ -50,6 +52,7 @@ fun PantallaTareas(vm: TareasViewModel) {
     val primos by vm.primos.collectAsStateWithLifecycle()
     val carga by vm.carga.collectAsStateWithLifecycle()
     val simularError by vm.simularError.collectAsStateWithLifecycle()
+    val tiempos by vm.tiempos.collectAsStateWithLifecycle()
     var textoN by rememberSaveable { mutableStateOf("5000000") }
     var toques by rememberSaveable { mutableIntStateOf(0) }
 
@@ -198,7 +201,45 @@ fun PantallaTareas(vm: TareasViewModel) {
                     }
                 }
             }
+            TarjetaTarea("Comparación de tiempos") {
+                TablaTiempos(tiempos)
+                OutlinedButton(
+                    onClick = { vm.limpiarTiempos() },
+                    enabled = tiempos.isNotEmpty()
+                ) {
+                    Text("Limpiar")
+                }
+            }
         }
+    }
+}
+
+// Tabla con cada carga medida y el promedio de cada modo
+@Composable
+fun TablaTiempos(tiempos: List<RegistroTiempo>) {
+    if (tiempos.isEmpty()) {
+        Text("Aún no hay tiempos. Usa Una por una y A la vez.")
+        return
+    }
+    tiempos.forEachIndexed { i, registro ->
+        FilaTabla("${i + 1}. ${registro.modo}", "${registro.milisegundos} ms")
+    }
+    HorizontalDivider()
+    for (modo in listOf("Una por una", "A la vez")) {
+        val delModo = tiempos.filter { it.modo == modo }
+        if (delModo.isNotEmpty()) {
+            val promedio = delModo.map { it.milisegundos }.average().toLong()
+            FilaTabla("Promedio $modo (${delModo.size})", "$promedio ms", negrita = true)
+        }
+    }
+}
+
+@Composable
+fun FilaTabla(izquierda: String, derecha: String, negrita: Boolean = false) {
+    val peso = if (negrita) FontWeight.Bold else FontWeight.Normal
+    Row(modifier = Modifier.fillMaxWidth()) {
+        Text(izquierda, fontWeight = peso, modifier = Modifier.weight(1f))
+        Text(derecha, fontWeight = peso)
     }
 }
 

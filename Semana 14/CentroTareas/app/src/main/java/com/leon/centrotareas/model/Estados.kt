@@ -12,6 +12,9 @@ sealed interface PrimosUi {
 // Avance del conteo de primos: cantidad es null hasta que termina
 data class AvancePrimos(val porcentaje: Float, val cantidad: Int? = null)
 
+// Un tiempo medido en la tarjeta Dos cargas
+data class RegistroTiempo(val modo: String, val milisegundos: Long)
+
 sealed interface CargaUi {
     data object Inicial : CargaUi
     data object Cargando : CargaUi
