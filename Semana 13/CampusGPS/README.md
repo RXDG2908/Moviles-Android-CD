@@ -11,7 +11,7 @@ acción para resolverlo.
 
 - **Alumno:** Renzo Raúl León Fernández
 - **Modalidad:** individual
-- **Paquete:** `com.tecsup.campusgps`
+- **Paquete:** `com.leon.campusgps`
 - **Tecnología:** Kotlin, Jetpack Compose, Material 3, Google Play Services
   Location y Maps Compose
 - **Patrón:** MVVM + Repository
@@ -19,7 +19,7 @@ acción para resolverlo.
 ## Estructura de paquetes
 
 ```
-com.tecsup.campusgps/
+com.leon.campusgps/
 ├── MainActivity.kt
 ├── model/
 │   └── Modelos.kt                    Posicion, Lugar, LugarConDistancia, UbicacionUi, TipoError
@@ -122,7 +122,7 @@ mapa sale gris.
 
 Restricción de la clave en Google Cloud (Maps SDK for Android):
 
-- Paquete: `com.tecsup.campusgps`
+- Paquete: `com.leon.campusgps`
 - SHA-1 de depuración (`./gradlew signingReport`):
   `1E:D0:35:9B:C2:34:82:EF:E5:22:60:B5:E8:4F:99:9B:E4:6E:75:A3`
 
@@ -181,6 +181,9 @@ active la ubicación a mano.
   que sugiere la guía, no existe en la 6.4.1.
 - El proyecto base se armó a partir de la guía del laboratorio, con los archivos
   [E] escritos siguiendo lo que describe.
+- El paquete se cambió de `com.tecsup.campusgps` a `com.leon.campusgps` porque el
+  docente pidió que el paquete lleve el apellido del alumno. La restricción de la
+  clave de Maps en Google Cloud debe tener el paquete nuevo, o el mapa sale gris.
 - En horizontal la pantalla conserva los datos, pero el mapa queda sin espacio
   porque el botón, el texto y la lista ocupan todo el alto.
 
