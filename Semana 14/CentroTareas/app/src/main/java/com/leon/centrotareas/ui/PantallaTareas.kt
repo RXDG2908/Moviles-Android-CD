@@ -14,6 +14,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -22,10 +24,15 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
+import com.leon.centrotareas.model.PrimosUi
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.leon.centrotareas.viewmodel.TareasViewModel
@@ -36,6 +43,8 @@ fun PantallaTareas(vm: TareasViewModel) {
     val mensaje by vm.mensaje.collectAsStateWithLifecycle()
     val progreso by vm.progreso.collectAsStateWithLifecycle()
     val corriendo by vm.corriendo.collectAsStateWithLifecycle()
+    val primos by vm.primos.collectAsStateWithLifecycle()
+    var textoN by rememberSaveable { mutableStateOf("5000000") }
     var toques by rememberSaveable { mutableIntStateOf(0) }
 
     Scaffold(
@@ -86,12 +95,60 @@ fun PantallaTareas(vm: TareasViewModel) {
                 Text(mensaje)
             }
             TarjetaTarea("Contar números primos") {
-                // TODO Paso 5: campo numérico, Contar, Cancelar y resultado
+                val calculando = primos == PrimosUi.Calculando
+                OutlinedTextField(
+                    value = textoN,
+                    onValueChange = { textoN = it },
+                    label = { Text("Contar primos hasta") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(
+                        onClick = {
+                            // Ignora textos que no son número o son menores que 2
+                            val n = textoN.toIntOrNull()
+                            if (n != null && n >= 2) vm.contar(n)
+                        },
+                        enabled = !calculando,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Contar")
+                    }
+                    OutlinedButton(
+                        onClick = { vm.cancelarPrimos() },
+                        enabled = calculando,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Cancelar")
+                    }
+                }
+                when (val estado = primos) {
+                    PrimosUi.Inicial -> {}
+                    PrimosUi.Calculando -> Text("Calculando...")
+                    is PrimosUi.Listo -> Recuadro(
+                        "${estado.cantidad} primos en ${estado.milisegundos} ms",
+                        Exito
+                    )
+                    PrimosUi.Cancelado -> Text("Cancelado")
+                }
             }
             TarjetaTarea("Dos cargas") {
                 // TODO Pasos 6 y 7: Una por una, A la vez, Simular error y resultado
             }
         }
+    }
+}
+
+// Verde para resultados correctos
+private val Exito = Color(0xFFC8E6C9)
+
+// Recuadro de color con un texto: resultado o error
+@Composable
+fun Recuadro(texto: String, fondo: Color) {
+    Surface(color = fondo, shape = MaterialTheme.shapes.small, modifier = Modifier.fillMaxWidth()) {
+        Text(texto, modifier = Modifier.padding(12.dp), color = Color.Black)
     }
 }
 
