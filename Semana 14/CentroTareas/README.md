@@ -146,7 +146,26 @@ recuadro rojo con Reintentar.
 | 6. Dos cargas a la vez con async | Hecho |
 | 7. Estados de error y reintento | Hecho |
 | 8. Pruebas de aceptación y README | Hecho |
+| Fase 2: 3 mejoras con IA | Hecho |
+
+## Fase 2 (rama mejora-ia)
+
+Tres mejoras hechas con ayuda de IA. Los prompts, lo que respondió y lo que se
+cambió están en [PROMPTS.md](PROMPTS.md).
+
+| Mejora | Qué hace | Capas que cambian |
+|--------|----------|-------------------|
+| Progreso desde el Repository | La tarea simulada vive en el Repository y entrega su avance como `Flow` con `flowOn(Dispatchers.Default)` | Repository + ViewModel |
+| Primos con progreso | El conteo de primos avisa el porcentaje cada 1 % y la tarjeta muestra una barra | Repository + ViewModel + View |
+| Comparación de tiempos | Tarjeta nueva con cada carga medida y el promedio de cada modo | ViewModel + View |
+
+| Primos con progreso | Comparación de tiempos |
+|---|---|
+| ![Primos con progreso](capturas/07-primos-progreso.jpg) | ![Comparación de tiempos](capturas/08-comparacion.jpg) |
+
+Sigue sin usarse GlobalScope, runBlocking ni Thread.sleep, y cada `catch` vuelve a
+lanzar la `CancellationException`.
 
 ## Pendiente
 
-- Fase 2 en la rama `mejora-ia`: mínimo 3 mejoras con IA y `PROMPTS.md`.
+- Nada. Fase 1 en `main` y Fase 2 en `mejora-ia`.
