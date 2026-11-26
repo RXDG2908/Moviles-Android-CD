@@ -143,3 +143,22 @@ Además, habría que mandar un token de usuario en un encabezado y mostrar los e
 - El proyecto base del docente está en su Drive, que pide iniciar sesión. Por eso se armó a partir de la guía, con los archivos [E] escritos tal como los describe: la barra MuroCampus, `Componentes.kt`, `UiState.kt` y la Factory.
 - La prueba de Retrofit del Paso 4 se borró de MainActivity antes del commit, como pide la guía.
 - Se probó en el emulador Lab03 (API 35).
+
+## Fase 2 · rama mejora-ia (con IA)
+
+Las cuatro mejoras están explicadas en [PROMPTS.md](PROMPTS.md), con lo que cambié de lo que propuso la IA.
+
+| Mejora | Qué hace | Capas |
+|---|---|---|
+| Borrar publicación | Botón Eliminar en el detalle con `@DELETE("posts/{id}")` y `Response<Unit>`. El Repository revisa el código HTTP y lo devuelve como `Result`. Avisa con un Snackbar | API + Repository + ViewModel + View |
+| Búsqueda | Filtra por título lo ya descargado. El ViewModel combina la lista y el texto con `combine` | ViewModel + View |
+| Interceptor | Agrega `Accept: application/json` a todas las peticiones (se ve en Logcat) | RetrofitClient |
+| Pulido de la UI | Avatares por usuario, iconos, tarjetas animadas, comentarios que entran deslizándose y check con rebote | View |
+
+| Eliminar | Eliminada | Búsqueda |
+|---|---|---|
+| ![Eliminar](capturas/06-detalle-eliminar.png) | ![Eliminada](capturas/07-eliminada.png) | ![Búsqueda](capturas/08-busqueda.png) |
+
+| Lista nueva | Detalle nuevo | Crear nuevo |
+|---|---|---|
+| ![Lista](capturas/09-ui-lista.png) | ![Detalle](capturas/10-ui-detalle.png) | ![Crear](capturas/11-ui-crear.png) |
