@@ -1,4 +1,4 @@
-// Actividad principal: muestra la barra MuroCampus y el contenido de la app.
+// Actividad principal: crea el ViewModel y muestra la barra MuroCampus con la lista.
 package com.leon.murocampus
 
 import android.os.Bundle
@@ -14,9 +14,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.Modifier
+import androidx.activity.viewModels
+import com.leon.murocampus.ui.PantallaLista
 import com.leon.murocampus.ui.theme.MuroCampusTheme
+import com.leon.murocampus.viewmodel.PostsViewModel
+import com.leon.murocampus.viewmodel.PostsViewModelFactory
 
 class MainActivity : ComponentActivity() {
+
+    private val vm: PostsViewModel by viewModels { PostsViewModelFactory() }
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,8 +40,9 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 ) { relleno ->
-                    // Pantalla vacía: el contenido se agrega en los pasos siguientes
-                    Box(modifier = Modifier.fillMaxSize().padding(relleno))
+                    Box(modifier = Modifier.fillMaxSize().padding(relleno)) {
+                        PantallaLista(vm, onAbrir = {})
+                    }
                 }
             }
         }
