@@ -3,6 +3,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
+    kotlin("plugin.serialization")
 }
 
 android {
@@ -43,6 +44,17 @@ dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.activity:activity-compose:1.9.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    // Lee los StateFlow desde Compose respetando el ciclo de vida
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
+
+    // Retrofit: convierte la interface en llamadas HTTP
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-kotlinx-serialization:2.11.0")
+    // Pasa el JSON a data class
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+    // OkHttp hace la conexion; el interceptor muestra el trafico en Logcat
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
     debugImplementation("androidx.compose.ui:ui-tooling")
 }
