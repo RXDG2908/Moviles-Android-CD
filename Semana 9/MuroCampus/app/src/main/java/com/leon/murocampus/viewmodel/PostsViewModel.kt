@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.leon.murocampus.data.PostRepository
 import com.leon.murocampus.model.Comentario
+import com.leon.murocampus.model.NuevoPost
 import com.leon.murocampus.model.Post
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -67,5 +68,24 @@ class PostsViewModel(private val repo: PostRepository) : ViewModel() {
                 UiState.Exito(DetalleUi(post.getOrThrow(), comentarios.getOrThrow()))
             }
         }
+    }
+
+    // ----- Crear publicación (null = todavía no se envió nada)
+    private val _creacion = MutableStateFlow<UiState<Post>?>(null)
+    val creacion: StateFlow<UiState<Post>?> = _creacion.asStateFlow()
+
+    // Envía el POST con el cuerpo en JSON y guarda la respuesta del servidor
+    fun publicar(titulo: String, texto: String) {
+        viewModelScope.launch {
+            _creacion.value = UiState.Cargando
+            repo.crear(NuevoPost(userId = 1, title = titulo, body = texto))
+                .onSuccess { _creacion.value = UiState.Exito(it) }
+                .onFailure { _creacion.value = UiState.Error(mensajeDe(it)) }
+        }
+    }
+
+    // Limpia el mensaje al salir de la pantalla Crear
+    fun reiniciarCreacion() {
+        _creacion.value = null
     }
 }
