@@ -4,11 +4,17 @@ package com.leon.murocampus.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.leon.murocampus.data.PostRepository
+import com.leon.murocampus.model.Comentario
 import com.leon.murocampus.model.Post
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+
+// Lo que muestra el detalle: la publicación y sus comentarios
+data class DetalleUi(val post: Post, val comentarios: List<Comentario>)
 
 class PostsViewModel(private val repo: PostRepository) : ViewModel() {
 
@@ -25,6 +31,28 @@ class PostsViewModel(private val repo: PostRepository) : ViewModel() {
             repo.listar()
                 .onSuccess { _lista.value = UiState.Exito(it) }
                 .onFailure { _lista.value = UiState.Error(mensajeDe(it)) }
+        }
+    }
+
+    // ----- Detalle de una publicación
+    private val _detalle = MutableStateFlow<UiState<DetalleUi>>(UiState.Cargando)
+    val detalle: StateFlow<UiState<DetalleUi>> = _detalle.asStateFlow()
+
+    // Pide el post y sus comentarios a la vez; si una falla, todo el detalle es Error
+    fun abrir(id: Int) {
+        viewModelScope.launch {
+            _detalle.value = UiState.Cargando
+            val (post, comentarios) = coroutineScope {
+                val a = async { repo.detalle(id) }
+                val b = async { repo.comentarios(id) }
+                Pair(a.await(), b.await())
+            }
+            val error = post.exceptionOrNull() ?: comentarios.exceptionOrNull()
+            _detalle.value = if (error != null) {
+                UiState.Error(mensajeDe(error))
+            } else {
+                UiState.Exito(DetalleUi(post.getOrThrow(), comentarios.getOrThrow()))
+            }
         }
     }
 }
