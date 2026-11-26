@@ -9,6 +9,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -80,16 +91,35 @@ fun PantallaCrear(vm: PostsViewModel) {
         when (val e = estado) {
             null -> {}
             UiState.Cargando -> CircularProgressIndicator(modifier = Modifier.size(32.dp))
-            is UiState.Exito -> Surface(
-                color = MaterialTheme.colorScheme.secondaryContainer,
-                shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    "Publicado con id ${e.datos.id}",
-                    modifier = Modifier.padding(16.dp),
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
-                )
+            is UiState.Exito -> {
+                // El check crece con un pequeño rebote al publicar
+                val escala = remember { Animatable(0f) }
+                LaunchedEffect(e.datos.id) {
+                    escala.animateTo(1f, spring(dampingRatio = Spring.DampingRatioMediumBouncy))
+                }
+                Surface(
+                    color = Color(0xFFC8E6C9),
+                    shape = MaterialTheme.shapes.medium,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Filled.CheckCircle,
+                            contentDescription = null,
+                            tint = Color(0xFF2E7D32),
+                            modifier = Modifier.size(28.dp).scale(escala.value)
+                        )
+                        Text(
+                            "Publicado con id ${e.datos.id}",
+                            modifier = Modifier.padding(start = 12.dp),
+                            color = Color(0xFF1B5E20),
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
             }
             is UiState.Error -> Surface(
                 color = MaterialTheme.colorScheme.errorContainer,

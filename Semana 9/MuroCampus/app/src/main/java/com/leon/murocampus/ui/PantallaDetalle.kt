@@ -10,7 +10,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -41,11 +50,15 @@ fun PantallaDetalle(vm: PostsViewModel, id: Int) {
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             item {
-                Text(
-                    "Usuario ${e.datos.post.userId}",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.primary
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Avatar(e.datos.post.userId, tamano = 48.dp)
+                    Text(
+                        "Usuario ${e.datos.post.userId}",
+                        style = MaterialTheme.typography.titleSmall,
+                        color = colorDeUsuario(e.datos.post.userId),
+                        modifier = Modifier.padding(start = 12.dp)
+                    )
+                }
                 Text(
                     e.datos.post.title,
                     style = MaterialTheme.typography.headlineSmall,
@@ -72,15 +85,31 @@ fun PantallaDetalle(vm: PostsViewModel, id: Int) {
                 )
             }
             items(e.datos.comentarios, key = { it.id }) { c ->
-                Card(modifier = Modifier.fillMaxWidth()) {
-                    Column(modifier = Modifier.padding(12.dp)) {
-                        // El correo va en azul, como pide el diseño
-                        Text(
-                            c.email,
-                            style = MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Text(c.body, style = MaterialTheme.typography.bodyMedium)
+                // Cada comentario entra deslizándose desde abajo
+                val visible = remember { MutableTransitionState(false).apply { targetState = true } }
+                AnimatedVisibility(
+                    visibleState = visible,
+                    enter = fadeIn() + slideInVertically { it / 2 }
+                ) {
+                    Card(modifier = Modifier.fillMaxWidth()) {
+                        Column(modifier = Modifier.padding(12.dp)) {
+                            // El correo va en azul, como pide el diseño
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    Icons.Filled.Email,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                                Text(
+                                    c.email,
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.padding(start = 6.dp)
+                                )
+                            }
+                            Text(c.body, style = MaterialTheme.typography.bodyMedium)
+                        }
                     }
                 }
             }

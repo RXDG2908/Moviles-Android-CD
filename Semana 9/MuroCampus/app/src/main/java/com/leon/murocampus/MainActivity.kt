@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -94,9 +94,11 @@ fun AppMuro(vm: PostsViewModel) {
         floatingActionButton = {
             // El botón + solo aparece en la lista
             if (idSeleccionado == null && !creando) {
-                FloatingActionButton(onClick = { creando = true }) {
-                    Icon(Icons.Filled.Add, contentDescription = "Nueva publicación")
-                }
+                ExtendedFloatingActionButton(
+                    onClick = { creando = true },
+                    icon = { Icon(Icons.Filled.Add, contentDescription = "Nueva publicación") },
+                    text = { Text("Publicar") }
+                )
             }
         },
         topBar = {

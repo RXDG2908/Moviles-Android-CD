@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.FilterChip
@@ -71,11 +72,13 @@ fun PantallaLista(vm: PostsViewModel, onAbrir: (Int) -> Unit) {
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     items(e.datos, key = { it.id }) { post ->
+                        // animateItem: las tarjetas se deslizan al filtrar, buscar o borrar
                         TarjetaPost(
                             usuario = post.userId,
                             titulo = post.title,
                             texto = post.body,
-                            onClick = { onAbrir(post.id) }
+                            onClick = { onAbrir(post.id) },
+                            modifier = Modifier.animateItem()
                         )
                     }
                 }
@@ -93,10 +96,15 @@ fun FiltroUsuarios(seleccionado: Int?, onElegir: (Int?) -> Unit) {
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(opciones) { userId ->
+            val elegido = seleccionado == userId
             FilterChip(
-                selected = seleccionado == userId,
+                selected = elegido,
                 onClick = { onElegir(userId) },
-                label = { Text(if (userId == null) "Todos" else "Usuario $userId") }
+                label = { Text(if (userId == null) "Todos" else "Usuario $userId") },
+                // El chip elegido muestra un check
+                leadingIcon = if (elegido) {
+                    { Icon(Icons.Filled.Check, contentDescription = null) }
+                } else null
             )
         }
     }
