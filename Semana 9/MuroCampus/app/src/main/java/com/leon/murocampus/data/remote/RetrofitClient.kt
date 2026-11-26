@@ -3,6 +3,7 @@ package com.leon.murocampus.data.remote
 
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -14,7 +15,17 @@ object RetrofitClient {
     private val json = Json { ignoreUnknownKeys = true }
 
     // OkHttp hace la conexión; el interceptor muestra en Logcat cada petición y su JSON
+    // Agrega el encabezado Accept a todas las peticiones: le dice al servidor que queremos JSON
+    private val encabezadoJson = Interceptor { cadena ->
+        val peticion = cadena.request().newBuilder()
+            .header("Accept", "application/json")
+            .build()
+        cadena.proceed(peticion)
+    }
+
     private val cliente = OkHttpClient.Builder()
+        // Primero el encabezado y después el registro, para que Logcat lo muestre
+        .addInterceptor(encabezadoJson)
         .addInterceptor(HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         })
