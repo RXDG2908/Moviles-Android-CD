@@ -20,7 +20,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.leon.murocampus.viewmodel.UiState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -61,7 +69,28 @@ fun AppMuro(vm: PostsViewModel) {
         creando = false
     }
 
+    // Resultado del borrado: vuelve a la lista y avisa con un Snackbar
+    val borrado by vm.borrado.collectAsStateWithLifecycle()
+    val avisos = remember { SnackbarHostState() }
+    // El aviso va en su propio alcance: así no se corta al limpiar el estado
+    val alcance = rememberCoroutineScope()
+    LaunchedEffect(borrado) {
+        when (val b = borrado) {
+            is UiState.Exito -> {
+                idSeleccionado = null
+                alcance.launch { avisos.showSnackbar("Publicación ${b.datos} eliminada") }
+                vm.borradoMostrado()
+            }
+            is UiState.Error -> {
+                alcance.launch { avisos.showSnackbar("No se pudo eliminar: ${b.mensaje}") }
+                vm.borradoMostrado()
+            }
+            else -> {}
+        }
+    }
+
     Scaffold(
+        snackbarHost = { SnackbarHost(avisos) },
         floatingActionButton = {
             // El botón + solo aparece en la lista
             if (idSeleccionado == null && !creando) {

@@ -4,7 +4,9 @@ package com.leon.murocampus.data.remote
 import com.leon.murocampus.model.Comentario
 import com.leon.murocampus.model.NuevoPost
 import com.leon.murocampus.model.Post
+import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -32,4 +34,8 @@ interface PostApi {
     // POST posts: @Body manda el objeto como JSON en el cuerpo
     @POST("posts")
     suspend fun crear(@Body nuevo: NuevoPost): Post
+
+    // DELETE posts/1: la respuesta llega vacía; Response deja revisar el código HTTP
+    @DELETE("posts/{id}")
+    suspend fun borrar(@Path("id") id: Int): Response<Unit>
 }

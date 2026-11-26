@@ -9,7 +9,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,6 +30,7 @@ import com.leon.murocampus.viewmodel.UiState
 @Composable
 fun PantallaDetalle(vm: PostsViewModel, id: Int) {
     val estado by vm.detalle.collectAsStateWithLifecycle()
+    val borrado by vm.borrado.collectAsStateWithLifecycle()
 
     when (val e = estado) {
         UiState.Cargando -> Cargando("Cargando publicación…")
@@ -46,6 +52,18 @@ fun PantallaDetalle(vm: PostsViewModel, id: Int) {
                     fontWeight = FontWeight.Bold
                 )
                 Text(e.datos.post.body, style = MaterialTheme.typography.bodyLarge)
+                // Borra con DELETE; se deshabilita mientras espera la respuesta
+                OutlinedButton(
+                    onClick = { vm.borrar(e.datos.post.id) },
+                    enabled = borrado != UiState.Cargando,
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    ),
+                    modifier = Modifier.padding(top = 12.dp)
+                ) {
+                    Icon(Icons.Filled.Delete, contentDescription = null)
+                    Text("Eliminar", modifier = Modifier.padding(start = 8.dp))
+                }
                 HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
                 Text(
                     "Comentarios (${e.datos.comentarios.size})",

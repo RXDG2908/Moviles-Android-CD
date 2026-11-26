@@ -88,4 +88,30 @@ class PostsViewModel(private val repo: PostRepository) : ViewModel() {
     fun reiniciarCreacion() {
         _creacion.value = null
     }
+
+    // ----- Borrar publicación (null = no se ha pedido; Exito lleva el id borrado)
+    private val _borrado = MutableStateFlow<UiState<Int>?>(null)
+    val borrado: StateFlow<UiState<Int>?> = _borrado.asStateFlow()
+
+    // DELETE posts/{id}; si sale bien, la quita de la lista que ya está en pantalla
+    // (JSONPlaceholder no borra de verdad, así que no se vuelve a descargar)
+    fun borrar(id: Int) {
+        viewModelScope.launch {
+            _borrado.value = UiState.Cargando
+            repo.borrar(id)
+                .onSuccess {
+                    val actual = _lista.value
+                    if (actual is UiState.Exito) {
+                        _lista.value = UiState.Exito(actual.datos.filter { it.id != id })
+                    }
+                    _borrado.value = UiState.Exito(id)
+                }
+                .onFailure { _borrado.value = UiState.Error(mensajeDe(it)) }
+        }
+    }
+
+    // La pantalla avisa que ya mostró el resultado del borrado
+    fun borradoMostrado() {
+        _borrado.value = null
+    }
 }
