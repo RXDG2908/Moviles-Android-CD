@@ -9,7 +9,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,10 +31,30 @@ import com.leon.murocampus.viewmodel.UiState
 
 @Composable
 fun PantallaLista(vm: PostsViewModel, onAbrir: (Int) -> Unit) {
-    val estado by vm.lista.collectAsStateWithLifecycle()
+    val estado by vm.listaVisible.collectAsStateWithLifecycle()
     val filtro by vm.usuarioFiltro.collectAsStateWithLifecycle()
+    val busqueda by vm.busqueda.collectAsStateWithLifecycle()
 
     Column(modifier = Modifier.fillMaxSize()) {
+        // Buscador por título: filtra las publicaciones que ya están descargadas
+        OutlinedTextField(
+            value = busqueda,
+            onValueChange = { vm.buscar(it) },
+            placeholder = { Text("Buscar por título") },
+            leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
+            trailingIcon = {
+                if (busqueda.isNotEmpty()) {
+                    IconButton(onClick = { vm.buscar("") }) {
+                        Icon(Icons.Filled.Close, contentDescription = "Borrar búsqueda")
+                    }
+                }
+            },
+            singleLine = true,
+            shape = MaterialTheme.shapes.extraLarge,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, top = 12.dp)
+        )
         FiltroUsuarios(seleccionado = filtro, onElegir = { vm.filtrar(it) })
 
         when (val e = estado) {

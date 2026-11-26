@@ -11,7 +11,10 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 // Lo que muestra el detalle: la publicación y sus comentarios
@@ -47,6 +50,24 @@ class PostsViewModel(private val repo: PostRepository) : ViewModel() {
         _usuarioFiltro.value = userId
         cargar()
     }
+
+    // ----- Búsqueda por título sobre lo que ya se descargó (no llama a la red)
+    private val _busqueda = MutableStateFlow("")
+    val busqueda: StateFlow<String> = _busqueda.asStateFlow()
+
+    fun buscar(texto: String) {
+        _busqueda.value = texto
+    }
+
+    // Lo que dibuja la lista: el estado de la red con la búsqueda ya aplicada
+    val listaVisible: StateFlow<UiState<List<Post>>> =
+        combine(_lista, _busqueda) { estado, texto ->
+            if (estado is UiState.Exito && texto.isNotBlank()) {
+                UiState.Exito(estado.datos.filter { it.title.contains(texto.trim(), ignoreCase = true) })
+            } else {
+                estado
+            }
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), UiState.Cargando)
 
     // ----- Detalle de una publicación
     private val _detalle = MutableStateFlow<UiState<DetalleUi>>(UiState.Cargando)
