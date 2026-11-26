@@ -15,6 +15,7 @@ Si no hay internet, muestra un mensaje claro con el botón Reintentar y no se ci
 - **Tecnología:** Kotlin, Jetpack Compose y Material 3, Retrofit 2.11, OkHttp 4.12 y kotlinx.serialization
 - **Patrón:** MVVM + Repository (interface)
 - **Paquete:** `com.leon.murocampus`
+- **Informe:** [LAB09-LEON-RENZO-2026.pdf](../LAB09-LEON-RENZO-2026.pdf), la guía llenada con capturas, pruebas y respuestas (entregado en Canvas)
 
 ## Estructura de paquetes
 
