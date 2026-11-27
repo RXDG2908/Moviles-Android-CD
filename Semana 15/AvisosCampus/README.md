@@ -60,3 +60,13 @@ La segunda reemplaza a la primera: solo queda una en el panel. Por eso se usa `a
 
 **5. ¿En qué casos usarías una notificación local y en cuáles una push de Firebase?**
 Local cuando el motivo nace en el celular: recordatorios, fin de una tarea o cambios del dispositivo. Push cuando nace en un servidor: un anuncio del docente, una nota publicada o un mensaje de otra persona, incluso con la app cerrada.
+
+## Fase 2 (rama mejora-ia)
+
+- Canal **Urgentes** para el recordatorio, además del canal Avisos.
+- Texto completo al expandir la notificación (`BigTextStyle`).
+- Receptor del cargador con el switch **Escuchar el cargador** (`receiver/CargadorReceiver.kt`).
+
+![Receptor del cargador](capturas/08-cargador.png)
+
+Detalle de los prompts en [PROMPTS.md](PROMPTS.md).
