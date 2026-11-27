@@ -84,6 +84,20 @@ class AvisosViewModel(private val repo: AvisosRepository) : ViewModel() {
         }
     }
 
+    private val _escuchandoCargador = MutableStateFlow(false)
+    val escuchandoCargador: StateFlow<Boolean> = _escuchandoCargador.asStateFlow()
+
+    fun cambiarEscuchaCargador(valor: Boolean) {
+        _escuchandoCargador.value = valor
+    }
+
+    fun alCambiarCargador(conectado: Boolean) {
+        viewModelScope.launch {
+            val estado = if (conectado) "Conectado" else "Desconectado"
+            avisar("Cargador", estado, Origen.CARGADOR)
+        }
+    }
+
     fun noSePudoMostrar() {
         _mensaje.value = "Sin permiso: el aviso se guardó en el historial, pero no se mostró"
     }
