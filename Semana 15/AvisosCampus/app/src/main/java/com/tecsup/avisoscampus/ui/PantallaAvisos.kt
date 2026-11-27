@@ -46,6 +46,7 @@ import com.tecsup.avisoscampus.viewmodel.AvisosViewModel
 @Composable
 fun PantallaAvisos(vm: AvisosViewModel) {
     val contexto = LocalContext.current
+    val avisos by vm.avisos.collectAsState()
     val permiso by vm.permiso.collectAsState()
     val faltan by vm.faltan.collectAsState()
     val escuchando by vm.escuchandoAvion.collectAsState()
@@ -143,9 +144,7 @@ fun PantallaAvisos(vm: AvisosViewModel) {
                     Switch(checked = escuchando, onCheckedChange = { vm.cambiarEscucha(it) })
                 }
             }
-            Tarjeta("Historial") {
-                // TODO Paso 7: reemplazar esta tarjeta por HistorialAvisos(avisos)
-            }
+            HistorialAvisos(avisos)
         }
     }
 }
@@ -163,7 +162,7 @@ private fun EtiquetaPermiso(permiso: PermisoUi) {
 }
 
 @Composable
-private fun Tarjeta(titulo: String, contenido: @Composable () -> Unit) {
+internal fun Tarjeta(titulo: String, contenido: @Composable () -> Unit) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier.padding(16.dp),
