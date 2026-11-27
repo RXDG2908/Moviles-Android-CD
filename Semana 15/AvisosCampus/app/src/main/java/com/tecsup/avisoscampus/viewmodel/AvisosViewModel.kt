@@ -58,7 +58,8 @@ class AvisosViewModel(private val repo: AvisosRepository) : ViewModel() {
                     _faltan.value = restante
                     delay(1000)
                 }
-                avisar("Recordatorio", "Revisa tu laboratorio pendiente", Origen.RECORDATORIO)
+                avisar("Recordatorio", "Revisa tu laboratorio pendiente. Confirma que tus commits estén en GitHub, " +
+                        "que el README tenga las capturas y que la entrega esté subida a Canvas.", Origen.RECORDATORIO)
             } finally {
                 _faltan.value = null
             }
