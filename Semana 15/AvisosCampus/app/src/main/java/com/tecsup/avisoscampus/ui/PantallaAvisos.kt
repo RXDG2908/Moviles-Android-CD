@@ -1,24 +1,35 @@
 package com.tecsup.avisoscampus.ui
 
+import android.Manifest
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.tecsup.avisoscampus.model.PermisoUi
 import com.tecsup.avisoscampus.notificacion.Notificador
 import com.tecsup.avisoscampus.viewmodel.AvisosViewModel
 
@@ -26,6 +37,17 @@ import com.tecsup.avisoscampus.viewmodel.AvisosViewModel
 @Composable
 fun PantallaAvisos(vm: AvisosViewModel) {
     val contexto = LocalContext.current
+    val permiso by vm.permiso.collectAsState()
+
+    val lanzador = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { concedido ->
+        vm.permisoRespondido(concedido)
+    }
+
+    LaunchedEffect(Unit) {
+        if (Notificador.tienePermiso(contexto)) vm.permisoRespondido(true)
+    }
 
     LaunchedEffect(Unit) {
         vm.eventos.collect { aviso ->
@@ -54,7 +76,16 @@ fun PantallaAvisos(vm: AvisosViewModel) {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Tarjeta("Permiso de notificaciones") {
-                // TODO Paso 2: etiqueta de estado y botón "Permitir notificaciones"
+                EtiquetaPermiso(permiso)
+                Button(onClick = {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        lanzador.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    } else {
+                        vm.permisoRespondido(true)
+                    }
+                }) {
+                    Text("Permitir notificaciones")
+                }
                 // TODO Paso 8: mensaje de error y botón "Abrir ajustes"
             }
             Tarjeta("Avisos") {
@@ -70,6 +101,18 @@ fun PantallaAvisos(vm: AvisosViewModel) {
                 // TODO Paso 7: reemplazar esta tarjeta por HistorialAvisos(avisos)
             }
         }
+    }
+}
+
+@Composable
+private fun EtiquetaPermiso(permiso: PermisoUi) {
+    val (texto, color) = when (permiso) {
+        PermisoUi.SinPedir -> "Sin pedir" to Color(0xFF616161)
+        PermisoUi.Concedido -> "Permitido" to Color(0xFF2E7D32)
+        PermisoUi.Denegado -> "Denegado" to Color(0xFFC62828)
+    }
+    Surface(color = color, contentColor = Color.White, shape = RoundedCornerShape(8.dp)) {
+        Text(texto, modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp))
     }
 }
 
